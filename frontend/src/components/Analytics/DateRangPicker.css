@@ -1,0 +1,50 @@
+/* DateRangePicker.css */
+
+/* กำหนด background สีขาว, ระยะห่างพอดี, และลบมุมเหลี่ยมขอบสำหรับปุ่ม */
+.date-range-picker-button {
+    background-color: #ffffff; /* สีขาว */
+    padding: 10px 20px; /* ระยะห่างพอดี */
+    border-radius: 8px; /* ลบมุมเหลี่ยมขอบ */
+    border: 1px solid #e0e0e0; /* เพิ่มขอบบางๆ เพื่อให้ปุ่มดูโดดเด่น */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%; /* ทำให้ปุ่มมีขนาดเต็มความกว้าง */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* เพิ่มเงาเล็กน้อย */
+    cursor: pointer; /* เปลี่ยนเคอร์เซอร์เมื่อชี้ไปที่ปุ่ม */
+  }
+  
+  /* กำหนด style สำหรับ icon */
+  .date-range-picker-icon {
+    margin-right: 8px;
+    color: #888; /* สีเทาอ่อน */
+  }
+  
+  /* กำหนด style สำหรับตัวเลือกวันที่ */
+  .date-range-picker-content {
+    background-color: #ffffff; /* สีขาว */
+    padding: 16px; /* ระยะห่างภายใน */
+    border-radius: 8px; /* ลบมุมเหลี่ยมขอบ */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* เพิ่มเงา */
+  }
+  
+  /* กำหนด style สำหรับ Calendar */
+  .react-calendar {
+    width: 100%;
+    border: none; /* ลบขอบเดิมของ Calendar */
+  }
+  
+  .react-calendar__tile {
+    border-radius: 4px; /* ลบมุมเหลี่ยมของแต่ละวันที่ */
+  }
+  
+  /* เปลี่ยนสี background เมื่อเลือกวันที่ */
+  .react-calendar__tile--active {
+    background-color: #007BFF; /* สีฟ้า */
+    color: #ffffff; /* สีตัวอักษรขาว */
+  }
+  
+  .react-calendar__tile--hover {
+    background-color: #f0f0f0; /* สีพื้นหลังเมื่อ hover */
+  }
+  

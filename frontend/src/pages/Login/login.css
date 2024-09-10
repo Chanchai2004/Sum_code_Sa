@@ -1,0 +1,88 @@
+/* Ensure that the container takes up the full width and height */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;  /* Make sure it takes the full width */
+    background-color: black;
+    margin: 0;  /* Reset margin */
+    padding: 0;  /* Reset padding */
+    position: absolute; /* Make sure it covers the full viewport */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+/* The rest of your styles can stay the same */
+.login-formContainer {
+    background-color: #001529;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+}
+
+.login-title {
+    color: #ffcc00;
+    margin-bottom: 30px;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.login-form {
+    width: 100%;
+}
+
+.login-label {
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.login-input {
+    background-color: #edf2c4;
+    color: #001529;
+    border-color: #ffcc00;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.login-rememberMe {
+    text-align: left;
+}
+
+.login-checkbox {
+    color: #ffffff;
+}
+
+.login-button {
+    width: 100%;
+    background-color: #ffcc00;
+    color: #001529;
+    border-color: #ffcc00;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 10px 0;
+    font-size: 18px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.login-registerContainer {
+    margin-top: 20px;
+}
+
+.login-registerText {
+    color: white;
+    margin-right: 10px;
+}
+
+.login-registerButton {
+    color: #ffcc00;
+    border-color: #ffcc00;
+    background-color: #001529;
+}

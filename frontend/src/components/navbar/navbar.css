@@ -1,0 +1,85 @@
+/* ปรับพื้นหลัง Navbar และทำให้ Navbar กว้างเต็มหน้าจอ */
+.header {
+    background-color: #ffcc00;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    position: fixed;
+    margin-top: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    border-radius: 0;
+    height: 60px; /* เพิ่มความสูงให้ Navbar */
+}
+
+/* จัดการสไตล์โลโก้ให้สวยงาม */
+.logo {
+    color: #001529;
+    font-size: 28px;
+    font-weight: bold;
+    font-family: 'Montserrat', sans-serif;
+    cursor: pointer; /* เพิ่มเพื่อให้โลโก้สามารถคลิกได้ */
+}
+
+/* จัดการเมนูภายใน Navbar */
+.menu {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+/* สไตล์ลิงก์ใน Navbar */
+.link {
+    color: #001529;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.3s, border-bottom 0.3s;
+    border-bottom: 2px solid transparent; /* ทำเส้นใต้เมื่อ hover */
+}
+
+.link:hover {
+    color: #fcfcfc; /* เปลี่ยนสีเมื่อ hover */
+    border-bottom: 2px solid #001529;
+}
+
+/* ปุ่ม login/logout */
+.button {
+    background-color: #001529;
+    color: #ffcc00;
+    border-color: #001529;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 8px 20px;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.button:hover {
+    background-color: #ff9900;
+    color: #001529;
+    border-color: #ff9900;
+}
+
+/* ทำให้ Navbar ตอบสนองต่อหน้าจอเล็กลง */
+@media (max-width: 768px) {
+    .menu {
+        gap: 15px;
+    }
+
+    .logo {
+        font-size: 22px;
+    }
+
+    .link {
+        font-size: 14px;
+    }
+
+    .button {
+        padding: 6px 15px;
+    }
+}

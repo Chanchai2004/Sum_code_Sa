@@ -1,0 +1,33 @@
+.home-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* ครอบคลุมความสูงของ viewport */
+    width: 100vw;  /* ครอบคลุมความกว้างของ viewport */
+    background-color: black;
+    margin: 0;  /* ลบ margin */
+    padding: 0;  /* ลบ padding */
+    position: absolute; /* ทำให้ container ครอบคลุมเต็ม viewport */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.home-title {
+    color: white;
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.home-button {
+    background-color: #001529;
+    color: #ffcc00;
+    border-color: #001529;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 10px 20px;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}

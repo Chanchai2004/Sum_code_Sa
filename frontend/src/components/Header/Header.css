@@ -1,0 +1,186 @@
+/* Styling for the header container */
+.header {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Distributes space between child elements */
+  padding: 10px 20px;
+  background-color: #f9f9f9;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px; /* Space below the header */
+  width: 100%; /* Adjusted width to 100% */
+  box-sizing: border-box; /* Include padding in width calculation */
+}
+
+/* Styling for individual items within the header */
+.header-item {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between label and input/button */
+}
+
+/* Additional spacing for buttons */
+.header-item button {
+  margin-left: 5px; /* Space between buttons */
+}
+
+/* Specific styles for input elements */
+.header-item input[type="text"], 
+.header-item input[type="date"], 
+.header-item input[type="time"] {
+  padding: 10px;
+  border: 2px solid #ffc700;
+  border-radius: 15px;
+  outline: none;
+  font-size: 16px;
+  background-color: #fff;
+  color: #333;
+}
+
+/* Styling for select element */
+.header-item select.movie-select {
+  padding: 10px;
+  border: 2px solid #ffc700;
+  border-radius: 15px;
+  outline: none;
+  font-size: 16px;
+  background-color: #fff;
+  color: #333;
+  width: 100%;
+  max-width: 200px; /* Adjust this based on your layout needs */
+}
+
+/* Styling for buttons in the header and popup */
+.add-btn, .delete-btn, .update-btn {
+  color: white;
+  border: none;
+  padding: 10px 20px; /* ขนาดปุ่มเดิม */
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  position: relative; /* ทำให้ปุ่มอยู่ในตำแหน่งเดิม */
+  z-index: 2; /* ปุ่มจะอยู่เหนือเนื้อหาอื่นๆ */
+}
+
+.add-btn {
+  background-color: #4CAF50; /* สีเขียวสำหรับปุ่ม Add */
+}
+
+.delete-btn {
+  background-color: #f44336; /* สีแดงสำหรับปุ่ม Delete */
+}
+
+.update-btn {
+  background-color: #ffc700; /* สีเหลืองสำหรับปุ่ม Update */
+}
+
+.add-btn:hover, .delete-btn:hover, .update-btn:hover {
+  color: var(--bg-color); /* เปลี่ยนตัวอักษรเป็นสีพื้นหลังเดิม */
+  background-color: white; /* เปลี่ยนพื้นหลังเป็นสีขาว */
+  box-shadow: inset 0 0 0 2px var(--bg-color); /* เพิ่มขอบด้านในด้วยสีพื้นหลังเดิม */
+  
+}
+
+.add-btn:hover {
+  --bg-color: #4CAF50; /* สีเขียวเดิมสำหรับปุ่ม Add */
+}
+
+.delete-btn:hover {
+  --bg-color: #f44336; /* สีแดงเดิมสำหรับปุ่ม Delete */
+}
+
+.update-btn:hover {
+  --bg-color: #ffc700; /* สีเหลืองเดิมสำหรับปุ่ม Update */
+}
+
+/* Additional styling for interactive elements */
+.add-btn:active, .delete-btn:active, .update-btn:active {
+  opacity: 0.9; /* ลดความโปร่งใสเมื่อคลิกเพื่อเพิ่มเอฟเฟกต์การกดปุ่ม */
+}
+
+.header-item button:hover {
+  opacity: 1; /* ทำให้ปุ่มไม่จางลงเมื่อ hover (ควบคุมโดย transform) */
+}
+
+.header-item button:focus {
+  outline: none; /* ลบเส้นขอบเมื่อปุ่มถูกโฟกัส */
+}
+
+/* Styling for the modal content */
+.modal-content {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling for the header items inside the modal */
+.modal-content .header-item {
+  margin-bottom: 15px; /* เพิ่มระยะห่างระหว่างฟิลด์ */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Styling for labels inside the modal */
+.modal-content .header-item label {
+  display: inline-block;
+  width: 80px; /* ตั้งค่าความกว้างสำหรับ label เพื่อให้ text-align */
+  text-align: right;
+  margin-right: 10px; /* เพิ่มระยะห่างระหว่าง label กับ input */
+  font-weight: bold;
+}
+
+/* Make all input fields, selects, and DatePickers have the same width */
+.modal-content .header-item .ant-picker,
+.modal-content .header-item .ant-select,
+.modal-content .header-item input {
+  width: 100%;
+  max-width: 300px; /* หรือค่าที่คุณต้องการให้เท่ากัน */
+  flex-grow: 1; /* ทำให้ขนาดของ input ใช้พื้นที่ทั้งหมดที่มีอยู่ */
+}
+
+/* Styling for the select element inside the modal */
+.modal-content .header-item select {
+  width: 100%;
+  max-width: 300px; /* ทำให้ขนาดเท่ากัน */
+}
+
+/* Styling for buttons in the modal */
+.modal-content .header-item .update-btn, 
+.modal-content .header-item .delete-btn {
+  margin-top: 10px;
+  margin-right: 10px; /* ระยะห่างระหว่างปุ่ม Update กับ Delete */
+  width: 120px; /* ตั้งค่าความกว้างของปุ่มให้เท่ากัน */
+}
+
+/* Specific styling for button container */
+.modal-content .header-item.button-group {
+  display: flex;
+  justify-content: flex-start; /* จัดปุ่มไปทางซ้าย */
+  gap: 10px; /* ระยะห่างระหว่างปุ่ม */
+}
+
+.modal-content .header-item button {
+  flex: 1; /* ทำให้ปุ่มมีขนาดเท่ากัน */
+}
+
+/* Style for showtime cells */
+.showtime-cell {
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+  border-radius: 8px; /* Adjust this value to make the corners more or less rounded */
+}
+
+/* Hover effect for showtime cells */
+.showtime-cell:hover {
+  transform: scale(0.97); /* Slightly increase the size */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Add shadow to create a lift effect */
+  z-index: 1; /* Make sure it appears on top of other elements */
+  border-radius: 8px; /* Ensure the border-radius is consistent on hover */
+  opacity: 0.7; /* Reduce opacity to make the color appear lighter */
+}
+
+

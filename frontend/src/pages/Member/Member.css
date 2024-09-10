@@ -1,0 +1,17 @@
+.member-header {
+    padding: 20px 30px;
+  }
+  
+  .member-actions {
+    text-align: end;
+    align-self: center;
+  }
+  
+  .member-table-container {
+    margin: 20px 30px;
+  }
+  
+  .delete-button {
+    margin-left: 10px;
+  }
+  

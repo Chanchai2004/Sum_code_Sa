@@ -1,0 +1,31 @@
+/* สีสลับระหว่างแถวของตาราง */
+tbody tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+}
+
+tbody tr:nth-of-type(even) {
+    background-color: #ffffff;
+}
+
+/* เพิ่มเอฟเฟกต์ hover สำหรับช่องที่มี movieTitle */
+tbody td {
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+tbody td:not(:empty):hover {
+    background-color: #bae7ff; /* สีที่เปลี่ยนเมื่อ hover เฉพาะช่องที่มี movieTitle */
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1); /* เพิ่มเงาเล็กน้อยเมื่อ hover */
+    cursor: pointer; /* เปลี่ยนเคอร์เซอร์เมื่อ hover */
+}
+
+/* เอฟเฟกต์ hover สำหรับแถวทั้งหมดที่มี movieTitle */
+tbody tr:hover td:not(:empty) {
+    background-color: #bae7ff;
+}
+
+tbody td:hover {
+    background-color: #ced4da;
+    color: #000000;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15); /* เงาที่เกิดขึ้นเมื่อ hover */
+    transition: all 0.2s ease-in-out;
+}

@@ -1,0 +1,75 @@
+.container {
+    text-align: center;
+    color: rgb(251, 251, 251);
+    padding: 40px;
+    width: 100vw; /* ใช้ความกว้างของหน้าจอทั้งหมด */
+    height: 100vh; /* ใช้ความสูงของหน้าจอทั้งหมด */
+    box-sizing: border-box; /* ทำให้ padding รวมอยู่ในขนาดของ element */
+    overflow: hidden; /* ป้องกันการเลื่อน */
+  }
+  
+  .header {
+    text-align: right;
+    margin-bottom: 20px;
+    width: 100%; /* เพิ่มความกว้างเต็มหน้าจอ */
+  }
+  
+  .footer {
+    margin-top: 20px;
+    padding: 3px;
+    width: 100%; /* เพิ่มความกว้างเต็มหน้าจอ */
+  }
+  
+  .summary {
+    margin-top: 20px;
+    text-align: center;
+    padding: 10px;
+    color: #ECD168;
+    background-color: rgb(0, 0, 0);
+    width: 100%; /* เพิ่มความกว้างเต็มหน้าจอ */
+  }
+  
+  .beforesummary {
+    margin-top: 40px;
+    text-align: center;
+    padding: 3px;
+    background-color: rgb(253, 253, 253);
+    width: 100%; /* เพิ่มความกว้างเต็มหน้าจอ */
+  }
+  
+  .seat {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    margin: 3px;
+    line-height: 40px;
+    text-align: center;
+    border-radius: 8px;
+    background-color: white;
+    border: 1px solid black;
+    cursor: pointer;
+    font-size: 12px;
+    color: black;
+  }
+  
+  .seat.booked {
+    background-color: #1A2C50; /* สีดำ */
+    color: white;
+    cursor: not-allowed;
+  }
+  
+  .seat.selected {
+    background-color: #007bff; /* สีฟ้า */
+    color: white;
+  }
+  
+  .seat-row {
+    display: flex;
+    justify-content: center;
+    width: 100%; /* เพิ่มความกว้างเต็มหน้าจอ */
+  }
+  
+  .yellow-border .seat {
+    border: 4px solid #ECD168;
+  }
+  
