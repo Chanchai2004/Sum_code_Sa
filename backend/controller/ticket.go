@@ -21,67 +21,47 @@ func ListTickets(c *gin.Context) {
 	c.JSON(http.StatusOK, tickets)
 }
 
-// GetTicketsById รับข้อมูลตั๋วตาม ID
+// GetTicketsById รับข้อมูลตั๋วตาม ID โดยใช้ SQL ดิบ
 func GetTicketsById(c *gin.Context) {
 	memberID := c.Param("id")
 
 	log.Println("Received Member ID:", memberID)
 
-	db := config.DB()
-	var bookings []entity.Booking
-	if err := db.Preload("ShowTime.Movie").
-		Preload("ShowTime.Theater").
-		Preload("Seat"). // Preload ที่สัมพันธ์กับที่นั่ง
-		Where("member_id = ?", memberID).
-		Order("created_at desc").
-		Find(&bookings).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Bookings not found"})
-		return
-	}
-
 	// สร้างโครงสร้างที่จะเก็บผลลัพธ์
 	type BookingResponse struct {
-		Movie   string   `json:"movie"`
-		Date    string   `json:"date"`
-		Seats   string   `json:"seats"`
-		Theater string   `json:"theater"`
+		Movie   string `json:"movie"`
+		Date    string `json:"date"`
+		Seats   string `json:"seats"`
+		Theater string `json:"theater"`
 	}
 
-	// แผนที่สำหรับจัดกลุ่มที่นั่งตาม ticket_id
-	bookingMap := make(map[uint]BookingResponse)
-
-	// ลูปเพื่อจัดกลุ่มที่นั่งตาม ticket_id
-	for _, booking := range bookings {
-		ticketID := booking.TicketID
-		showTime := booking.ShowTime
-		seatNo := booking.Seat.SeatNo
-
-		// หาก ticket_id ยังไม่มีในแผนที่ ให้สร้างใหม่
-		if _, exists := bookingMap[ticketID]; !exists {
-			bookingMap[ticketID] = BookingResponse{
-				Movie:   showTime.Movie.MovieName,
-				Date:    showTime.ShowDate.String(),
-				Seats:   seatNo,
-				Theater: showTime.Theater.TheaterName,
-			}
-		} else {
-			// ถ้ามีอยู่แล้ว ให้เพิ่มที่นั่งเข้าไป
-			existingBooking := bookingMap[ticketID]
-			existingBooking.Seats += ", " + seatNo
-			bookingMap[ticketID] = existingBooking
-		}
-	}
-
-	// แปลงผลลัพธ์จากแผนที่เป็น slice
 	var results []BookingResponse
-	for _, value := range bookingMap {
-		results = append(results, value)
+
+	// ใช้ SQL ดิบเพื่อดึงข้อมูล
+	err := config.DB().Raw(`
+		SELECT 
+		    m.movie_name AS Movie,
+		    s.show_date AS Date,
+		    GROUP_CONCAT(se.seat_no, ', ') AS Seats,
+		    t.theater_name AS Theater
+		FROM bookings b
+		JOIN show_times s ON b.show_time_id = s.id
+		JOIN movies m ON s.movie_id = m.id
+		JOIN seats se ON b.seat_id = se.id
+		JOIN theaters t ON se.theater_id = t.id
+		WHERE b.member_id = ?
+		GROUP BY b.ticket_id, s.show_date, t.theater_name
+		ORDER BY b.ticket_id DESC;
+	`, memberID).Scan(&results).Error
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Bookings not found"})
+		return
 	}
 
 	log.Println("Fetched bookings:", results)
 	c.JSON(http.StatusOK, results)
 }
-
 
 // CreateTicket สร้างตั๋วใหม่
 func CreateTicket(c *gin.Context) {

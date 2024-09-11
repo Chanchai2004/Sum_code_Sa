@@ -6,10 +6,10 @@ import { bookSeats } from '../../services/https';
 
 const { Option } = Select;
 
-// ฟังก์ชันสร้าง seatMap อัตโนมัติจากโครงสร้างที่นั่ง
-const generateSeatMap = (seats: string[][]) => {
+// ฟังก์ชันสร้าง seatMap อัตโนมัติจากโครงสร้างที่นั่ง โดยคำนวณ seatIndex จาก theaterID
+const generateSeatMap = (seats: string[][], theaterID: number) => {
   const seatMap: { [key: number]: string } = {};
-  let seatIndex = 1;
+  let seatIndex = (theaterID - 1) * 160 + 1; // คำนวณ seatID เริ่มต้นตามโรงหนัง (โรงที่ 1 เริ่มที่ 1, โรงที่ 2 เริ่มที่ 161, โรงที่ 3 เริ่มที่ 321)
 
   seats.forEach(row => {
     row.forEach(seat => {
@@ -21,31 +21,17 @@ const generateSeatMap = (seats: string[][]) => {
   return seatMap;
 };
 
-// ข้อมูลที่นั่ง
-const seatsLeft = [
-  ['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10'],
-  ['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'B10'],
-  ['C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10'],
-  ['D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'D10'],
-  ['E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9', 'E10'],
-  ['F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10'],
-  ['G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'G9', 'G10'],
-  ['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'H7', 'H8', 'H9', 'H10'],
+// ข้อมูลที่นั่ง (เรียงลำดับที่ต้องการ)
+const seats = [
+  ['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'A11', 'A12', 'A13', 'A14', 'A15', 'A16', 'A17', 'A18', 'A19', 'A20'],
+  ['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'B10', 'B11', 'B12', 'B13', 'B14', 'B15', 'B16', 'B17', 'B18', 'B19', 'B20'],
+  ['C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'C11', 'C12', 'C13', 'C14', 'C15', 'C16', 'C17', 'C18', 'C19', 'C20'],
+  ['D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'D10', 'D11', 'D12', 'D13', 'D14', 'D15', 'D16', 'D17', 'D18', 'D19', 'D20'],
+  ['E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9', 'E10', 'E11', 'E12', 'E13', 'E14', 'E15', 'E16', 'E17', 'E18', 'E19', 'E20'],
+  ['F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', 'F13', 'F14', 'F15', 'F16', 'F17', 'F18', 'F19', 'F20'],
+  ['G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'G9', 'G10', 'G11', 'G12', 'G13', 'G14', 'G15', 'G16', 'G17', 'G18', 'G19', 'G20'],
+  ['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'H7', 'H8', 'H9', 'H10', 'H11', 'H12', 'H13', 'H14', 'H15', 'H16', 'H17', 'H18', 'H19', 'H20'],
 ];
-
-const seatsRight = [
-  ['A11', 'A12', 'A13', 'A14', 'A15', 'A16', 'A17', 'A18', 'A19', 'A20'],
-  ['B11', 'B12', 'B13', 'B14', 'B15', 'B16', 'B17', 'B18', 'B19', 'B20'],
-  ['C11', 'C12', 'C13', 'C14', 'C15', 'C16', 'C17', 'C18', 'C19', 'C20'],
-  ['D11', 'D12', 'D13', 'D14', 'D15', 'D16', 'D17', 'D18', 'D19', 'D20'],
-  ['E11', 'E12', 'E13', 'E14', 'E15', 'E16', 'E17', 'E18', 'E19', 'E20'],
-  ['F11', 'F12', 'F13', 'F14', 'F15', 'F16', 'F17', 'F18', 'F19', 'F20'],
-  ['G11', 'G12', 'G13', 'G14', 'G15', 'G16', 'G17', 'G18', 'G19', 'G20'],
-  ['H11', 'H12', 'H13', 'H14', 'H15', 'H16', 'H17', 'H18', 'H19', 'H20'],
-];
-
-// กำหนด seatMap โดยใช้ฟังก์ชัน generateSeatMap
-const seatMap = generateSeatMap([...seatsLeft, ...seatsRight]);
 
 const SeatMap: React.FC = () => {
   const [bookedSeats, setBookedSeats] = useState<string[]>([]);
@@ -65,6 +51,9 @@ const SeatMap: React.FC = () => {
     if (storedTheaterID) setTheaterID(Number(storedTheaterID));
   }, []);
 
+  // สร้าง seatMap โดยใช้ theaterID เพื่อกำหนด seatID ให้ถูกต้อง
+  const seatMap = generateSeatMap(seats, theaterID);
+
   // ดึงข้อมูลที่นั่งที่ถูกจองจาก API
   const fetchBookedSeats = async () => {
     try {
@@ -76,7 +65,6 @@ const SeatMap: React.FC = () => {
         const bookedSeatsArray = seatsData.data.map((seatID: number) => seatMap[seatID]);
         setBookedSeats(bookedSeatsArray); // อัปเดตสถานะที่นั่งที่ถูกจอง
       } else {
-        // กรณีไม่มีข้อมูลการจองที่นั่ง
         console.log('No bookings found for this showtime.');
         setBookedSeats([]); // ตั้งค่าเป็นที่นั่งว่าง
       }
@@ -85,37 +73,59 @@ const SeatMap: React.FC = () => {
     }
   };
 
-  // ดึงข้อมูลใหม่ทุกครั้งที่ showtimeID เปลี่ยน
+  // ดึงข้อมูลใหม่ทุกครั้งที่ showtimeID หรือ theaterID เปลี่ยน
   useEffect(() => {
     fetchBookedSeats();
-  }, [showtimeID]);
+  }, [showtimeID, theaterID]);
 
   // ฟังก์ชันเลือกที่นั่ง
-  const onSelectSeat = (seat: string) => {
-    setSelectedSeats(prev =>
-      prev.includes(seat) ? prev.filter(s => s !== seat) : [...prev, seat]
-    );
-  };
-
-  // ฟังก์ชันยืนยันการจอง
-  const handleConfirmBooking = async () => {
-    if (!memberID) {
-      message.error('Member ID not found');
-      return;
-    }
-
-    const result = await bookSeats(showtimeID, theaterID, memberID, selectedSeats);
-
-    if (result.success) {
-      message.success(result.message);
-      setSelectedSeats([]); // Reset selected seats
-
-      // อัปเดตสถานะที่นั่งหลังจากการจองสำเร็จ
-      await fetchBookedSeats(); // ดึงข้อมูลที่นั่งใหม่
+  // ฟังก์ชันเลือกที่นั่ง
+const onSelectSeat = (seat: string) => {
+  if (selectedSeats.includes(seat)) {
+    // หากเลือกที่นั่งเดิมอีกครั้งจะเอาออก
+    setSelectedSeats(prev => prev.filter(s => s !== seat));
+  } else {
+    // ถ้าเลือกที่นั่งเกิน 5 ที่นั่ง จะแสดงแจ้งเตือน
+    if (selectedSeats.length >= 5) {
+      message.error('You can select up to 5 seats per booking');
     } else {
-      message.error(result.message);
+      // ถ้าเลือกไม่เกิน 5 ที่นั่ง ให้เพิ่มที่นั่งใหม่
+      setSelectedSeats(prev => [...prev, seat]);
     }
-  };
+  }
+};
+
+// ฟังก์ชันยืนยันการจอง
+const handleConfirmBooking = async () => {
+  if (selectedSeats.length === 0) {
+    message.error('Please select the seat');
+    return;
+  }
+
+  if (selectedSeats.length > 5) {
+    message.error('You can select up to 5 seats per booking');
+    return;
+  }
+
+  if (!memberID) {
+    message.error('Member ID not found');
+    return;
+  }
+
+  const result = await bookSeats(showtimeID, theaterID, memberID, selectedSeats);
+
+  if (result.success) {
+    console.log(result);
+    console.log(theaterID);
+
+    message.success(result.message);
+    setSelectedSeats([]); // Reset selected seats
+    await fetchBookedSeats(); // ดึงข้อมูลที่นั่งใหม่
+  } else {
+    message.error(result.message);
+  }
+};
+
 
   // คำนวณราคาที่นั่ง
   const totalPrice = selectedSeats.length * 100;
@@ -129,11 +139,11 @@ const SeatMap: React.FC = () => {
             <Select
               value={showtimeID}
               style={{ width: 120, height: 40 }}
-              onChange={(value) => setShowtimeID(value)} // การเปลี่ยนค่าของ showtimeID
+              onChange={(value) => setShowtimeID(value)}
             >
               <Option value={1}>12:00 AM</Option>
               <Option value={2}>14:00 PM</Option>
-              <Option value={3}>12:00 PM (Theater 3)</Option> {/* เมื่อเลือก 12:00 PM จะตั้งค่า showtimeID เป็น 3 */}
+              <Option value={3}>12:00 PM (Theater 3)</Option>
             </Select>
           </div>
           <div style={{ padding: 6 }}>
@@ -161,7 +171,7 @@ const SeatMap: React.FC = () => {
       </div>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <div>
-          {seatsLeft.map((row, rowIndex) => (
+          {seats.map((row, rowIndex) => (
             <div key={rowIndex} className={`seat-row ${rowIndex >= 6 ? 'yellow-border' : ''}`}>
               {row.map(seat => (
                 <Seat
@@ -169,44 +179,41 @@ const SeatMap: React.FC = () => {
                   seat={seat}
                   isBooked={bookedSeats.includes(seat)}
                   isSelected={selectedSeats.includes(seat)}
-                  onSelect={onSelectSeat}
-                />
-              ))}
-            </div>
-          ))}
-        </div>
-        <div style={{ width: '50px' }}></div>
-        <div>
-          {seatsRight.map((row, rowIndex) => (
-            <div key={rowIndex} className={`seat-row ${rowIndex >= 6 ? 'yellow-border' : ''}`}>
-              {row.map(seat => (
-                <Seat
-                  key={seat}
-                  seat={seat}
-                  isBooked={bookedSeats.includes(seat)}
-                  isSelected={selectedSeats.includes(seat)}
-                  onSelect={onSelectSeat}
+                  onSelect={() => onSelectSeat(seat)}
                 />
               ))}
             </div>
           ))}
         </div>
       </div>
+
       <div className="beforesummary">
-        <h2 style={{ color: 'black' }}>MERJE CINIPLEX</h2>
+        <h2 style={{ color: 'black',fontFamily:'Arial',fontWeight:'bold',fontSize:'18px'}}>
+          MERJE CINIPLEX
+        </h2>
       </div>
+
       <div className="summary">
-        <div className="summary-content">
-          <h3>Total: Rp.Seat:</h3>
-          <h3>{totalPrice} {selectedSeats.join(', ')}</h3>
-          <div className="buttons">
-            <Button type="default" style={{ marginRight: '10px' }}>BACK TO</Button>
-            <Button type="primary" onClick={handleConfirmBooking}>CONFIRM</Button>
+        <div className="summary-content" style={{ alignContent:'center' }}>
+          <div style={{ flex: 1 }}>
+            <h3>Total</h3>
+            <h3 style={{ fontSize: '27px', color: '#FFD700' }}>Rp. {totalPrice.toLocaleString()}</h3>
+          </div>
+          <div style={{ flex: 2 }}>
+            <h3>Seat</h3>
+            <h3 style={{ fontSize: '27px', color: '#FFD700' }}>: {selectedSeats.join(', ')}</h3>
+          </div>
+          <div style={{ flex: 2, textAlign: 'center' }}>  {/* รวมคอลัมน์สำหรับปุ่ม */}
+            <Button type="default" style={{ marginRight: '20px', width: '180px', height: '40px' }}>BACK TO</Button>
+            <Button type="primary" style={{ width: '180px', height: '40px', backgroundColor: '#FFD700', border: '2px solid #FFD700', color: 'black' }} onClick={handleConfirmBooking}>CONFIRM</Button>
           </div>
         </div>
       </div>
+
+
     </div>
   );
+  
 };
 
 export default SeatMap;

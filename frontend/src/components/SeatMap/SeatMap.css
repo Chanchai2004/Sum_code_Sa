@@ -1,40 +1,40 @@
 .container {
     text-align: center;
-    color: rgb(251, 251, 251);
+    color: rgb(255, 255, 255);
     padding: 40px;
     width: 100vw; /* ใช้ความกว้างของหน้าจอทั้งหมด */
     height: 100vh; /* ใช้ความสูงของหน้าจอทั้งหมด */
-    box-sizing: border-box; /* ทำให้ padding รวมอยู่ในขนาดของ element */
-    overflow: hidden; /* ป้องกันการเลื่อน */
-  }
-  
-  .header {
-    text-align: right;
-    margin-bottom: 20px;
-    width: 100%; /* เพิ่มความกว้างเต็มหน้าจอ */
-  }
-  
-  .footer {
-    margin-top: 20px;
-    padding: 3px;
-    width: 100%; /* เพิ่มความกว้างเต็มหน้าจอ */
+    background-color: #e1e1e1;
   }
   
   .summary {
-    margin-top: 20px;
-    text-align: center;
-    padding: 10px;
-    color: #ECD168;
-    background-color: rgb(0, 0, 0);
-    width: 100%; /* เพิ่มความกว้างเต็มหน้าจอ */
+  display: flex;
+  justify-content: center; /* จัดกึ่งกลางแนวนอน */
+  align-items: center; /* จัดกึ่งกลางแนวตั้ง */
+  margin: 20px auto; /* จัดให้อยู่ตรงกลางในแนวนอนและมีระยะห่างด้านบน */
+  width: 100%; /* กำหนดความกว้าง 80% ของหน้าจอ */
+  max-width: 1000px; /* ขนาดสูงสุดของกล่อง */
+  background-color: #000000; /* กำหนดสีพื้นหลังเป็นสีแดงตามที่ต้องการ */
+  padding: 20px; /* เพิ่ม padding ให้เนื้อหาภายใน */
+  border-radius: 10px; /* ทำให้กล่องมีขอบมน */
+}
+
+  .summary-content {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    font-weight: bold;
+    font-size: 21px;
   }
   
   .beforesummary {
     margin-top: 40px;
     text-align: center;
-    padding: 3px;
+    padding: 12px;
     background-color: rgb(253, 253, 253);
     width: 100%; /* เพิ่มความกว้างเต็มหน้าจอ */
+
   }
   
   .seat {
@@ -59,7 +59,7 @@
   }
   
   .seat.selected {
-    background-color: #007bff; /* สีฟ้า */
+    background-color: #21699c; /* สีฟ้า */
     color: white;
   }
   
@@ -71,5 +71,41 @@
   
   .yellow-border .seat {
     border: 4px solid #ECD168;
+  }
+  
+  
+  button {
+    font-size: 18px;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  button[type="default"] {
+    background-color: white;
+    color: black;
+    border: 2px solid black;
+    width: 180px; /* ความกว้างเรียวยาวขึ้น */
+    height: 40px; /* ความสูงลดลง */
+  }
+  
+  button[type="default"]:hover {
+    background-color: black;
+    color: white;
+  }
+  
+  button[type="primary"] {
+    background-color: #FFD700;
+    color: rgb(203, 17, 17);
+    border: 2px solid #FFD700;
+    width: 180px; /* ความกว้างเรียวยาวขึ้น */
+    height: 40px; /* ความสูงลดลง */
+  }
+  
+  button[type="primary"]:hover {
+    background-color: #FFC300;
+    color: white;
   }
   
