@@ -84,6 +84,22 @@ func SetupDatabase() {
 		Email: "sa2@gmail.com",
 	})
 
+	hashedPassword3, _ := HashPassword("123456") // แฮชรหัสผ่านใหม่ที่ต้องการ
+	Member3 := &entity.Member{
+		UserName:   "sa3",
+		FirstName:  "Software3",
+		LastName:   "Analysis3",
+		Email:      "sa3@gmail.com",
+		Password:   hashedPassword3, // บันทึกรหัสผ่านที่แฮชแล้ว
+		GenderID:   GenderMale.ID,
+		TotalPoint: 8,
+		Role:       "customer",
+	}
+	db.FirstOrCreate(Member3, &entity.Member{
+		Email: "sa3@gmail.com",
+	})
+	
+
 	// สร้างข้อมูลภาพยนตร์ 3 เรื่อง
 	movies := []entity.Movie{
 		{MovieName: "Inception", MovieDuration: 120},

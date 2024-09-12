@@ -98,7 +98,7 @@ func BookSeats(c *gin.Context) {
 	// บันทึก transaction
 	if err := tx.Commit().Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Transaction failed"})
-		return
+		return	
 	}
 
 	// ส่งข้อความตอบกลับเมื่อการจองเสร็จสิ้น
