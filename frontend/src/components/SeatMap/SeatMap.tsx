@@ -134,7 +134,8 @@ const SeatMap: React.FC = () => {
       });
   
       // นำทางไปยังหน้า Payment พร้อมส่งข้อมูลไปด้วย
-      navigate('/payment', { state: { totalPrice, selectedSeats, ticketID } });
+      navigate('/paymentdetail', { state: { totalPrice, selectedSeats, ticketID } });
+      console.log("นำทางแต่ไม่ไป");
     } else {
       message.error(result.message);
     }

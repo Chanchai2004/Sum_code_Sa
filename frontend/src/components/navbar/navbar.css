@@ -18,13 +18,13 @@
 }
 
 /* จัดการสไตล์โลโก้ให้สวยงาม */
-.logo {
+/* .logo {
     color: #001529;
     font-size: 28px;
     font-weight: bold;
     font-family: 'Montserrat', sans-serif;
-    cursor: pointer; /* เพิ่มเพื่อให้โลโก้สามารถคลิกได้ */
-}
+    cursor: pointer;} /* เพิ่มเพื่อให้โลโก้สามารถคลิกได้ */
+
 
 /* จัดการเมนูภายใน Navbar */
 .menu {
@@ -83,3 +83,14 @@
         padding: 6px 15px;
     }
 }
+
+.logoContainer {
+    display: flex;
+    align-items: center;
+    margin-right: auto;
+  }
+  
+  .logo {
+    height: 50px; /* ปรับขนาดรูปภาพตามต้องการ */
+  }
+  

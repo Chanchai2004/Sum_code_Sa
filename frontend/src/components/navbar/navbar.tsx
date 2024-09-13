@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Layout, Button } from 'antd';
 import './navbar.css';
+import MerjeLogo from "../../assets/Merjelogo.png";
 
 const { Header } = Layout;
 
@@ -35,8 +36,9 @@ const Navbar: React.FC = () => {
 
   return (
     <Header className="header">
-      <div className="logo">
-        MERJE CINIPLEX
+      <div className="logoContainer">
+      <img src={MerjeLogo} alt="MERJE Logo" className="logo" />{" "}
+      {/* แสดงรูปภาพ */}
       </div>
       <div className="menu">
         <span className="link" onClick={() => navigate('/home')}>Home</span>

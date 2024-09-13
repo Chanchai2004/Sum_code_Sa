@@ -9,6 +9,10 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import Home from './pages/Home/home';
 import MyTicket from './pages/MyTicket/myticket';
 import SeatBooking from './pages/SeatBooking/SeatBooking'; // เพิ่มการอิมพอร์ต SeatBooking
+import PaymentDetail from './pages/paymentdetails/paymentdetail';
+import ScanPayment from './pages/scanpayment/scanpayment';
+import Ticket from './pages/ticket/ticket';
+
 
 const App: React.FC = () => {
     const navigate = useNavigate();
@@ -34,7 +38,7 @@ const App: React.FC = () => {
             {isLoggedIn && isAdmin && <Sidebar />}
             <div className="main-content">
                 <Routes>
-                    <Route path="/" element={<Navigate to={isLoggedIn ? (isAdmin ? "/dashboard" : "/home") : "/login"} />} />
+                    
                     <Route path="/login" element={<Login />} />
                     
                     {/* เส้นทางสำหรับผู้ใช้ Admin */}
@@ -47,6 +51,11 @@ const App: React.FC = () => {
                     <Route path="/home" element={isLoggedIn && !isAdmin ? <Home /> : <Navigate to="/login" />} />
                     <Route path="/myticket" element={isLoggedIn && !isAdmin ? <MyTicket /> : <Navigate to="/login" />} />
                     <Route path="/seatbooking" element={isLoggedIn && !isAdmin ? <SeatBooking /> : <Navigate to="/login" />} />
+
+                    {/* เส้นทางสำหรับการชำระเงิน */}
+                    <Route path="/paymentdetail" element={isLoggedIn && !isAdmin ? <PaymentDetail /> : <Navigate to="/login" />} />
+                    <Route path="/scanpayment" element={isLoggedIn && !isAdmin ? <ScanPayment /> : <Navigate to="/login" />} />
+                    <Route path="/ticket" element={isLoggedIn && !isAdmin ? <Ticket /> : <Navigate to="/login" />} />
 
                     <Route path="*" element={<Navigate to="/login" />} />
                 </Routes>
