@@ -23,3 +23,9 @@ export interface IBooking {
     success: boolean;      // ผลลัพธ์การจอง
     message: string;       // ข
   }
+
+  export interface BookingResponse {
+    success: boolean;
+    message: string;
+    ticketID?: number; // เพิ่ม optional property สำหรับ ticketID
+  }

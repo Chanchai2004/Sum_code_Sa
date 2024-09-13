@@ -4,8 +4,25 @@
     padding: 40px;
     width: 100vw; /* ใช้ความกว้างของหน้าจอทั้งหมด */
     height: 100vh; /* ใช้ความสูงของหน้าจอทั้งหมด */
-    background-color: #e1e1e1;
+    background-color: #000000;
   }
+
+  .seat-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;  /* Make sure it takes the full width */
+    background-color: black;
+    margin: 0;  /* Reset margin */
+    padding: 0;  /* Reset padding */
+    position: absolute; /* Make sure it covers the full viewport */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
   
   .summary {
   display: flex;

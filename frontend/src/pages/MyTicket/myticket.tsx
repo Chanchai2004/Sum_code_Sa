@@ -34,8 +34,8 @@ const MyTicket: React.FC = () => {
           throw new Error("Data is not valid");
         }
       } catch (error) {
-        console.error('Failed to load tickets:', error);
-        message.error('Failed to load tickets. Please try again.');
+        console.error('no ticket');
+     
       }
     };
 

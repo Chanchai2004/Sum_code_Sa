@@ -1,7 +1,8 @@
 import { MembersInterface } from "../../interfaces/IMember";
 import { MoviesInterface } from "../../interfaces/IMovie";  
 import { ShowTimesInterface } from "../../interfaces/IShowtime";
-import { TicketInterface } from "../../interfaces/ITicket"; // Import Interface ของ Tickets
+import { TicketInterface } from "../../interfaces/ITicket";
+import { BookingResponse } from "../../interfaces/IBooking"; // Import Interface ของ Tickets
 
 const apiUrl = "http://localhost:8000/api";
 
@@ -364,38 +365,36 @@ async function GetTicketById(id: Number | undefined) {
 
 
 // ฟังก์ชันเพื่อทำการจองที่นั่ง
-async function bookSeats(showtimeID: number, theaterID: number, memberID: number, seats: string[]) {
+async function bookSeats(showtimeID: number, theaterID: number, memberID: number, seats: string[]): Promise<BookingResponse> {
   const requestOptions = {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${localStorage.getItem('token')}`, // หากต้องการใช้ token สำหรับ authen
+      "Authorization": `Bearer ${localStorage.getItem('token')}`,
     },
     body: JSON.stringify({
-      showtime_id: showtimeID,  // แก้ไขให้ตรงกับ backend
+      showtime_id: showtimeID,
       theater_id: theaterID,
       member_id: memberID,
-      seats: seats,  // เปลี่ยนจาก seatIDs เป็น seats
+      seats: seats,
     }),
   };
 
-  let res = await fetch(`${apiUrl}/book-seats`, requestOptions) // เปลี่ยนเป็นเส้นทาง /book-seats
-    .then((response) => response.json())
-    .then((res) => {
-      if (res.message === "Booking confirmed successfully") { // แก้เงื่อนไขเพื่อตรวจสอบ success message
-        return { success: true, message: "Booking successful" };
-      } else {
-        return { success: false, message: res.error || "Booking failed" };
-      }
-    })
-    .catch(error => {
-      console.error('Error booking seats:', error);
-      return { success: false, message: "Booking failed" };
-    });
+  try {
+    const response = await fetch(`${apiUrl}/book-seats`, requestOptions);
+    const res = await response.json();
 
-  return res;
+    if (res.success) {
+      // คืนค่า ticketID จาก backend หากมีการส่งกลับมา
+      return { success: true, message: res.message, ticketID: res.ticketID };
+    } else {
+      return { success: false, message: res.error || "Booking failed" };
+    }
+  } catch (error) {
+    console.error('Error booking seats:', error);
+    return { success: false, message: "Booking failed" };
+  }
 }
-
 
 // ฟังก์ชันเพื่อดึงข้อมูลที่นั่งที่ถูกจองสำหรับ Showtime และ Theater
 async function GetBookedSeats(showtimeID: number, theaterID: number) {

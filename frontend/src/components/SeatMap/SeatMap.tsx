@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Select, message } from 'antd';
+import { useNavigate } from 'react-router-dom'; // นำเข้า useNavigate
 import Seat from './Seat';
 import './SeatMap.css';
 import { bookSeats } from '../../services/https';
@@ -40,6 +41,8 @@ const SeatMap: React.FC = () => {
   const [showtimeID, setShowtimeID] = useState<number>(1);
   const [theaterID, setTheaterID] = useState<number>(1);
 
+  const navigate = useNavigate(); // ใช้ navigate เพื่อนำทางไปหน้าอื่น
+
   // ดึงข้อมูลจาก localStorage
   useEffect(() => {
     const storedMemberID = localStorage.getItem('memberID');
@@ -73,147 +76,155 @@ const SeatMap: React.FC = () => {
     }
   };
 
-  // ดึงข้อมูลใหม่ทุกครั้งที่ showtimeID หรือ theaterID เปลี่ยน
   useEffect(() => {
     fetchBookedSeats();
   }, [showtimeID, theaterID]);
 
-  // ฟังก์ชันเลือกที่นั่ง
-  // ฟังก์ชันเลือกที่นั่ง
-const onSelectSeat = (seat: string) => {
-  if (selectedSeats.includes(seat)) {
-    // หากเลือกที่นั่งเดิมอีกครั้งจะเอาออก
-    setSelectedSeats(prev => prev.filter(s => s !== seat));
-  } else {
-    // ถ้าเลือกที่นั่งเกิน 5 ที่นั่ง จะแสดงแจ้งเตือน
-    if (selectedSeats.length >= 5) {
-      message.error('You can select up to 5 seats per booking');
+  const onSelectSeat = (seat: string) => {
+    if (selectedSeats.includes(seat)) {
+      setSelectedSeats(prev => prev.filter(s => s !== seat));
     } else {
-      // ถ้าเลือกไม่เกิน 5 ที่นั่ง ให้เพิ่มที่นั่งใหม่
-      setSelectedSeats(prev => [...prev, seat]);
+      if (selectedSeats.length >= 5) {
+        message.error('You can select up to 5 seats per booking');
+      } else {
+        setSelectedSeats(prev => [...prev, seat]);
+      }
     }
-  }
-};
+  };
 
-// ฟังก์ชันยืนยันการจอง
-const handleConfirmBooking = async () => {
-  if (selectedSeats.length === 0) {
-    message.error('Please select the seat');
-    return;
-  }
+  const totalPrice = selectedSeats.reduce((total, seat) => {
+    const rowLetter = seat.charAt(0);
+    if (['G', 'H'].includes(rowLetter)) {
+      return total + 150;
+    } else {
+      return total + 100;
+    }
+  }, 0);
 
-  if (selectedSeats.length > 5) {
-    message.error('You can select up to 5 seats per booking');
-    return;
-  }
-
-  if (!memberID) {
-    message.error('Member ID not found');
-    return;
-  }
-
-  const result = await bookSeats(showtimeID, theaterID, memberID, selectedSeats);
-
-  if (result.success) {
-    console.log(result);
-    console.log(theaterID);
-
-    message.success(result.message);
-    setSelectedSeats([]); // Reset selected seats
-    await fetchBookedSeats(); // ดึงข้อมูลที่นั่งใหม่
-  } else {
-    message.error(result.message);
-  }
-};
-
-
-  // คำนวณราคาที่นั่ง
-  const totalPrice = selectedSeats.length * 100;
+  const handleConfirmBooking = async () => {
+    if (selectedSeats.length === 0) {
+      message.error('Please select the seat');
+      return;
+    }
+  
+    if (selectedSeats.length > 5) {
+      message.error('You can select up to 5 seats per booking');
+      return;
+    }
+  
+    if (!memberID) {
+      message.error('Member ID not found');
+      return;
+    }
+  
+    const result = await bookSeats(showtimeID, theaterID, memberID, selectedSeats);
+  
+    if (result.success) {
+      message.success(result.message);
+      setSelectedSeats([]);
+  
+      // ดึง ticketID จาก result ที่ได้รับจาก backend
+      const ticketID = result.ticketID;
+  
+      // ส่ง ticketID พร้อมกับข้อมูลอื่น ๆ ไปยังหน้า Payment
+      console.log("Navigating to Payment with data: ", {
+        totalPrice,
+        selectedSeats,
+        ticketID,  // เพิ่ม ticketID ที่ได้รับจาก backend
+      });
+  
+      // นำทางไปยังหน้า Payment พร้อมส่งข้อมูลไปด้วย
+      navigate('/payment', { state: { totalPrice, selectedSeats, ticketID } });
+    } else {
+      message.error(result.message);
+    }
+  };
+  
 
   return (
-    <div className="container">
-      <div style={{ textAlign: 'left', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '20px', marginLeft: 200, marginRight: 200, display: 'flex' }}>
-        <div>
-          <h2 style={{ margin: 0 }}>SELECT TIME HERE!</h2>
-          <div style={{ padding: 6 }}>
-            <Select
-              value={showtimeID}
-              style={{ width: 120, height: 40 }}
-              onChange={(value) => setShowtimeID(value)}
-            >
-              <Option value={1}>12:00 AM</Option>
-              <Option value={2}>14:00 PM</Option>
-              <Option value={3}>12:00 PM (Theater 3)</Option>
-            </Select>
-          </div>
-          <div style={{ padding: 6 }}>
-            <Select
-              value={theaterID}
-              style={{ width: 120, height: 40 }}
-              onChange={(value) => setTheaterID(value)}
-            >
-              <Option value={1}>Theater 1</Option>
-              <Option value={2}>Theater 2</Option>
-              <Option value={3}>Theater 3</Option>
-            </Select>
-          </div>
-        </div>
-        <div style={{ textAlign: 'left', marginLeft: 'auto', alignItems: 'flex-end', display: 'flex' }}>
-          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
-            <div style={{ width: '15px', height: '15px', backgroundColor: '#1A2C50', marginRight: '5px', borderRadius: '3px' }}></div>
-            <p style={{ margin: 0, marginRight: '10px' }}>Booked</p>
-            <div style={{ width: '15px', height: '15px', backgroundColor: 'white', marginRight: '5px', borderRadius: '3px', border: '1px solid black' }}></div>
-            <p style={{ margin: 0, marginRight: '10px' }}>Available</p>
-            <div style={{ width: '15px', height: '15px', backgroundColor: '#007bff', marginRight: '5px', borderRadius: '3px' }}></div>
-            <p style={{ margin: 0 }}>Selected</p>
-          </div>
-        </div>
-      </div>
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <div>
-          {seats.map((row, rowIndex) => (
-            <div key={rowIndex} className={`seat-row ${rowIndex >= 6 ? 'yellow-border' : ''}`}>
-              {row.map(seat => (
-                <Seat
-                  key={seat}
-                  seat={seat}
-                  isBooked={bookedSeats.includes(seat)}
-                  isSelected={selectedSeats.includes(seat)}
-                  onSelect={() => onSelectSeat(seat)}
-                />
-              ))}
+    <div className='seat-container'>
+      <div className="container">
+        <div style={{ textAlign: 'left', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '20px', marginLeft: 200, marginRight: 200, display: 'flex' }}>
+          <div>
+            <h2 style={{ margin: 0 }}>SELECT TIME HERE!</h2>
+            <div style={{ padding: 6 }}>
+              <Select
+                value={showtimeID}
+                style={{ width: 120, height: 40 }}
+                onChange={(value) => setShowtimeID(value)}
+              >
+                <Option value={1}>12:00 AM</Option>
+                <Option value={2}>14:00 PM</Option>
+                <Option value={3}>12:00 PM (Theater 3)</Option>
+              </Select>
             </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="beforesummary">
-        <h2 style={{ color: 'black',fontFamily:'Arial',fontWeight:'bold',fontSize:'18px'}}>
-          MERJE CINIPLEX
-        </h2>
-      </div>
-
-      <div className="summary">
-        <div className="summary-content" style={{ alignContent:'center' }}>
-          <div style={{ flex: 1 }}>
-            <h3>Total</h3>
-            <h3 style={{ fontSize: '27px', color: '#FFD700' }}>Rp. {totalPrice.toLocaleString()}</h3>
+            <div style={{ padding: 6 }}>
+              <Select
+                value={theaterID}
+                style={{ width: 120, height: 40 }}
+                onChange={(value) => setTheaterID(value)}
+              >
+                <Option value={1}>Theater 1</Option>
+                <Option value={2}>Theater 2</Option>
+                <Option value={3}>Theater 3</Option>
+              </Select>
+            </div>
           </div>
-          <div style={{ flex: 2 }}>
-            <h3>Seat</h3>
-            <h3 style={{ fontSize: '27px', color: '#FFD700' }}>: {selectedSeats.join(', ')}</h3>
-          </div>
-          <div style={{ flex: 2, textAlign: 'center' }}>  {/* รวมคอลัมน์สำหรับปุ่ม */}
-            <Button type="default" style={{ marginRight: '20px', width: '180px', height: '40px' }}>BACK TO</Button>
-            <Button type="primary" style={{ width: '180px', height: '40px', backgroundColor: '#FFD700', border: '2px solid #FFD700', color: 'black' }} onClick={handleConfirmBooking}>CONFIRM</Button>
+          <div style={{ textAlign: 'left', marginLeft: 'auto', alignItems: 'flex-end', display: 'flex' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
+              <div style={{ width: '15px', height: '15px', backgroundColor: '#1A2C50', marginRight: '5px', borderRadius: '3px' }}></div>
+              <p style={{ margin: 0, marginRight: '10px' }}>Booked</p>
+              <div style={{ width: '15px', height: '15px', backgroundColor: 'white', marginRight: '5px', borderRadius: '3px', border: '1px solid black' }}></div>
+              <p style={{ margin: 0, marginRight: '10px' }}>Available</p>
+              <div style={{ width: '15px', height: '15px', backgroundColor: '#007bff', marginRight: '5px', borderRadius: '3px' }}></div>
+              <p style={{ margin: 0 }}>Selected</p>
+            </div>
           </div>
         </div>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <div>
+            {seats.map((row, rowIndex) => (
+              <div key={rowIndex} className={`seat-row ${rowIndex >= 6 ? 'yellow-border' : ''}`}>
+                {row.map(seat => (
+                  <Seat
+                    key={seat}
+                    seat={seat}
+                    isBooked={bookedSeats.includes(seat)}
+                    isSelected={selectedSeats.includes(seat)}
+                    onSelect={() => onSelectSeat(seat)}
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="beforesummary">
+          <h2 style={{ color: 'black', fontFamily: 'Arial', fontWeight: 'bold', fontSize: '18px' }}>
+            MERJE CINIPLEX
+          </h2>
+        </div>
+
+        <div className="summary">
+          <div className="summary-content" style={{ alignContent: 'center' }}>
+            <div style={{ flex: 1 }}>
+              <h3>Total</h3>
+              <h3 style={{ fontSize: '27px', color: '#FFD700' }}>Rp. {totalPrice.toLocaleString()}</h3>
+            </div>
+            <div style={{ flex: 2 }}>
+              <h3>Seat</h3>
+              <h3 style={{ fontSize: '27px', color: '#FFD700' }}>: {selectedSeats.join(', ')}</h3>
+            </div>
+            <div style={{ flex: 2, textAlign: 'center' }}>
+              <Button type="default" style={{ marginRight: '20px', width: '180px', height: '40px' }}>BACK TO</Button>
+              <Button type="primary" style={{ width: '180px', height: '40px', backgroundColor: '#FFD700', border: '2px solid #FFD700', color: 'black' }} onClick={handleConfirmBooking}>CONFIRM</Button>
+            </div>
+          </div>
+        </div>
+
       </div>
-
-
     </div>
   );
-  
 };
 
 export default SeatMap;

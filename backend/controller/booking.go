@@ -102,5 +102,10 @@ func BookSeats(c *gin.Context) {
 	}
 
 	// ส่งข้อความตอบกลับเมื่อการจองเสร็จสิ้น
-	c.JSON(http.StatusOK, gin.H{"message": "Booking confirmed successfully"})
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "Booking confirmed successfully",
+		"ticketID": ticket.ID,  // ส่ง ticketID กลับไปที่ frontend
+	})
+	
 }
