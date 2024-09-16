@@ -7,7 +7,7 @@ import './home.css';
 
 interface Showtime {
   ID: number;
-  ShowDate: string;
+  Showdate: string;
   MovieID: number;
   TheaterID: number;
   Movie?: {

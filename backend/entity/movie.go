@@ -1,7 +1,7 @@
 package entity
 
 import (
-	"time"
+	
 
 	"gorm.io/gorm"
 )
@@ -14,8 +14,8 @@ type Movie struct {
 	Director      string
 	Actor         string
 	Synopsis      string
-	ReleaseDate   time.Time  // เปลี่ยนจาก string เป็น time.Time
-	Poster        string
+	ReleaseDate   string  // เปลี่ยนจาก string เป็น time.Time
+	Poster        []byte        `gorm:"type:blob"`                  // เก็บภาพโปสเตอร์เป็น blob
 
 	// ความสัมพันธ์กับ ShowTimes
 	Showtimes []ShowTimes `gorm:"foreignKey:MovieID"`

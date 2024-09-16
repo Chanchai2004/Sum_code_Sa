@@ -39,10 +39,10 @@ func main() {
 		// Movie Routes
 		router.GET("/movies", controller.ListMovies)         // แสดงรายการหนังทั้งหมด
 		router.GET("/movie/:id", controller.GetMovie)        // แสดงรายละเอียดหนังโดยใช้ ID
-		router.POST("/movies", controller.CreateMovie)       // เพิ่มหนังใหม่
-		router.PATCH("/movies/:id", controller.UpdateMovie)  // อัปเดตข้อมูลหนัง
+		router.POST("/movies", controller.CreateMovie)       // เพิ่มหนังใหม่พร้อมโปสเตอร์ (รับไฟล์ poster)
+		router.PATCH("/movies/:id", controller.UpdateMovie)  // อัปเดตข้อมูลหนังพร้อมโปสเตอร์ (รับไฟล์ poster)
 		router.DELETE("/movies/:id", controller.DeleteMovie) // ลบหนังโดยใช้ ID
-
+		router.GET("/movie/:id/poster", controller.GetMoviePosterByID)
 		// Theater Routes
 		router.GET("/theaters", controller.ListTheaters)
 
@@ -52,7 +52,7 @@ func main() {
 		router.GET("/showtimes", controller.ListShowTimes)
 		router.PATCH("/showtimes/:id", controller.UpdateShowTime)
 		router.DELETE("/showtimes/:id", controller.DeleteShowTime)
-		router.DELETE("/showtimes", controller.DeleteShowTimeByDetails) // เพิ่มเส้นทางสำหรับการลบโดยใช้รายละเอียด
+		router.DELETE("/showtimes", controller.DeleteShowTimeByDetails)// เพิ่มเส้นทางสำหรับการลบโดยใช้รายละเอียด
 
 		// Seat Routes
 		router.GET("/seats", controller.ListSeats)

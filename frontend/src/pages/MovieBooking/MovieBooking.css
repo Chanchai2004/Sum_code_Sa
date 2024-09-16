@@ -1,0 +1,93 @@
+/* Slider Container */
+.slick-slider {
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    user-select: none;
+    touch-action: pan-y;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Hide dots and default arrows */
+  .slick-dots, .slick-prev:before, .slick-next:before {
+    display: none;
+  }
+  
+  /* Arrow Styling */
+.slick-prev-arrow, .slick-next-arrow {
+    font-size: 24px;
+    color: black;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    cursor: pointer;
+  }
+  
+  .slick-prev-arrow {
+    left: -20px; /* เพิ่มระยะห่างทางซ้าย */
+  }
+  
+  .slick-next-arrow {
+    right: -20px; /* เพิ่มระยะห่างทางขวา */
+  }
+  
+  .slick-prev-arrow:hover, .slick-next-arrow:hover {
+    color: #333;
+  }
+  
+  /* Slider List (visible area) */
+  .slick-list {
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Slider Track (contains the slides) */
+  .slick-track {
+    display: flex;
+    transition: transform 0.5s ease; /* Smooth slide transition */
+  }
+  
+  /* Individual Slide */
+  .slick-slide {
+    display: inline-block;
+    width: 80px; /* Customize width of each card */
+    padding: 0 10px; /* Space between slides */
+  }
+  
+  /* Styling for date card */
+  .date-card {
+    width: 100%;
+    height: 100px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .date-card.selected {
+    background-color: #b0b0b0;
+    color: white;
+  }
+  
+  .date-card:hover {
+    background-color: #1c2b59;
+    color: white;
+  }
+  
+  .date-text {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .date-month {
+    text-transform: uppercase;
+  }
+  
+  
+  

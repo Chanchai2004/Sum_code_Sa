@@ -1,13 +1,14 @@
 package entity
 
 import (
-   "time"
-   "gorm.io/gorm"
+	"time"
+
+	"gorm.io/gorm"
 )
 
 type ShowTimes struct {
 	gorm.Model
-	ShowDate  time.Time // เปลี่ยนเป็น time.Time
+	Showdate  time.Time // เปลี่ยนเป็น time.Time
 	MovieID   uint
 	TheaterID uint
 

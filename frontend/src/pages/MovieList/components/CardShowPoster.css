@@ -1,0 +1,19 @@
+.card-custom {
+  padding: 0;
+  border: none;
+  margin: 15px;
+  transition: transform 0.3s, box-shadow 0.3s; /* ทำให้การ์ดมีการเคลื่อนไหวที่นุ่มนวล */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* เพิ่มเงาเล็กน้อย */
+}
+
+.card-custom:hover {
+  transform: scale(1.05); /* ขยายขนาดการ์ดเล็กน้อยเมื่อ hover */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* เพิ่มเงาเมื่อ hover */
+}
+
+.poster-img {
+  height: 66.66%; /* กำหนดขนาดรูปภาพให้เป็น 2/3 ของการ์ด */
+  object-fit: cover;
+  width: 100%;
+  border-radius: 0;
+}

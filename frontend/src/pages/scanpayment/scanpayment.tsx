@@ -19,7 +19,7 @@ const ScanPayment: React.FC = () => {
   const [totalPrice, setTotalPrice] = useState<number>(0); // สำหรับข้อมูลราคาทั้งหมด
   const [ticketID, setTicketID] = useState<number | null>(null); // สำหรับ TicketID
   const [theaterID, setTheaterID] = useState<number | null>(null);
-  const [showDate, setShowDate] = useState<string>(""); // กำหนด state สำหรับ ShowDate
+  const [Showdate, setShowdate] = useState<string>(""); // กำหนด state สำหรับ Showdate
   const [showTime, setShowTime] = useState<string>(""); // เก็บค่าเวลา
 
   useEffect(() => {
@@ -36,10 +36,10 @@ const ScanPayment: React.FC = () => {
     if (storedSeatNo) {setSeatNo(storedSeatNo);}
     if (storedTotalPrice) {setTotalPrice(parseFloat(storedTotalPrice));}
 
-    // Fetch ชื่อภาพยนตร์และ ShowDate จาก ShowTimeID
+    // Fetch ชื่อภาพยนตร์และ Showdate จาก ShowTimeID
     if (showtimeID) { fetchMovieDetailsByShowtimeID(showtimeID);}}, [showtimeID]);
 
-  // ฟังก์ชันดึงข้อมูลชื่อภาพยนตร์และ ShowDate จาก ShowTimeID
+  // ฟังก์ชันดึงข้อมูลชื่อภาพยนตร์และ Showdate จาก ShowTimeID
   const fetchMovieDetailsByShowtimeID = async (id: number) => {
     try {
       const response = await fetch(`http://localhost:8000/api/showtimes/${id}`);
@@ -51,10 +51,10 @@ const ScanPayment: React.FC = () => {
         if (data.Movie && data.Movie.MovieName) {
           setMovieName(data.Movie.MovieName); // แสดงชื่อภาพยนตร์จาก Movie.MovieName
   
-          // แยกวันที่และเวลาออกจาก ShowDate
-          const showDateObj = new Date(data.ShowDate);
-          setShowDate(showDateObj.toLocaleDateString()); // แปลงวันที่
-          setShowTime(showDateObj.toLocaleTimeString()); // แปลงเวลา
+          // แยกวันที่และเวลาออกจาก Showdate
+          const ShowdateObj = new Date(data.Showdate);
+          setShowdate(ShowdateObj.toLocaleDateString()); // แปลงวันที่
+          setShowTime(ShowdateObj.toLocaleTimeString()); // แปลงเวลา
   
           setTheaterID(data.Theater.TheaterName); // แสดงชื่อโรงภาพยนตร์จาก Theater.TheaterName
         } else {
@@ -196,7 +196,7 @@ useEffect(() => {
             <h1 style={styles.title}>{movieName}</h1>
             <div style={styles.info}>
               <p>
-                <img src={IconDate} alt="date" style={styles.icon} /> {showDate || "Loading..."}
+                <img src={IconDate} alt="date" style={styles.icon} /> {Showdate || "Loading..."}
               </p>
               <p>
                 <img src={Icontime} alt="time" style={styles.icon} /> {showTime || "Loading..."}

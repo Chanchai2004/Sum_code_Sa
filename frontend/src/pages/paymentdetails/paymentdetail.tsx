@@ -23,7 +23,7 @@ const PaymentDetail: React.FC = () => {
   const [showtimeID, setShowtimeID] = useState<number | null>(null);
   const [movieName, setMovieName] = useState<string>("");
   const [theaterID, setTheaterID] = useState<number | null>(null);
-  const [showDate, setShowDate] = useState<string>(""); // กำหนด state สำหรับ ShowDate
+  const [Showdate, setShowdate] = useState<string>(""); // กำหนด state สำหรับ Showdate
   const [showTime, setShowTime] = useState<string>(""); // เก็บค่าเวลา
 
 
@@ -39,13 +39,13 @@ const PaymentDetail: React.FC = () => {
     if (storedShowtimeID) { setShowtimeID(parseInt(storedShowtimeID)); }
     if (storedTheaterID) { setTheaterID(parseInt(storedTheaterID)); }
 
-    // Fetch ชื่อภาพยนตร์และ ShowDate จาก ShowTimeID
+    // Fetch ชื่อภาพยนตร์และ Showdate จาก ShowTimeID
     if (showtimeID) {
       fetchMovieDetailsByShowtimeID(showtimeID);
     }
   }, [showtimeID]);
 
-  // ฟังก์ชันดึงข้อมูลชื่อภาพยนตร์และ ShowDate จาก ShowTimeID
+  // ฟังก์ชันดึงข้อมูลชื่อภาพยนตร์และ Showdate จาก ShowTimeID
   const fetchMovieDetailsByShowtimeID = async (id: number) => {
     try {
       const response = await fetch(`http://localhost:8000/api/showtimes/${id}`);
@@ -57,9 +57,9 @@ const PaymentDetail: React.FC = () => {
       if (response.ok) {
         if (data.Movie && data.Movie.MovieName) {
           setMovieName(data.Movie.MovieName);
-          const showDateObj = new Date(data.ShowDate);
-          setShowDate(showDateObj.toLocaleDateString());
-          setShowTime(showDateObj.toLocaleTimeString());
+          const ShowdateObj = new Date(data.Showdate);
+          setShowdate(ShowdateObj.toLocaleDateString());
+          setShowTime(ShowdateObj.toLocaleTimeString());
           setTheaterID(data.Theater.TheaterName);
         } else {
           console.error('Movie data not found in the response.');
@@ -103,7 +103,7 @@ const PaymentDetail: React.FC = () => {
             <h1 style={styles.title}>{movieName}</h1>
             <div style={styles.info}>
               <p>
-                <img src={IconDate} alt="date" style={styles.icon} /> {showDate || "Loading..."}
+                <img src={IconDate} alt="date" style={styles.icon} /> {Showdate || "Loading..."}
               </p>
               <p>
                 <img src={Icontime} alt="time" style={styles.icon} /> {showTime || "Loading..."}

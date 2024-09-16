@@ -49,9 +49,13 @@ async function GetGenders() {
 }
 
 // ฟังก์ชันเพื่อลบสมาชิกตาม ID
-async function DeleteMemberByID(id: Number | undefined) {
+async function DeleteMemberByID(id: Number | undefined, adminID?: number, password?: string) {
   const requestOptions = {
     method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: password && adminID ? JSON.stringify({ password, adminID }) : undefined,  // ส่ง AdminID และ Password ถ้ามี
   };
 
   let res = await fetch(`${apiUrl}/members/${id}`, requestOptions)
@@ -59,8 +63,12 @@ async function DeleteMemberByID(id: Number | undefined) {
       if (res.status === 200) {
         return true;
       } else {
-        return false;
+        return res.json().then((err) => Promise.reject(err));
       }
+    })
+    .catch((error) => {
+      console.error("Error deleting member:", error);
+      return false;
     });
 
   return res;
@@ -70,9 +78,6 @@ async function DeleteMemberByID(id: Number | undefined) {
 async function GetMemberById(id: Number | undefined) {
   const requestOptions = {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
   };
 
   let res = await fetch(`${apiUrl}/members/${id}`, requestOptions)
@@ -150,7 +155,12 @@ async function GetMovies() {
 }
 
 // ฟังก์ชันเพื่อดึงข้อมูลหนังตาม ID
-async function GetMovieById(id: Number | undefined) {
+async function GetMovieById(id: number | undefined) {
+  if (id === undefined) {
+    console.error("Movie ID is undefined");
+    return false;
+  }
+
   const requestOptions = {
     method: "GET",
     headers: {
@@ -158,24 +168,29 @@ async function GetMovieById(id: Number | undefined) {
     },
   };
 
-  let res = await fetch(`${apiUrl}/movies/${id}`, requestOptions)
-    .then((res) => {
-      if (res.status === 200) {
-        return res.json();
-      } else {
-        return false;
-      }
-    });
+  try {
+    const res = await fetch(`${apiUrl}/movie/${id}`, requestOptions);
 
-  return res;
+    if (res.status === 200) {
+      return await res.json();
+    } else if (res.status === 404) {
+      console.error("Movie not found");
+      return false;
+    } else {
+      console.error("Failed to fetch movie, status code:", res.status);
+      return false;
+    }
+  } catch (error) {
+    console.error("Error fetching movie by ID:", error);
+    return false;
+  }
 }
 
-// ฟังก์ชันเพื่อสร้างหนังใหม่
-async function CreateMovie(data: MoviesInterface) {
+
+async function CreateMovie(formData: FormData) {
   const requestOptions = {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+    body: formData,
   };
 
   let res = await fetch(`${apiUrl}/movies`, requestOptions)
@@ -190,6 +205,7 @@ async function CreateMovie(data: MoviesInterface) {
 
   return res;
 }
+
 
 // ฟังก์ชันเพื่ออัปเดตข้อมูลหนัง
 async function UpdateMovie(data: MoviesInterface) {
@@ -330,6 +346,28 @@ async function DeleteShowtimeByID(id: Number | undefined) {
   return res;
 }
 
+async function CheckAdminPassword(adminID: number, password: string) {
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id: adminID, password }),  // ส่ง AdminID และ Password
+  };
+
+  let res = await fetch(`${apiUrl}/check-admin-password`, requestOptions)
+    .then((response) => response.json())
+    .then((res) => {
+      if (res.success) {
+        return { status: true };
+      } else {
+        return { status: false, message: res.error };
+      }
+    });
+
+  return res;
+}
+
 // ฟังก์ชันเพื่อดึงข้อมูล Tickets ตาม ID
 async function GetTicketById(id: Number | undefined) {
   if (!id || isNaN(Number(id))) {
@@ -442,4 +480,5 @@ export {
   DeleteShowtimeByID,
   bookSeats,
   GetBookedSeats,  // เพิ่มฟังก์ชัน GetBookedSeats เพื่อดึงข้อมูลที่นั่งที่ถูกจอง
+  CheckAdminPassword
 };

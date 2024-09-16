@@ -98,7 +98,6 @@ func SetupDatabase() {
 	db.FirstOrCreate(Member3, &entity.Member{
 		Email: "sa3@gmail.com",
 	})
-	
 
 	// สร้างข้อมูลภาพยนตร์ 3 เรื่อง
 	movies := []entity.Movie{
@@ -152,13 +151,13 @@ func SetupDatabase() {
 
 	// สร้างข้อมูลการฉายภาพยนตร์
 	showTimes := []entity.ShowTimes{
-		{ShowDate: time.Date(2024, 10, 28, 12, 0, 0, 0, time.UTC), MovieID: movies[0].ID, TheaterID: theaters[0].ID},
-		{ShowDate: time.Date(2024, 10, 28, 14, 0, 0, 0, time.UTC), MovieID: movies[0].ID, TheaterID: theaters[0].ID},
-		{ShowDate: time.Date(2024, 10, 29, 12, 0, 0, 0, time.UTC), MovieID: movies[2].ID, TheaterID: theaters[2].ID},
+		{Showdate: time.Date(2024, 10, 28, 12, 0, 0, 0, time.UTC), MovieID: movies[0].ID, TheaterID: theaters[0].ID},
+		{Showdate: time.Date(2024, 10, 28, 14, 0, 0, 0, time.UTC), MovieID: movies[0].ID, TheaterID: theaters[0].ID},
+		{Showdate: time.Date(2024, 10, 29, 12, 0, 0, 0, time.UTC), MovieID: movies[2].ID, TheaterID: theaters[2].ID},
 	}
 
 	for i := range showTimes {
-		if err := db.FirstOrCreate(&showTimes[i], entity.ShowTimes{ShowDate: showTimes[i].ShowDate, MovieID: showTimes[i].MovieID, TheaterID: showTimes[i].TheaterID}).Error; err != nil {
+		if err := db.FirstOrCreate(&showTimes[i], entity.ShowTimes{Showdate: showTimes[i].Showdate, MovieID: showTimes[i].MovieID, TheaterID: showTimes[i].TheaterID}).Error; err != nil {
 			fmt.Printf("Error creating showtime: %s\n", err)
 		}
 	}

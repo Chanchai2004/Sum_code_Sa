@@ -56,13 +56,13 @@ const ShowtimeManagement: React.FC = () => {
         .then(response => response.json())
         .then(data => {
           const transformedSchedule: ShowTimeInterface[] = data.flatMap((item: any) => {
-            const showdate = moment(item.Showdate);
+            const Showdate = moment(item.Showdate);
   
-            if (selectedDate && showdate.format('YYYY-MM-DD') !== selectedDate.format('YYYY-MM-DD')) {
+            if (selectedDate && Showdate.format('YYYY-MM-DD') !== selectedDate.format('YYYY-MM-DD')) {
               return [];
             }
   
-            const startTime = showdate.hours();
+            const startTime = Showdate.hours();
             const durationInMinutes = Math.ceil(item.Movie.MovieDuration / 60 / 1e9);
             const endTime = Math.min(startTime + Math.ceil(durationInMinutes / 60), 22);
             const theater = item.Theater.TheaterName;

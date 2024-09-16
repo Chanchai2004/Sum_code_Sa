@@ -2,17 +2,18 @@ import React, { useEffect } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import Sidebar from './components/Sidebar/Sidebar';
 import Members from './pages/Member/Member';
-import Showtime from './pages/Showtime/Showtime';
 import Analytics from './pages/Analytics/Analytics';
 import Login from './pages/Login/login';
-import Dashboard from './pages/Dashboard/Dashboard';
-import Home from './pages/Home/home';
+import Movie from './pages/Movie/Movie';
+//import Home from './pages/Home/home';
 import MyTicket from './pages/MyTicket/myticket';
 import SeatBooking from './pages/SeatBooking/SeatBooking'; // เพิ่มการอิมพอร์ต SeatBooking
 import PaymentDetail from './pages/paymentdetails/paymentdetail';
 import ScanPayment from './pages/scanpayment/scanpayment';
 import Ticket from './pages/ticket/ticket';
-
+import MovieList from './pages/MovieList/MovieList';
+import ShowtimeManagement from './pages/Showtime/Showtime';
+import MovieBooking from './pages/MovieBooking/MovieBooking';
 
 const App: React.FC = () => {
     const navigate = useNavigate();
@@ -22,10 +23,10 @@ const App: React.FC = () => {
 
     useEffect(() => {
         if (isLoggedIn) {
-            if (isAdmin && !['/dashboard', '/showtimes', '/members', '/analytics'].includes(location.pathname)) {
-                navigate('/dashboard');
+            if (isAdmin && !['/movie', '/showtimes', '/members', '/analytics'].includes(location.pathname)) {
+                navigate('/movie');
             }
-            if (!isAdmin && !['/home', '/myticket', '/seatbooking'].includes(location.pathname)) { // เพิ่ม '/seatbooking' ในการตรวจสอบ
+            if (!isAdmin && !['/home', '/myticket', '/seatbooking', '/moviebooking' ].includes(location.pathname)) { // เพิ่ม '/seatbooking' ในการตรวจสอบ
                 navigate('/home');
             }
         } else {
@@ -42,15 +43,16 @@ const App: React.FC = () => {
                     <Route path="/login" element={<Login />} />
                     
                     {/* เส้นทางสำหรับผู้ใช้ Admin */}
-                    <Route path="/dashboard" element={isLoggedIn && isAdmin ? <Dashboard /> : <Navigate to="/login" />} />
-                    <Route path="/showtimes" element={isLoggedIn && isAdmin ? <Showtime /> : <Navigate to="/login" />} />
+                    <Route path="/movie" element={isLoggedIn && isAdmin ? <Movie /> : <Navigate to="/login" />} />
+                    <Route path="/showtimes" element={isLoggedIn && isAdmin ? <ShowtimeManagement /> : <Navigate to="/login" />} />
                     <Route path="/members" element={isLoggedIn && isAdmin ? <Members /> : <Navigate to="/login" />} />
                     <Route path="/analytics" element={isLoggedIn && isAdmin ? <Analytics /> : <Navigate to="/login" />} />
 
                     {/* เส้นทางสำหรับผู้ใช้ที่ไม่ใช่ Admin */}
-                    <Route path="/home" element={isLoggedIn && !isAdmin ? <Home /> : <Navigate to="/login" />} />
+                    <Route path="/home" element={isLoggedIn && !isAdmin ? <MovieList /> : <Navigate to="/login" />} />
                     <Route path="/myticket" element={isLoggedIn && !isAdmin ? <MyTicket /> : <Navigate to="/login" />} />
-                    <Route path="/seatbooking" element={isLoggedIn && !isAdmin ? <SeatBooking /> : <Navigate to="/login" />} />
+                    <Route path="/seatbooking" element={isLoggedIn && !isAdmin ? <SeatBooking /> : <Navigate to="/login" />}/>
+                    <Route path="/moviebooking" element={isLoggedIn && !isAdmin ? <MovieBooking /> : <Navigate to="/login" />} />
 
                     {/* เส้นทางสำหรับการชำระเงิน */}
                     <Route path="/paymentdetail" element={isLoggedIn && !isAdmin ? <PaymentDetail /> : <Navigate to="/login" />} />
