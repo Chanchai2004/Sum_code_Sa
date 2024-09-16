@@ -127,6 +127,7 @@ const MovieBooking: React.FC = () => {
         const showtimeID = showtime.ID;
         const TheaterID = showtime.TheaterID;
         navigate('/seatbooking', { state: { showtimeID, TheaterID } });
+        
       } else {
         console.error('Showtime not found');
       }
@@ -135,6 +136,7 @@ const MovieBooking: React.FC = () => {
     }
   };
 
+  
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Navigation */}

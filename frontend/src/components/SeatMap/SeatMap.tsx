@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Select, message } from 'antd';
-import { useNavigate } from 'react-router-dom'; // นำเข้า useNavigate
+import { useNavigate, useLocation } from 'react-router-dom'; // นำเข้า useNavigate และ useLocation
 import Seat from './Seat';
 import './SeatMap.css';
 import { bookSeats } from '../../services/https';
@@ -38,24 +38,19 @@ const SeatMap: React.FC = () => {
   const [bookedSeats, setBookedSeats] = useState<string[]>([]);
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
   const [memberID, setMemberID] = useState<number | null>(null);
-  const [showtimeID, setShowtimeID] = useState<number>(1);
-  const [theaterID, setTheaterID] = useState<number>(1);
 
   const navigate = useNavigate(); // ใช้ navigate เพื่อนำทางไปหน้าอื่น
+  const location = useLocation(); // รับค่าจาก navigate
+  const { showtimeID, TheaterID } = location.state || {}; // ดึง showtimeID และ theaterID จาก location.state
 
   // ดึงข้อมูลจาก localStorage
   useEffect(() => {
     const storedMemberID = localStorage.getItem('memberID');
-    const storedShowtimeID = localStorage.getItem('showtimeID');
-    const storedTheaterID = localStorage.getItem('theaterID');
-
     if (storedMemberID) setMemberID(Number(storedMemberID));
-    if (storedShowtimeID) setShowtimeID(Number(storedShowtimeID));
-    if (storedTheaterID) setTheaterID(Number(storedTheaterID));
   }, []);
 
   // สร้าง seatMap โดยใช้ theaterID เพื่อกำหนด seatID ให้ถูกต้อง
-  const seatMap = generateSeatMap(seats, theaterID);
+  const seatMap = generateSeatMap(seats, TheaterID);
 
   // ดึงข้อมูลที่นั่งที่ถูกจองจาก API
   const fetchBookedSeats = async () => {
@@ -64,7 +59,6 @@ const SeatMap: React.FC = () => {
       const seatsData = await response.json();
 
       if (response.ok && seatsData.data) {
-        // แปลง SeatID เป็นชื่อที่นั่ง
         const bookedSeatsArray = seatsData.data.map((seatID: number) => seatMap[seatID]);
         setBookedSeats(bookedSeatsArray); // อัปเดตสถานะที่นั่งที่ถูกจอง
       } else {
@@ -78,7 +72,7 @@ const SeatMap: React.FC = () => {
 
   useEffect(() => {
     fetchBookedSeats();
-  }, [showtimeID, theaterID]);
+  }, [showtimeID, TheaterID]);
 
   const onSelectSeat = (seat: string) => {
     if (selectedSeats.includes(seat)) {
@@ -117,7 +111,7 @@ const SeatMap: React.FC = () => {
       return;
     }
   
-    const result = await bookSeats(showtimeID, theaterID, memberID, selectedSeats);
+    const result = await bookSeats(showtimeID, TheaterID, memberID, selectedSeats);
   
     if (result.success) {
       message.success(result.message);
@@ -128,60 +122,23 @@ const SeatMap: React.FC = () => {
   
       // ส่ง ticketID พร้อมกับข้อมูลอื่น ๆ ไปยังหน้า Payment
       console.log("Navigating to Payment with data: ", {
+        showtimeID,
         totalPrice,
         selectedSeats,
         ticketID,  // เพิ่ม ticketID ที่ได้รับจาก backend
       });
   
       // นำทางไปยังหน้า Payment พร้อมส่งข้อมูลไปด้วย
-      navigate('/paymentdetail', { state: { totalPrice, selectedSeats, ticketID } });
+      navigate('/paymentdetail', { state: { totalPrice, selectedSeats, ticketID,showtimeID } });
       console.log("นำทางแต่ไม่ไป");
     } else {
       message.error(result.message);
     }
   };
-  
 
   return (
     <div className='seat-container'>
       <div className="container">
-        <div style={{ textAlign: 'left', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '20px', marginLeft: 200, marginRight: 200, display: 'flex' }}>
-          <div>
-            <h2 style={{ margin: 0 }}>SELECT TIME HERE!</h2>
-            <div style={{ padding: 6 }}>
-              <Select
-                value={showtimeID}
-                style={{ width: 120, height: 40 }}
-                onChange={(value) => setShowtimeID(value)}
-              >
-                <Option value={1}>12:00 AM</Option>
-                <Option value={2}>14:00 PM</Option>
-                <Option value={3}>12:00 PM (Theater 3)</Option>
-              </Select>
-            </div>
-            <div style={{ padding: 6 }}>
-              <Select
-                value={theaterID}
-                style={{ width: 120, height: 40 }}
-                onChange={(value) => setTheaterID(value)}
-              >
-                <Option value={1}>Theater 1</Option>
-                <Option value={2}>Theater 2</Option>
-                <Option value={3}>Theater 3</Option>
-              </Select>
-            </div>
-          </div>
-          <div style={{ textAlign: 'left', marginLeft: 'auto', alignItems: 'flex-end', display: 'flex' }}>
-            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
-              <div style={{ width: '15px', height: '15px', backgroundColor: '#1A2C50', marginRight: '5px', borderRadius: '3px' }}></div>
-              <p style={{ margin: 0, marginRight: '10px' }}>Booked</p>
-              <div style={{ width: '15px', height: '15px', backgroundColor: 'white', marginRight: '5px', borderRadius: '3px', border: '1px solid black' }}></div>
-              <p style={{ margin: 0, marginRight: '10px' }}>Available</p>
-              <div style={{ width: '15px', height: '15px', backgroundColor: '#007bff', marginRight: '5px', borderRadius: '3px' }}></div>
-              <p style={{ margin: 0 }}>Selected</p>
-            </div>
-          </div>
-        </div>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <div>
             {seats.map((row, rowIndex) => (

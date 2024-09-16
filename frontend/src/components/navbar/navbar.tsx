@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Layout, Button } from 'antd';
-import './navbar.css';
+import styles from './navbar.module.css';
+
 import MerjeLogo from "../../assets/Merjelogo.png";
 
 const { Header } = Layout;
@@ -35,21 +36,21 @@ const Navbar: React.FC = () => {
   }, []);
 
   return (
-    <Header className="header">
-      <div className="logoContainer">
-      <img src={MerjeLogo} alt="MERJE Logo" className="logo" />{" "}
-      {/* แสดงรูปภาพ */}
-      </div>
-      <div className="menu">
-        <span className="link" onClick={() => navigate('/home')}>Home</span>
-        <span className="link" onClick={() => navigate('/myticket')}>MyTicket</span>
-        <span className="link" onClick={() => navigate('/news')}>MERJE news</span>
-        <span className="link" onClick={() => navigate('/reward')}>Reward</span>
-        <Button type="primary" className="button" onClick={handleLoginClick}>
-          {isLoggedIn ? 'Logout' : 'Login'}
-        </Button>
-      </div>
-    </Header>
+    <Header className={styles.header}>
+  <div className={styles.logoContainer}>
+    <img src={MerjeLogo} alt="MERJE Logo" className={styles.logo} />
+  </div>
+  <div className={styles.menu}>
+    <span className={styles.link} onClick={() => navigate('/home')}>Home</span>
+    <span className={styles.link} onClick={() => navigate('/myticket')}>MyTicket</span>
+    <span className={styles.link} onClick={() => navigate('/news')}>MERJE news</span>
+    <span className={styles.link} onClick={() => navigate('/reward')}>Reward</span>
+    <Button type="primary" className={styles.button} onClick={handleLoginClick}>
+      {isLoggedIn ? 'Logout' : 'Login'}
+    </Button>
+  </div>
+</Header>
+
   );
 };
 

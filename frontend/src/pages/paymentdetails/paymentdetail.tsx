@@ -14,66 +14,56 @@ import PromptPayLogo from "../../assets/promptpaylogo.png";
 
 const PaymentDetail: React.FC = () => {
   const navigate = useNavigate();
-  const location = useLocation(); // Use `useLocation` to access state from `SeatMap`
+  const location = useLocation(); // ใช้ `useLocation` เพื่อดึง state จาก SeatMap
 
-  // รับค่า totalPrice, selectedSeats และ ticketID จาก state ที่ส่งมาจาก SeatMap
-  const { totalPrice, selectedSeats, ticketID } = location.state || {};
-  console.log(ticketID);
+  // รับค่า totalPrice, selectedSeats, ticketID, และ showtimeID จาก state ที่ส่งมาจาก SeatMap
+  const { totalPrice, selectedSeats, ticketID, showtimeID } = location.state || {};
 
-  const [showtimeID, setShowtimeID] = useState<number | null>(null);
+
   const [movieName, setMovieName] = useState<string>("");
   const [theaterID, setTheaterID] = useState<number | null>(null);
-  const [Showdate, setShowdate] = useState<string>(""); // กำหนด state สำหรับ Showdate
+  const [showDate, setShowDate] = useState<string>(""); // กำหนด state สำหรับ ShowDate
   const [showTime, setShowTime] = useState<string>(""); // เก็บค่าเวลา
 
 
-
   useEffect(() => {
-    // Fetch ข้อมูลจาก localStorage หรือ API
-    localStorage.setItem("showtimeID", "1");
-    localStorage.setItem("ticketID", "1");
-    const storedShowtimeID = localStorage.getItem("showtimeID");
-    const storedTheaterID = localStorage.getItem("theaterID");
-    console.log("storedShowtime")
-
-    if (storedShowtimeID) { setShowtimeID(parseInt(storedShowtimeID)); }
-    if (storedTheaterID) { setTheaterID(parseInt(storedTheaterID)); }
-
-    // Fetch ชื่อภาพยนตร์และ Showdate จาก ShowTimeID
+    // ถ้ามี showtimeID ให้ทำการ fetch ข้อมูลภาพยนตร์
     if (showtimeID) {
       fetchMovieDetailsByShowtimeID(showtimeID);
+    } else {
+      console.error("Showtime ID not found");
     }
   }, [showtimeID]);
 
-  // ฟังก์ชันดึงข้อมูลชื่อภาพยนตร์และ Showdate จาก ShowTimeID
+  // ฟังก์ชันดึงข้อมูลชื่อภาพยนตร์และ ShowDate จาก showtimeID
   const fetchMovieDetailsByShowtimeID = async (id: number) => {
     try {
+      console.log("Fetching details for Showtime ID:", id);
       const response = await fetch(`http://localhost:8000/api/showtimes/${id}`);
-      const data = await response.json();
-      
-      // Log the full data to see what is being returned
-      console.log("Response Data:", data);
-      
+      const responseData = await response.json();
+
       if (response.ok) {
+        console.log("Ticket ID:", ticketID, "Showtime ID:", showtimeID, "Selected Seats:", selectedSeats, "Total Price:", totalPrice);
+        const data = responseData.data;
         if (data.Movie && data.Movie.MovieName) {
           setMovieName(data.Movie.MovieName);
-          const ShowdateObj = new Date(data.Showdate);
-          setShowdate(ShowdateObj.toLocaleDateString());
-          setShowTime(ShowdateObj.toLocaleTimeString());
-          setTheaterID(data.Theater.TheaterName);
+          const showDateObj = new Date(data.ShowDate);
+          setShowDate(showDateObj.toLocaleDateString());
+          setShowTime(showDateObj.toLocaleTimeString());
+          setTheaterID(data.Theater?.TheaterName || "Unknown Theater");
         } else {
-          console.error('Movie data not found in the response.');
+          console.error("Movie data not found in the response.");
         }
       } else {
-        console.error('Error fetching movie details:', response.statusText);
+        console.error("Error fetching movie details:", response.statusText);
       }
     } catch (error) {
-      console.error('Error fetching movie details:', error);
+      console.error("Error fetching movie details:", error);
     }
   };
-  
+
   const [selectedCoupon, setSelectedCoupon] = useState("");
-  
+
   const handleCouponChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedCoupon(e.target.value);
   };
@@ -87,9 +77,11 @@ const PaymentDetail: React.FC = () => {
   };
 
   useEffect(() => {
-    // ถ้าไม่ได้รับข้อมูลที่ต้องการ ให้ redirect กลับไปหน้า seatmap
-      navigate('/paymentdetail');
+    navigate("/paymentdetail");
+    
   }, [totalPrice, selectedSeats, ticketID, navigate]);
+  
+
   return (
     <>
       <Navbar />
@@ -103,14 +95,13 @@ const PaymentDetail: React.FC = () => {
             <h1 style={styles.title}>{movieName}</h1>
             <div style={styles.info}>
               <p>
-                <img src={IconDate} alt="date" style={styles.icon} /> {Showdate || "Loading..."}
+                <img src={IconDate} alt="date" style={styles.icon} /> {showDate || "Loading..."}
               </p>
               <p>
                 <img src={Icontime} alt="time" style={styles.icon} /> {showTime || "Loading..."}
               </p>
               <p>
-                <img src={Iconlo} alt="location" style={styles.icon} /> Merje
-                Cineplex
+                <img src={Iconlo} alt="location" style={styles.icon} /> Merje Cineplex
               </p>
               <h2>{theaterID} </h2>
               <div style={styles.languages}>
@@ -131,14 +122,15 @@ const PaymentDetail: React.FC = () => {
             <h3 style={styles.label}>Select Seat</h3>
             <div style={styles.innerContent}>
               <img src={Iconchair} alt="seat" style={styles.icon} />
-              <span style={styles.text}>{selectedSeats ? selectedSeats.join(", ") : "No seats selected"}</span>
+              <span style={styles.text}>{selectedSeats && selectedSeats.length > 0 ? selectedSeats.join(", ") : "No seats selected"}</span>
+
             </div>
           </div>
           <div style={styles.item}>
             <h3 style={styles.label}>Total</h3>
             <div style={styles.innerContent}>
               <img src={Iconcoin} alt="total" style={styles.icon} />
-              <span style={styles.text}> {totalPrice} THB</span>
+              <span style={styles.text}> {totalPrice ? `${totalPrice} THB` : "THB"}</span>
             </div>
           </div>
         </div>
@@ -189,7 +181,6 @@ const PaymentDetail: React.FC = () => {
     </>
   );
 };
-
 const styles = {
   container: {
     width: "1520px",

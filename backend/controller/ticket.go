@@ -41,7 +41,7 @@ func GetTicketsById(c *gin.Context) {
 	err := config.DB().Raw(`
 		SELECT 
 		    m.movie_name AS Movie,
-		    s.show_date AS Date,
+		    s.showdate AS Date,
 		    GROUP_CONCAT(se.seat_no, ', ') AS Seats,
 		    t.theater_name AS Theater
 		FROM bookings b
@@ -50,7 +50,7 @@ func GetTicketsById(c *gin.Context) {
 		JOIN seats se ON b.seat_id = se.id
 		JOIN theaters t ON se.theater_id = t.id
 		WHERE b.member_id = ?
-		GROUP BY b.ticket_id, s.show_date, t.theater_name
+		GROUP BY b.ticket_id, s.showdate, t.theater_name
 		ORDER BY b.ticket_id DESC;
 	`, memberID).Scan(&results).Error
 
