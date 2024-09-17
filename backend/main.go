@@ -33,7 +33,7 @@ func main() {
 		router.GET("/members", controller.ListMembers)
 		router.GET("/member/:id", controller.GetMember)
 		router.POST("/members", controller.CreateMember)
-		router.PATCH("/members", controller.UpdateMember)
+		router.PATCH("/members/:id", controller.UpdateMember)
 		router.DELETE("/members/:id", controller.DeleteMember)
 		router.GET("/mrewards/:member_id", controller.GetRewardsByMemberID)
 
