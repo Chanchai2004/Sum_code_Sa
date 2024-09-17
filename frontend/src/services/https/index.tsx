@@ -81,7 +81,7 @@ async function GetMemberById(id: Number | undefined) {
     method: "GET",
   };
 
-  let res = await fetch(`${apiUrl}/members/${id}`, requestOptions)
+  let res = await fetch(`${apiUrl}/member/${id}`, requestOptions)
     .then((res) => {
       if (res.status === 200) {
         return res.json();
