@@ -27,7 +27,7 @@ const App: React.FC = () => {
             if (isAdmin && !['/movie', '/showtimes', '/members', '/analytics'].includes(location.pathname)) {
                 navigate('/movie');
             }
-            if (!isAdmin && !['/home', '/myticket', '/seatbooking', '/moviebooking' , '/reward' ].includes(location.pathname)) { // เพิ่ม '/seatbooking' ในการตรวจสอบ
+            if (!isAdmin && !['/home', '/myticket', '/seatbooking', '/moviebooking' , '/reward' , '/history'].includes(location.pathname)) { // เพิ่ม '/seatbooking' ในการตรวจสอบ
                 navigate('/home');
             }
         } else {
