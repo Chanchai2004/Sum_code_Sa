@@ -197,6 +197,9 @@ const getRewardImage = (reward: RewardInterface) => {
   
         // อัปเดตคะแนนสมาชิกในตาราง Member
         await UpdateMember(memberData);
+        // ตรวจสอบข้อมูลที่จะถูกส่งไปอัปเดตคะแนน
+        console.log("Data being sent to UpdateMember:", memberData);
+
   
         messageApi.open({
           type: "success", // ประเภทของ popup เช่น "success", "error", "info", "warning"

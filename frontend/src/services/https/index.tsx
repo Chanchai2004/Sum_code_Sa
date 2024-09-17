@@ -81,7 +81,7 @@ async function GetMemberById(id: Number | undefined) {
     method: "GET",
   };
 
-  let res = await fetch(`${apiUrl}/members/${id}`, requestOptions)
+  let res = await fetch(`${apiUrl}/member/${id}`, requestOptions)
     .then((res) => {
       if (res.status === 200) {
         return res.json();
@@ -114,25 +114,35 @@ async function CreateMember(data: MembersInterface) {
   return res;
 }
 
+
 // ฟังก์ชันเพื่ออัปเดตข้อมูลสมาชิก
 async function UpdateMember(data: MembersInterface) {
   const requestOptions = {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
   };
 
-  let res = await fetch(`${apiUrl}/members/${data.ID}`, requestOptions)
-    .then((res) => {
-      if (res.status === 200) {
-        return res.json();
-      } else {
-        return false;
-      }
-    });
+  try {
+      // เรียก API เพื่ออัปเดตข้อมูลสมาชิก
+      let res = await fetch(`${apiUrl}/members/${data.ID}`, requestOptions);
 
-  return res;
+      // ตรวจสอบสถานะการตอบกลับ
+      if (res.status === 200) {
+          // ถ้าสถานะเป็น 200 ให้แปลงผลลัพธ์เป็น JSON
+          return await res.json();
+      } else {
+          // ถ้าสถานะไม่ใช่ 200 ให้ส่งค่ากลับเป็น false
+          console.error(`Error: ${res.status}`);
+          return false;
+      }
+  } catch (error) {
+      // จัดการข้อผิดพลาดเมื่อ fetch ไม่สำเร็จ
+      console.error("Failed to update member:", error);
+      return false;
+  }
 }
+
 
 // ฟังก์ชันเพื่อดึงข้อมูลหนังทั้งหมด
 async function GetMovies() {

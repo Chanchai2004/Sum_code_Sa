@@ -3,6 +3,7 @@ package controller
 import (
 	"net/http"
 	"fmt"
+	"strconv"
 	"github.com/gin-gonic/gin"
 	"github.com/tanapon395/sa-67-example/config"
 	"github.com/tanapon395/sa-67-example/entity"
@@ -126,31 +127,39 @@ func DeleteMember(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Deleted successful"})
 }
 
-// PATCH /members/:id
 func UpdateMember(c *gin.Context) {
-	var member entity.Member
+    var member entity.Member
 
-	MemberID := c.Param("id")
+    // ดึง id จาก URL และแปลงเป็น int
+    MemberID := c.Param("id")
+    id, err := strconv.Atoi(MemberID)
+    if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid member ID"})
+        return
+    }
 
-	db := config.DB()
-	result := db.First(&member, MemberID)
-	if result.Error != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "id not found"})
-		return
-	}
+    // ค้นหาสมาชิกตาม id ที่แปลงแล้ว
+    db := config.DB()
+    result := db.First(&member, id)
+    if result.Error != nil {
+        c.JSON(http.StatusNotFound, gin.H{"error": "id not found"})
+        return
+    }
 
-	if err := c.ShouldBindJSON(&member); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request, unable to map payload"})
-		return
-	}
+    // รับข้อมูล JSON จาก request body
+    if err := c.ShouldBindJSON(&member); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request, unable to map payload"})
+        return
+    }
 
-	result = db.Save(&member)
-	if result.Error != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request"})
-		return
-	}
+    // บันทึกข้อมูลที่อัปเดต
+    result = db.Save(&member)
+    if result.Error != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request"})
+        return
+    }
 
-	c.JSON(http.StatusOK, gin.H{"message": "Updated successful"})
+    c.JSON(http.StatusOK, gin.H{"message": "Updated successful"})
 }
 
 func GetRewardsByMemberID(c *gin.Context) {
