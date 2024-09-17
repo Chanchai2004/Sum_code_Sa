@@ -82,7 +82,7 @@ func DeleteReward(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Reward deleted successfully"})
 }
 
-// PATCH /rewards/:id อัปเดตข้อมูล Reward
+// PATCH /rewards/:id อัปเดตข้อมูล 
 func UpdateReward(c *gin.Context) {
 	var reward entity.Reward
 	id := c.Param("id")
