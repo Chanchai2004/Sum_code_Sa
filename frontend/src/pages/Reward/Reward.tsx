@@ -4,7 +4,7 @@ import axios from 'axios';
 import Navbar from '../../components/navbar/navbar';
 import './Reward.css';
 import RewardPopup from '../Popup/RewardPopup';
-import { CreateReward, GetMembers,UpdateMember } from '../../services/https/index'; 
+import { CreateReward, GetMemberById,UpdateMember } from '../../services/https/index'; 
 import { RewardInterface } from "../../interfaces/IReward";
 import { MembersInterface } from '../../interfaces/IMember';
 import { message } from "antd";
@@ -43,40 +43,26 @@ const Reward: React.FC = () => {
         console.log("No memberID found.");
         return;
     }
-    
-    console.log("API URL:", `${apiUrl}/members/${memberID}`);
+
+    console.log("Calling GetMemberById with ID:", memberID);
 
     try {
-        const response = await fetch(`${apiUrl}/members/${memberID}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}` // ส่ง token ใน headers
-            }
-        });
+        // เรียกใช้ฟังก์ชัน GetMemberById แทน fetch โดยตรง
+        const data = await GetMemberById(Number(memberID));
 
-        if (!response.ok) {
-            const errorData = await response.json(); // แปลงข้อมูลข้อผิดพลาดเป็น JSON
-            console.log("Error response status:", response.status); // แสดงสถานะการตอบกลับ
-            console.log("Error response data:", errorData); // แสดงข้อมูลข้อผิดพลาด
-
-            // ตรวจสอบข้อความข้อผิดพลาด
-            const errorMessage = errorData.message ? errorData.message : 'Unknown error';
+        if (!data) {
             messageApi.open({
                 type: "error",
-                content: `Error ${response.status}: ${errorMessage}`,
+                content: "Failed to fetch member data",
             });
-            return; // ออกจากฟังก์ชันเมื่อเกิดข้อผิดพลาด
+            return;
         }
 
-        const data = await response.json(); // แปลงข้อมูลที่ได้รับเป็น JSON
         console.log("Response data:", data); // แสดงข้อมูลที่ได้รับจาก API
 
         // ตรวจสอบว่า `data` มี `UserName` และ `TotalPoint` หรือไม่
         const userName = data.UserName ? data.UserName : "Name data not available";
-        // แปลง TotalPoint เป็นตัวเลขถ้าจำเป็น
-        const points = Number(data.TotalPoint); // ใช้ Number() เพื่อแปลงค่าเป็นตัวเลข
-        // ตรวจสอบค่าของ points และให้ค่าเริ่มต้นถ้าเป็น NaN
+        const points = Number(data.TotalPoint); // แปลง TotalPoint เป็นตัวเลข
         const displayPoints = !isNaN(points) ? points : "Points data not available";
 
         console.log("User Name:", userName); // แสดงค่า name
@@ -88,22 +74,12 @@ const Reward: React.FC = () => {
 
     } catch (error) {
         console.error("Error occurred:", error); // แสดงข้อผิดพลาดในคอนโซล
-
-        // ตรวจสอบประเภทของข้อผิดพลาด
-        let errorMessage = 'An unknown error occurred';
-        if (error instanceof Error) {
-            errorMessage = error.message;
-        } else if (typeof error === 'string') {
-            errorMessage = error;
-        }
-
         messageApi.open({
             type: "error",
-            content: errorMessage, // ใช้ข้อความข้อผิดพลาดที่ดึงมา
+            content: error.message || 'An unknown error occurred',
         });
     }
 };
-
 useEffect(() => {
     getUserProfile();
 }, []);
