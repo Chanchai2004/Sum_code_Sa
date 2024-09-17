@@ -5,7 +5,6 @@ import Members from './pages/Member/Member';
 import Analytics from './pages/Analytics/Analytics';
 import Login from './pages/Login/login';
 import Movie from './pages/Movie/Movie';
-//import Home from './pages/Home/home';
 import MyTicket from './pages/MyTicket/myticket';
 import SeatBooking from './pages/SeatBooking/SeatBooking'; // เพิ่มการอิมพอร์ต SeatBooking
 import PaymentDetail from './pages/paymentdetails/paymentdetail';
@@ -16,6 +15,9 @@ import ShowtimeManagement from './pages/Showtime/Showtime';
 import MovieBooking from './pages/MovieBooking/MovieBooking';
 import Reward from './pages/Reward/Reward';
 import HistoryPage from './pages/History/History';
+import MovieTable from './pages/Movie/MovieTable/movietable';
+import MovieEdit from './pages/Movie/MovieEdit/movieedit';  // ใช้ MovieEdit เวอร์ชันที่แก้ไขแล้ว
+
 const App: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -24,10 +26,10 @@ const App: React.FC = () => {
 
     useEffect(() => {
         if (isLoggedIn) {
-            if (isAdmin && !['/movie', '/showtimes', '/members', '/analytics'].includes(location.pathname)) {
+            if (isAdmin && !['/movie', '/showtimes', '/members', '/analytics', '/movies/create', '/movies/edit'].includes(location.pathname)) {
                 navigate('/movie');
             }
-            if (!isAdmin && !['/home', '/myticket', '/seatbooking', '/moviebooking' , '/reward','/history' ].includes(location.pathname)) { // เพิ่ม '/seatbooking' ในการตรวจสอบ
+            if (!isAdmin && !['/home', '/myticket', '/seatbooking', '/moviebooking', '/reward', '/history'].includes(location.pathname)) { 
                 navigate('/home');
             }
         } else {
@@ -40,19 +42,20 @@ const App: React.FC = () => {
             {isLoggedIn && isAdmin && <Sidebar />}
             <div className="main-content">
                 <Routes>
-                    
                     <Route path="/login" element={<Login />} />
                     
                     {/* เส้นทางสำหรับผู้ใช้ Admin */}
-                    <Route path="/movie" element={isLoggedIn && isAdmin ? <Movie /> : <Navigate to="/login" />} />
+                    <Route path="/movie" element={isLoggedIn && isAdmin ? <MovieTable /> : <Navigate to="/login" />} />
                     <Route path="/showtimes" element={isLoggedIn && isAdmin ? <ShowtimeManagement /> : <Navigate to="/login" />} />
                     <Route path="/members" element={isLoggedIn && isAdmin ? <Members /> : <Navigate to="/login" />} />
                     <Route path="/analytics" element={isLoggedIn && isAdmin ? <Analytics /> : <Navigate to="/login" />} />
+                    <Route path="/movies/create" element={isLoggedIn && isAdmin ? <Movie /> : <Navigate to="/login" />} />
+                    <Route path="/movies/edit" element={isLoggedIn && isAdmin ? <MovieEdit /> : <Navigate to="/login" />} /> 
 
                     {/* เส้นทางสำหรับผู้ใช้ที่ไม่ใช่ Admin */}
                     <Route path="/home" element={isLoggedIn && !isAdmin ? <MovieList /> : <Navigate to="/login" />} />
                     <Route path="/myticket" element={isLoggedIn && !isAdmin ? <MyTicket /> : <Navigate to="/login" />} />
-                    <Route path="/seatbooking" element={isLoggedIn && !isAdmin ? <SeatBooking /> : <Navigate to="/login" />}/>
+                    <Route path="/seatbooking" element={isLoggedIn && !isAdmin ? <SeatBooking /> : <Navigate to="/login" />} />
                     <Route path="/moviebooking" element={isLoggedIn && !isAdmin ? <MovieBooking /> : <Navigate to="/login" />} />
 
                     {/* เส้นทางสำหรับการชำระเงิน */}
@@ -60,11 +63,9 @@ const App: React.FC = () => {
                     <Route path="/scanpayment" element={isLoggedIn && !isAdmin ? <ScanPayment /> : <Navigate to="/login" />} />
                     <Route path="/ticket" element={isLoggedIn && !isAdmin ? <Ticket /> : <Navigate to="/login" />} />
 
-                     {/* เส้นทางสำหรับการเเลกรางวัล */}
+                    {/* เส้นทางสำหรับการเเลกรางวัล */}
                     <Route path="/reward" element={isLoggedIn && !isAdmin ? <Reward /> : <Navigate to="/login" />} />
                     <Route path="/history" element={isLoggedIn && !isAdmin ? <HistoryPage /> : <Navigate to="/login" />} />
-                  
-
 
                     <Route path="*" element={<Navigate to="/login" />} />
                 </Routes>
