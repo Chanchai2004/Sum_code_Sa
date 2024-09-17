@@ -189,6 +189,8 @@ func GetRewardsByMemberID(c *gin.Context) {
     }
 
     c.JSON(http.StatusOK, rewards)
+
+	
 }
 
 
