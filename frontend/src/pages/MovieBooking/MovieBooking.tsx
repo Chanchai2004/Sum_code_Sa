@@ -18,6 +18,7 @@ const PrevArrow = (props: any) => {
   );
 };
 
+
 const NextArrow = (props: any) => {
   const { onClick } = props;
   return (

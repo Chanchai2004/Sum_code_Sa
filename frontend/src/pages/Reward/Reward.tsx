@@ -671,4 +671,6 @@ const getRewardImage = (reward: RewardInterface) => {
   );
 }  
 
+
+
 export default Reward;
