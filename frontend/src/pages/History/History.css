@@ -1,0 +1,133 @@
+body {
+    background-color: #000; /* พื้นหลังสีดำ */
+    color: #fff; /* สีตัวอักษรหลักเป็นสีขาว */
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh; /* ความสูงของ body เต็มจอ */
+    overflow: auto; /* ป้องกันการ scroll */
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+    color: white;
+    height: 100%; /* ขยาย wrapper เต็มความสูง */
+    width: 100%; /* ขยาย wrapper เต็มความกว้าง */
+    box-sizing: border-box; /* รวม padding และ border ในขนาด */
+}
+
+.page-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+    position: relative;
+    width: 100%;
+    flex-shrink: 0; /* ให้แน่ใจว่า title ไม่ย่อขนาด */
+    padding: 10px;
+}
+
+.back-button {
+    position: absolute;
+    right: 10px;
+    top: 0;
+    font-size: 16px;
+    padding: 10px 15px;
+    background-color: #E53935; /* สีพื้นหลังปุ่ม BACK */
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+}
+
+.profile-container {
+    background-color: #FFC700; /* พื้นหลังสีเหลือง */
+    border-radius: 20px; /* มุมโค้งมน */
+    padding: 20px;
+    text-align: center;
+    width: 300px; /* กำหนดความกว้างของกล่อง */
+    margin-bottom: 30px;
+    flex-shrink: 0; /* ให้แน่ใจว่าโปรไฟล์ไม่ย่อขนาด */
+}
+
+.profile-picture img {
+    width: 50px; /* ขนาดของรูปโปรไฟล์ */
+    height: 50px;
+    margin-bottom: 10px;
+}
+
+.profile-name {
+    font-size: 18px; /* ขนาดตัวอักษรของชื่อผู้ใช้ */
+    font-weight: bold; /* ตัวอักษรหนา */
+    margin-bottom: 5px;
+}
+
+.reward-icon {
+    font-size: 16px; /* ขนาดของไอคอนเหรียญ */
+    font-weight: bold;
+    color: #000; /* สีดำสำหรับตัวอักษร */
+}
+
+/* รายการประวัติ */
+.history-list {
+    background-color: #000;
+    border-radius: 10px;
+    padding: 20px;
+    width: 90%; /* ขยายความกว้าง 90% ของหน้าจอ */
+    max-width: 100%; /* กำหนดความกว้างสูงสุดเต็มหน้าจอ */
+    margin: 0 auto; /* จัดให้กล่องอยู่ตรงกลาง */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* เพิ่มเงาให้กล่อง */
+    color: white; /* กำหนดสีตัวอักษรเป็นสีขาว */
+    flex-grow: 1; /* ให้ history-list ขยายเต็มพื้นที่ที่เหลือ */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box; /* รวม padding และ border ในขนาด */
+}
+
+.history-item {
+    background-color: #000; /* สีพื้นหลังของรายการ */
+    padding: 15px 0; /* เพิ่ม padding ให้ด้านบนและด้านล่าง */
+    border-bottom: 1px solid #444; /* เส้นใต้ */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.history-detail {
+    display: flex; /* ใช้ Flexbox เพื่อจัดวางในบรรทัดเดียวกัน */
+    justify-content: space-between; /* กระจายองค์ประกอบสองด้าน */
+    align-items: center; /* จัดให้อยู่กลางในแนวตั้ง */
+    width: 100%; /* ใช้ความกว้างเต็ม */
+    padding: 5px 20px; /* ลด padding ด้านบนและด้านล่างให้น้อยลง */
+    box-sizing: border-box; /* รวม padding และ border ในขนาด */
+    margin-bottom: 0; /* ลดหรือเอา margin ออกเพื่อให้ใกล้กับเส้นใต้ */
+}
+
+
+
+/* ตาราง */
+.ant-table {
+    background-color: #ddb45e !important; /* ใช้ !important เพื่อบังคับการเปลี่ยนแปลง */
+}
+
+.ant-table-thead > tr > th {
+    background-color: #fdce55 !important; /* ใช้ !important เพื่อบังคับการเปลี่ยนแปลง */
+    color: white !important;
+}
+
+
+.ant-table-tbody > tr:nth-child(even) {
+    background-color: #eaf4e5 !important;
+}
+
+.ant-table-tbody > tr:nth-child(odd) {
+    background-color: #ffffff !important;
+}
+
+.ant-table-cell {
+    color: #333 !important;
+}

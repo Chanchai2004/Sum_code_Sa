@@ -1,0 +1,129 @@
+body.popup-open {
+    overflow: auto;
+}
+
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.reward-container {
+    background-color: #FFC700;
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 1001;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; /* จัดวางเนื้อหาให้อยู่ตรงกลาง */
+}
+
+.reward-icon img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 10px !important;
+}
+
+.reward-points {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px !important;
+}
+
+.reward-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 15px !important; 
+    margin-bottom: 10px !important; 
+}
+
+.reward-image img {
+    width: 150px;
+    height: auto;
+    margin-bottom: 20px !important;
+}
+
+.reward-description {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 10px !important;
+}
+
+.button {
+    width: 100%;
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.confirm-btn {
+    background-color: #df273a !important; /* ใช้ !important เพื่อบังคับใช้สี */
+    color: white !important; /* ใช้ !important เพื่อบังคับใช้สีตัวหนังสือ */
+}
+
+.confirm-btn:hover {
+    background-color: #E53935 !important; /* ใช้ !important เพื่อบังคับใช้สีเมื่อ hover */
+}
+
+.cancel-btn {
+    background-color: #888383 !important; /* ใช้ !important เพื่อบังคับใช้สี */
+    color: white !important; /* ใช้ !important เพื่อบังคับใช้สีตัวหนังสือ */
+}
+
+.cancel-btn:hover {
+    background-color: #453e3e !important; /* ใช้ !important เพื่อบังคับใช้สีเมื่อ hover */
+}
+
+.success-popup {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100%); /* เริ่มต้นอยู่นอกจอ */
+    background-color: #ff0707; /* สีพื้นหลังสีเหลือง */
+    color: black; /* สีตัวอักษร */
+    padding: 10px 20px;
+    border-radius: 25px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    z-index: 1000; /* ให้แน่ใจว่า Popup อยู่เหนือองค์ประกอบอื่นๆ */
+    animation: slideDown 0.5s forwards; /* เรียกใช้ animation สำหรับการเลื่อนลง */
+  }
+  
+  /* Animation สำหรับการเลื่อนลง */
+  @keyframes slideDown {
+    from {
+      transform: translateX(-50%) translateY(-100%); /* เริ่มต้นนอกจอ */
+    }
+    to {
+      transform: translateX(-50%) translateY(20px); /* เลื่อนลงมาอยู่ที่ 20px จากขอบบน */
+    }
+  }
+  
+  
+  
+
+
+

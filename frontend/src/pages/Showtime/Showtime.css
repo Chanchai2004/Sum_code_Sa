@@ -2,7 +2,7 @@
     display: flex;
     height: 100vh;
     width: 100vw; /* Full width for the app */
-    overflow: hidden; /* Prevent overflow issues */
+    overflow: auto; /* Prevent overflow issues */
   }
   
   .main-content {
@@ -54,7 +54,7 @@
     width: 100%;
     margin-left: 3px;
     border-radius: 10px;
-    overflow: hidden;
+    overflow: auto;
     border-collapse: collapse;
     border-spacing: 0;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* เงาเข้มขึ้น */

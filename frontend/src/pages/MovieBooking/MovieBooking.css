@@ -38,7 +38,7 @@
   
   /* Slider List (visible area) */
   .slick-list {
-    overflow: hidden;
+    overflow: auto;
     margin: 0;
     padding: 0;
   }

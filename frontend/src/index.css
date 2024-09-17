@@ -28,7 +28,7 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden; /* ป้องกันการเลื่อน */
+  overflow: auto; /* ป้องกันการเลื่อน */
   background-color: #21699c; /* สีพื้นหลัง */
 }
 
@@ -59,7 +59,8 @@ button:focus-visible {
 @media (prefers-color-scheme: light) {
   :root {
     color: #000000;
-    background-color: #ffffff;
+    background-color: #000000;
+    overflow-x: hidden;
   }
   a:hover {
     color: #747bff;

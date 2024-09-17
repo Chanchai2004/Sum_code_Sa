@@ -38,6 +38,8 @@ func SetupDatabase() {
 		&entity.BookSeat{}, // สร้างหลังจาก Seat และ Booking
 		&entity.Payment{},
 		&entity.Ticket{}, // สร้างหลังจาก BookSeat และ Booking
+		&entity.Reward{},
+		&entity.CodeReward{},
 	)
 	if err != nil {
 		fmt.Println("Error in AutoMigrate:", err)

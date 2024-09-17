@@ -35,6 +35,8 @@ func main() {
 		router.POST("/members", controller.CreateMember)
 		router.PATCH("/members", controller.UpdateMember)
 		router.DELETE("/members/:id", controller.DeleteMember)
+		router.GET("/mrewards/:member_id", controller.GetRewardsByMemberID)
+
 
 		// Movie Routes
 		router.GET("/movies", controller.ListMovies)         // แสดงรายการหนังทั้งหมด
@@ -74,6 +76,20 @@ func main() {
 		router.POST("/payments", controller.CreatePayment)
 		router.PATCH("/payments/:id", controller.UpdatePayment)
 		router.DELETE("/payments/:id", controller.DeletePayment)
+
+		// Reward Routes
+        router.GET("/rewards", controller.ListRewards)          // เส้นทางสำหรับดึงข้อมูลรางวัลทั้งหมด
+        router.GET("/rewards/:id", controller.GetReward)        // ดึงข้อมูลรางวัลตาม ID
+        router.POST("/rewards", controller.CreateReward)        // สร้างรางวัล
+        router.PATCH("/rewards/:id", controller.UpdateReward)   // อัปเดตรางวัล
+        router.DELETE("/rewards/:id", controller.DeleteReward)  // ลบรางวัล
+
+		// CodeReward Routes
+        router.POST("/codereward", controller.CreateCodeReward) // เส้นทางสำหรับสร้างโค้ดแลกเปลี่ยน
+		router.GET("/check-code-reward", controller.GetCodeReward) // เส้นทางสำหรับดึงข้อมูลโค้ดแลกเปลี่ยน
+
+		
+
 
 		// เส้นทางสำหรับการเข้าสู่ระบบ
 		router.POST("/signin", controller.Signin)

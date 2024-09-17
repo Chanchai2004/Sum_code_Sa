@@ -3,6 +3,7 @@ import { MoviesInterface } from "../../interfaces/IMovie";
 import { ShowTimesInterface } from "../../interfaces/IShowtime";
 import { TicketInterface } from "../../interfaces/ITicket";
 import { BookingResponse } from "../../interfaces/IBooking"; // Import Interface ของ Tickets
+import { RewardInterface  } from "../../interfaces/IReward"; 
 
 const apiUrl = "http://localhost:8000/api";
 
@@ -458,6 +459,191 @@ async function GetBookedSeats(showtimeID: number, theaterID: number) {
     return false; // ส่ง false หากมีข้อผิดพลาด
   }
 }
+// ฟังก์ชันเพื่อดึงข้อมูลรางวัลทั้งหมด
+async function GetReward() {
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  let res = await fetch(`${apiUrl}/rewards`, requestOptions)
+    .then((res) => {
+      if (res.status === 200) {
+        return res.json();
+      } else {
+        return false;
+      }
+    });
+
+  return res;
+}
+
+// ฟังก์ชันเพื่อดึงข้อมูลรางวัลตาม ID
+async function GetRewardById(id: Number | undefined) {
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  let res = await fetch(`${apiUrl}/rewards/${id}`, requestOptions)
+    .then((res) => {
+      if (res.status === 200) {
+        return res.json(); // ถ้าสถานะเป็น 200 ส่งข้อมูลกลับมา
+      } else {
+        return false; // ถ้าไม่ใช่สถานะ 200 ส่งค่ากลับเป็น false
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching reward by ID:", error);
+      return false; // ส่งกลับ false หากเกิดข้อผิดพลาด
+    });
+
+  return res; // ส่งข้อมูลรางวัลที่ได้กลับไป
+}
+
+async function CreateReward(data: RewardInterface) {
+  // คัดลอกข้อมูล โดยตัด `id` และ `imageUrl` ออก
+  const { ID, imageUrl, ...rewardDataWithoutIdAndImageUrl } = data;
+
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(rewardDataWithoutIdAndImageUrl), // ส่งเฉพาะข้อมูลที่ต้องการ
+  };
+
+  let res = await fetch(`${apiUrl}/rewards`, requestOptions)
+    .then((response) => response.json())
+    .then((res) => {
+      if (res.data) {
+        return { status: true, message: res.data };
+      } else {
+        return { status: false, message: res.error };
+      }
+    });
+
+  return res;
+}
+const GetRewardsByMemberID = async (memberID: string) => {
+  try {
+      const response = await fetch(`${apiUrl}/mrewards/${memberID}`, {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+      });
+
+      console.log("Raw Response:", response);
+
+      if (!response.ok) {
+          // ถ้าไม่สำเร็จ อ่านข้อมูลจาก response.text() เพื่อดีบักข้อผิดพลาด
+          const errorText = await response.text(); 
+          console.error("Error response text:", errorText);
+          throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      // พยายามอ่านข้อมูล response.json() เพียงครั้งเดียว
+      const data = await response.json();
+      console.log("Data:", data); // ตรวจสอบข้อมูลที่ได้รับ
+      return data;
+
+  } catch (error) {
+      console.error("Error fetching rewards:", error);
+      throw error;
+  }
+  
+};
+// ฟังก์ชันสำหรับบันทึกโค้ด (POST)
+const saveCodeReward = async (code: string, rewardId: number, memberId: string | null) => {
+  try {
+      const response = await fetch(`${apiUrl}/codereward`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+              reward_code: code,
+              reward_id: rewardId,
+              member_id: memberId
+          }),
+      });
+
+      if (!response.ok) {
+          const errorText = await response.text();
+          console.error("Error saving code:", errorText);
+          throw new Error('Failed to save code');
+      }
+
+      const data = await response.json();
+      return data; // คืนค่าผลลัพธ์ที่บันทึกลงฐานข้อมูล
+  } catch (error) {
+      console.error('Error saving code reward:', error);
+      throw error;
+  }
+};
+
+
+
+
+// ฟังก์ชันสำหรับตรวจสอบโค้ดรางวัล
+const CheckCodeReward = async (code: string) => {
+  try {
+      const response = await fetch(`${apiUrl}/codereward?code=${code}`, {
+          method: "GET",
+          headers: {
+              "Content-Type": "application/json",
+          },
+      });
+
+      if (!response.ok) {
+          const errorText = await response.text();
+          console.error("Error response from server:", errorText); // แสดงข้อผิดพลาดจากเซิร์ฟเวอร์
+          throw new Error('Failed to check code reward');
+      }
+
+      const data = await response.json();
+      console.log("Response data from server:", data); // แสดงข้อมูลการตอบกลับจากเซิร์ฟเวอร์
+      return data;
+  } catch (error) {
+      console.error("Error checking code reward:", error); // แสดง error หากไม่สามารถตรวจสอบโค้ดได้
+      throw error;
+  }
+};
+
+// ฟังก์ชันสำหรับตรวจสอบโค้ดแลกเปลี่ยน (GET)
+const checkExistingCodeReward = async (rewardId: number) => {
+try {
+    const response = await fetch(`${apiUrl}/check-code-reward?reward_id=${rewardId}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    if (!response.ok) {
+        if (response.status === 404) {
+            console.warn("Code reward not found for reward_id:", rewardId);
+            return null; // ถ้าไม่พบโค้ด ให้คืนค่า null
+        }
+        const errorText = await response.text();
+        console.error("Error checking code:", errorText);
+        throw new Error('Failed to check code reward');
+    }
+
+    const data = await response.json();
+    return data;  // คืนค่าโค้ดที่มีอยู่ถ้ามี
+} catch (error) {
+    console.error('Error checking existing code reward:', error);
+    throw error;
+}
+};
+
+
+
+
 
 
 export {
@@ -480,5 +666,13 @@ export {
   DeleteShowtimeByID,
   bookSeats,
   GetBookedSeats,  // เพิ่มฟังก์ชัน GetBookedSeats เพื่อดึงข้อมูลที่นั่งที่ถูกจอง
-  CheckAdminPassword
+  CheckAdminPassword,
+  GetReward,
+  GetRewardById,
+  CreateReward,
+  GetRewardsByMemberID,
+  saveCodeReward,
+  CheckCodeReward,
+  checkExistingCodeReward
+  
 };

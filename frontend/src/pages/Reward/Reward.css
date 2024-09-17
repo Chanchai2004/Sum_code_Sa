@@ -1,0 +1,809 @@
+
+
+@import url('https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap');
+
+/* สไตล์สำหรับ Center Image */
+
+.center-image {
+    position: absolute;
+    top: 550px; 
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 0;  /*Center image อยู่หลัง popcorn และฉลาก */
+    max-width: 150px;
+    height: 5430px; /* ปรับขนาดให้ใหญ่ขึ้น */
+}
+
+/* Main content area */
+.my-points-container {
+    position: relative; /* ถ้าเป็น absolute หรือ fixed ให้ใช้ relative */
+    top: 55px; /* เพิ่มระยะห่างจากด้านบน */
+    text-align: left;
+}
+
+.my-points-container h1 {
+    margin-left: auto; /* เลื่อนข้อความไปทางขวาสุด */
+    margin-left: 110px; /* ปรับระยะห่างจากขอบขวา */
+    display: inline-block; /* ทำให้ margin-left ทำงาน */
+    color:#FFF
+}
+
+
+.points-content {
+    display: flex;
+    justify-content: space-between;
+    background-color: #F4C542;
+    padding: 0px;
+    width: 100%; 
+    max-width: 1200px; 
+    height: 300px;
+    border-radius: 20px;
+    align-items: center; 
+    margin: 0 auto; 
+    z-index: 1; /* เพิ่ม z-index เพื่อให้อยู่ในเลเยอร์ที่เหมาะสม */
+    position: relative; /* ให้แน่ใจว่าอยู่ในเลเยอร์เดียวกัน */
+    
+}
+
+/* Profile section */
+.profile-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    font-weight: bold;
+}
+
+.profile-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 20px; /* เพิ่มระยะห่างจากตัวอักษรข้างล่าง */
+} 
+
+
+.my-reward-button {
+    background-color: #D9534F; /* สีพื้นหลังของปุ่ม */
+    color: white; /* สีของข้อความในปุ่ม */
+    padding: 10px 20px; /* ระยะห่างภายในปุ่ม */
+    border: none; /* ไม่มีเส้นขอบ */
+    border-radius: 5px; /* มุมโค้งของปุ่ม */
+    cursor: pointer; /* เปลี่ยนรูปแบบเคอร์เซอร์เมื่อ hover */
+    margin-top: 25px; /* เพิ่ม margin-top เพื่อเลื่อนปุ่มลงมา */
+  }
+  
+  .my-reward-button:hover {
+    background-color: #c9423f; /* เปลี่ยนสีเมื่อ hover */
+  }
+  
+
+/* Divider ตัวแบ่ง */
+.divider {
+    width: 5px;
+    background-color: #000;
+    height: 250px;
+}
+
+/* Points section */
+.points-section {
+    flex: 1;
+    text-align: center;
+}
+
+/* รูปเหรียญ */
+.points-icon {
+    width: 70px;
+    height: 60px;
+    margin-bottom: 10px; /* เพิ่มระยะห่างจากองค์ประกอบข้างล่าง */
+}
+
+
+.balance h2 {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0;
+    margin-bottom: 10px; /* เพิ่มระยะห่างจากด้านล่าง */
+}
+
+
+.points-section p {
+    margin: 2px 0;
+}
+
+.description {
+    font-size: 14px;
+    color: #333;
+    margin-top: 5px; /* เพิ่ม margin-top เพื่อเพิ่มระยะห่างจากคะแนน */
+}
+
+
+/* History button */
+.history-button {
+    background-color: #D9534F;
+    color: #FFF;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    margin-top: 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.history-button:hover {
+    background-color: #c9423f; 
+}
+
+
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: rgb(0, 0, 0) !important;
+    max-width: 1500px; 
+    width: 100%; /* ปรับให้กว้างเต็มหน้าจอ */
+    min-height: 100vh; /* ให้ความสูงอย่างน้อยเท่ากับความสูงของ viewport */
+    overflow-y: auto; /* อนุญาตให้เลื่อนหน้าเว็บในแนวตั้ง */
+    font-family: Arial, sans-serif;
+    color: white;
+}
+
+.container {
+    position: relative;
+    width: 100%; /* กำหนดให้ความกว้างเต็มหน้าจอ */
+    min-height: 100vh; /* ปรับให้ความสูงอย่างน้อยเท่ากับความสูงของ viewport */
+}
+
+/* สไตล์สำหรับดาว */
+
+/* กระจายดาวทั่วหน้าจอด้วยระยะห่างที่มากขึ้น */
+.star {
+    position: absolute;
+    width: 100px; /* ขนาดของดาว */
+}
+
+/* กระจายดาวทั่วหน้าจอด้วยระยะห่างที่มากขึ้น */
+.star-1 {
+    top: 500px;
+    right: 50px;
+    width: 150px;
+}
+
+.star-2 {
+    top: 780px;
+    right: 100px;
+    width: 250px;
+    
+}
+
+.star-3 {
+    top: 600px;
+    left: 200px;
+}
+
+.star-4 {
+    top: 800px;
+    left: 100px;
+    width: 150px;
+}
+
+.star-5 {
+    top: 1200px;
+    left: 390px;
+    width: 50px;
+}
+
+.star-6 {
+    top: 1200px;
+    right: 200px;
+}
+
+.star-7 {
+    top: 1450px;
+    right: 100px;
+    width: 250px;
+}
+
+.star-8 {
+    top: 1500px;
+    left: 300px;
+}
+
+.star-9 {
+    top: 700px;
+    right: 450px;
+}
+
+.star-10 {
+    top: 1900px;
+    right: 300px;
+    width: 150px;
+}
+
+.star-11 {
+    top: 2090px;
+    right: 100px;
+    width: 250px;
+}
+
+.star-12 {
+    top: 2300px;
+    left: 250px;
+    width: 150px;
+}
+
+.star-13 {
+    top: 2600px;
+    right: 150px;
+}
+
+.star-14 {
+    top: 2900px;
+    left: 400px;
+}
+
+.star-15 {
+    top: 3200px;
+    right: 250px;
+    width: 200px;
+}
+
+.star-16 {
+    top: 3500px;
+    left: 150px;
+    width: 150px;
+}
+
+.star-17 {
+    top: 3800px;
+    right: 200px;
+}
+
+.star-18 {
+    top: 4700px;
+    left: 400px;
+}
+
+.star-19 {
+    top: 4400px;
+    right: 100px;
+    width: 50px;
+}
+
+.star-20 {
+    top: 2000px;
+    left: 20px;
+}
+
+.star-21 {
+    top: 5000px;
+    right: 250px;
+}
+
+.star-22 {
+    top: 5300px;
+    left: 200px;
+}
+.star-23 {
+    top: 5600px;
+    left: 300px;
+}
+.star-24 {
+    top: 5900px;
+    left: 100px;
+}
+.star-24 {
+    top: 5890px;
+    left: 400px;
+    width: 170px;
+}
+.star-25 {
+    top: 5820px;
+    left: 1100px;
+    width: 170px;
+    
+}
+.star-26 {
+    top: 5800px;
+    left: 90px;
+    width: 170px;
+}
+.star-27 {
+    top: 5580px;
+    left: 1100px;
+    width: 60px;
+}
+.star-28 {
+    top: 5600px;
+    left: 1320px;
+    width: 200px;
+}
+.star-29 {
+    top: 4950px;
+    left: 70px;
+    width: 200px;
+}
+.star-30 {
+    top: 5200px;
+    left: 1100px;
+    width: 200px;
+}
+.star-31 {
+    top: 4400px;
+    left: 90px;
+    width: 200px;
+}
+.star-32 {
+    top: 4200px;
+    left: 1000px;
+    width: 100px;
+}
+.star-33 {
+    top: 3750px;
+    left: 350px;
+    width: 210px;
+}
+.star-34 {
+    top: 4500px;
+    left: 1010px;
+    width: 250px;
+}
+.star-35 {
+    top: 3400px;
+    left: 1320px;
+    width: 40px;
+}
+.star-35 {
+    top: 3000px;
+    left: 1300px;
+    width: 50px;
+}
+.star-36 {
+    top: 4000px;
+    left: 1300px;
+    width: 250px;
+}
+.star-37 {
+    top: 4000px;
+    left: 100px;
+    width: 170px;
+}
+.star-38 {
+    top: 4250px;
+    left: 400px;
+    width: 90px;
+}
+/*สีส้ม*/
+.star-39 { 
+    top: 3500px;
+    left: 1257px;
+    width: 150px;
+} 
+.star-40 { 
+    top: 3300px;
+    left: 390px;
+    width: 50px;
+} 
+.star-41 { 
+    top: 3100px;
+    left: 130px;
+    width: 150px;
+} 
+.star-42 {
+    top: 2800px;
+    left: 1000px;
+    width: 150px;
+}
+.star-43 {
+    top: 2690px;
+    left: 20px;
+    width: 150px;
+}
+.star-44 {
+    top: 2550px;
+    left: 420px;
+    width: 90px;
+}
+.star-45 {
+    top: 2410px;
+    left: 970px;
+    width: 100px;
+}
+.star-46 {
+    top: 1750px;
+    left: 220px;
+    width: 200px;
+}
+.star-47 {
+    top: 1110px;
+    left: 20px;
+    width: 200px;
+}
+.star-48 {
+    top: 840px;
+    left: 420px;
+    width: 90px;
+}
+
+
+
+
+/* สไตล์สำหรับรูปรางวัล */
+/* สไตล์สำหรับรูปรางวัล */
+.popcorn-box {
+    position: absolute;
+    width: 150px;
+    z-index: 1;
+    left: 50.8%; /* จัดให้อยู่ตรงกลางแนวนอน */
+    transform: translateX(-50%); /* เลื่อนกึ่งกลางของรูปภาพไปตรงกลางหน้าจอ */
+}
+
+.popcorn-box:hover {
+    transform: translateX(-50%) scale(1.1); /* ขยายขนาดเมื่อ hover */
+}
+
+.popcorn-box-1 {
+    top: 670px;
+    width: 280px;
+    left: 51%;
+}
+
+.popcorn-box-2 {
+    top: 980px;
+    width: 230px;
+}
+
+.popcorn-box-3 {
+    top: 1270px;
+    width: 230px; /* ปรับขนาดตามที่ต้องการ */
+    left: 52%;
+}
+
+.popcorn-box-4 {
+    top: 1510px;
+    width: 250px;
+}
+
+.popcorn-box-5 {
+    top: 1780px;
+    width: 170px; /* ปรับขนาดตามที่ต้องการ */
+}
+
+.popcorn-box-6 {
+    top: 2040px;
+    width: 250px; /* ปรับขนาดตามที่ต้องการ */
+}
+
+.popcorn-box-7 {
+    top: 2290px;
+    width: 250px; /* ปรับขนาดตามที่ต้องการ */
+}
+
+.popcorn-box-8 {
+    top: 2550px;
+    width: 170px; /* ปรับขนาดตามที่ต้องการ */
+}
+
+.popcorn-box-9 {
+    top: 2840px;
+    width: 170px; /* ปรับขนาดตามที่ต้องการ */
+}
+
+.popcorn-box-10 {
+    top: 3020px;
+    width: 200px; /* ปรับขนาดตามที่ต้องการ */
+}
+
+.popcorn-box-11 {
+    top: 3350px;
+    width: 300px; /* ปรับขนาดตามที่ต้องการ */
+}
+
+.popcorn-box-12 {
+    top: 3665px;
+    width: 250px; /* ปรับขนาดตามที่ต้องการ */
+    left: 50%;
+}
+
+.popcorn-box-13 {
+    top: 3980px;
+    width: 200px; /* ปรับขนาดตามที่ต้องการ */
+}
+
+.popcorn-box-14 {
+    top: 4350px;
+    width: 360px; /* ปรับขนาดตามที่ต้องการ */
+}
+
+.popcorn-box-15 {
+    top: 4650px;
+    width: 300px; /* ปรับขนาดตามที่ต้องการ */
+}
+
+.popcorn-box-16 {
+    top: 5100px;
+    width: 480px; /* ปรับขนาดตามที่ต้องการ */
+}
+
+.popcorn-box-17 {
+    top: 5347px;
+    width: 250px; /* ปรับขนาดตามที่ต้องการ */
+}
+
+.popcorn-box-18 {
+    top: 5700px;
+    left: 53%;
+    width: 150px; /* ปรับขนาดตามที่ต้องการ */
+}
+
+
+
+/* สไตล์สำหรับกล่องข้อความ */
+.popcorn-label {
+    font-family: 'Fjalla One', sans-serif; /* กำหนดฟอนต์ Fjalla One */
+    font-weight: bold; /* ตั้งค่าให้เป็นตัวหนา */
+    position: absolute;
+    width: 200px;
+    text-align: center;
+    font-size: 15px;
+    background-color: white;
+    color: black;
+    border-radius: 10px;
+    padding: 10px;
+    z-index: 2; /* นำมาอยู่ข้างหน้า center-image */
+    left: 51%; /* จัดให้อยู่ตรงกลางแนวนอน */
+    transform: translateX(-50%); /* เลื่อนกึ่งกลางของกล่องไปตรงกลางหน้าจอ */
+}
+
+
+.popcorn-label-1 {
+    top: 910px;
+}
+
+.popcorn-label-2 {
+    top: 1200px;
+}
+
+.popcorn-label-3 {
+    top: 1450px;
+}
+
+.popcorn-label-4 {
+    top: 1720px;
+}
+
+.popcorn-label-5 {
+    top: 1970px;
+}
+
+.popcorn-label-6 {
+    top: 2230px;
+}
+
+.popcorn-label-7 {
+    top: 2485px;
+}
+
+.popcorn-label-8 {
+    top: 2750px;
+}
+
+.popcorn-label-9 {
+    top: 2960px;
+}
+
+.popcorn-label-10 {
+    top: 3250px;
+}
+
+.popcorn-label-11 {
+    top: 3530px;
+}
+
+.popcorn-label-12 {
+    top: 3900px;
+}
+
+.popcorn-label-13 {
+    top: 4200px;
+}
+
+.popcorn-label-14 {
+    top: 4540px;
+}
+
+.popcorn-label-15 {
+    top: 4980px;
+    left: 51.9%;
+}
+
+.popcorn-label-16 {
+    top: 5270px;
+    left: 51.9%;
+}
+
+.popcorn-label-17 {
+    top: 5580px;
+    left: 51.9%;
+}
+
+.popcorn-label-18 {
+    top: 5937px;
+    left: 51.9%;
+    
+}
+
+
+
+.points-2 {
+    position: absolute; /* ต้องใช้ position เพื่อกำหนด top และ left */
+    top: 670px; /* ระบุหน่วยเป็น px */
+    width: 150px; /* ระบุหน่วยเป็น px */
+    height: auto; /* ให้ความสูงปรับตามอัตราส่วน */
+    left:460px;
+}
+.points-4 {
+    position: absolute; /* ต้องใช้ position เพื่อกำหนด top และ left */
+    top: 980px; /* ระบุหน่วยเป็น px */
+    width: 150px; /* ระบุหน่วยเป็น px */
+    height: auto; /* ให้ความสูงปรับตามอัตราส่วน */
+    right:460px;
+}
+.points-6 {
+    position: absolute; /* ต้องใช้ position เพื่อกำหนด top และ left */
+    top: 1250px; /* ระบุหน่วยเป็น px */
+    width: 150px; /* ระบุหน่วยเป็น px */
+    height: auto; /* ให้ความสูงปรับตามอัตราส่วน */
+    left:490px;
+}
+.points-9 {
+    position: absolute; /* ต้องใช้ position เพื่อกำหนด top และ left */
+    top: 1500px; /* ระบุหน่วยเป็น px */
+    width: 150px; /* ระบุหน่วยเป็น px */
+    height: auto; /* ให้ความสูงปรับตามอัตราส่วน */
+    right:460px;
+}
+.points-12 {
+    position: absolute; /* ต้องใช้ position เพื่อกำหนด top และ left */
+    top: 1750px; /* ระบุหน่วยเป็น px */
+    width: 150px; /* ระบุหน่วยเป็น px */
+    height: auto; /* ให้ความสูงปรับตามอัตราส่วน */
+    left:500px;
+}
+.points-15 {
+    position: absolute; /* ต้องใช้ position เพื่อกำหนด top และ left */
+    top: 2010px; /* ระบุหน่วยเป็น px */
+    width: 150px; /* ระบุหน่วยเป็น px */
+    height: auto; /* ให้ความสูงปรับตามอัตราส่วน */
+    right:430px;
+}
+.points-18 {
+    position: absolute; /* ต้องใช้ position เพื่อกำหนด top และ left */
+    top: 2230px; /* ระบุหน่วยเป็น px */
+    width: 150px; /* ระบุหน่วยเป็น px */
+    height: auto; /* ให้ความสูงปรับตามอัตราส่วน */
+    left:450px;
+}
+.points-21 {
+    position: absolute; /* ต้องใช้ position เพื่อกำหนด top และ left */
+    top: 2520px; /* ระบุหน่วยเป็น px */
+    width: 150px; /* ระบุหน่วยเป็น px */
+    height: auto; /* ให้ความสูงปรับตามอัตราส่วน */
+    right:470px;
+}
+.points-26 {
+    position: absolute; /* ต้องใช้ position เพื่อกำหนด top และ left */
+    top: 2770px; /* ระบุหน่วยเป็น px */
+    width: 150px; /* ระบุหน่วยเป็น px */
+    height: auto; /* ให้ความสูงปรับตามอัตราส่วน */
+    left:480px;
+}
+.points-32 {
+    position: absolute; /* ต้องใช้ position เพื่อกำหนด top และ left */
+    top: 2970px; /* ระบุหน่วยเป็น px */
+    width: 150px; /* ระบุหน่วยเป็น px */
+    height: auto; /* ให้ความสูงปรับตามอัตราส่วน */
+    right:430px;
+}
+.points-38 {
+    position: absolute; /* ต้องใช้ position เพื่อกำหนด top และ left */
+    top: 3300px; /* ระบุหน่วยเป็น px */
+    width: 150px; /* ระบุหน่วยเป็น px */
+    height: auto; /* ให้ความสูงปรับตามอัตราส่วน */
+    left:450px;
+}
+.points-45 {
+    position: absolute; /* ต้องใช้ position เพื่อกำหนด top และ left */
+    top: 3550px; /* ระบุหน่วยเป็น px */
+    width: 150px; /* ระบุหน่วยเป็น px */
+    height: auto; /* ให้ความสูงปรับตามอัตราส่วน */
+    right:380px;
+}
+.points-50 {
+    position: absolute; /* ต้องใช้ position เพื่อกำหนด top และ left */
+    top: 3950px; /* ระบุหน่วยเป็น px */
+    width: 150px; /* ระบุหน่วยเป็น px */
+    height: auto; /* ให้ความสูงปรับตามอัตราส่วน */
+    left:450px;
+}
+.points-60 {
+    position: absolute; /* ต้องใช้ position เพื่อกำหนด top และ left */
+    top: 4290px; /* ระบุหน่วยเป็น px */
+    width: 150px; /* ระบุหน่วยเป็น px */
+    height: auto; /* ให้ความสูงปรับตามอัตราส่วน */
+    right:370px;
+}
+.points-70 {
+    position: absolute; /* ต้องใช้ position เพื่อกำหนด top และ left */
+    top: 4600px; /* ระบุหน่วยเป็น px */
+    width: 150px; /* ระบุหน่วยเป็น px */
+    height: auto; /* ให้ความสูงปรับตามอัตราส่วน */
+    left:450px;
+}
+.points-80 {
+    position: absolute; /* ต้องใช้ position เพื่อกำหนด top และ left */
+    top: 4980px; /* ระบุหน่วยเป็น px */
+    width: 150px; /* ระบุหน่วยเป็น px */
+    height: auto; /* ให้ความสูงปรับตามอัตราส่วน */
+    right:370px;
+}
+.points-90 {
+    position: absolute; /* ต้องใช้ position เพื่อกำหนด top และ left */
+    top: 5350px; /* ระบุหน่วยเป็น px */
+    width: 150px; /* ระบุหน่วยเป็น px */
+    height: auto; /* ให้ความสูงปรับตามอัตราส่วน */
+    left:430px;
+}
+.points-100 {
+    position: absolute; /* ต้องใช้ position เพื่อกำหนด top และ left */
+    top: 5670px; /* ระบุหน่วยเป็น px */
+    width: 150px; /* ระบุหน่วยเป็น px */
+    height: auto; /* ให้ความสูงปรับตามอัตราส่วน */
+    right:370px;
+}
+
+
+
+
+/* Popup.css  ของ ข้อความ เหรียญ ไม่เพียงพอ*/
+.popup-coin {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* สีพื้นหลังโปร่งใส */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .popup-content-coin {
+    background-color: white; /* สีพื้นหลังขาว */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+  }
+  
+  .popup-content-coin h2 {
+    margin-bottom: 20px;
+  }
+  
+  .popup-content-coin button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .popup-content-coin button:hover {
+    background-color: #0056b3;
+  }
+  
+
+
+  
+
+

@@ -22,4 +22,6 @@ type Member struct {
 
 	// ความสัมพันธ์กับ Ticket
 	Tickets []Ticket `gorm:"foreignKey:MemberID"`
+	// One-to-Many Relationship
+	Rewards    []Reward  `gorm:"foreignKey:MemberID" json:"rewards"`  // ความสัมพันธ์ One-to-Many กับ Reward
 }

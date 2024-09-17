@@ -21,7 +21,7 @@
   background-color: #001529;
   border-color: #ffcc00;
   border-radius: 10px;
-  overflow: hidden;
+  overflow: auto;
   width: 100%; /* ให้ตารางแสดงเต็มความกว้าง */
   max-width: 1300px;
 

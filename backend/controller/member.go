@@ -2,7 +2,7 @@ package controller
 
 import (
 	"net/http"
-
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/tanapon395/sa-67-example/config"
 	"github.com/tanapon395/sa-67-example/entity"
@@ -152,3 +152,34 @@ func UpdateMember(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Updated successful"})
 }
+
+func GetRewardsByMemberID(c *gin.Context) {
+    memberID := c.Param("member_id")
+
+    // Validate memberID
+    if memberID == "" {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Member ID is required"})
+        return
+    }
+
+    // Fetch rewards from the database พร้อมกับ Preload ข้อมูล Member
+    var rewards []entity.Reward
+    result := config.DB().Preload("Member").Where("member_id = ?", memberID).Find(&rewards)
+    
+    if result.Error != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch rewards"})
+        return
+    }
+
+    // Logging the fetched rewards for debugging
+    fmt.Printf("Fetched Rewards: %+v\n", rewards)
+
+    // Logging member information
+    for _, reward := range rewards {
+        fmt.Printf("Member Information for Reward %d: %+v\n", reward.ID, reward.Member)
+    }
+
+    c.JSON(http.StatusOK, rewards)
+}
+
+
