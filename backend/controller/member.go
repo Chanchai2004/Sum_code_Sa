@@ -3,7 +3,7 @@ package controller
 import (
 	"net/http"
 	"fmt"
-	"strconv"
+	
 	"github.com/gin-gonic/gin"
 	"github.com/tanapon395/sa-67-example/config"
 	"github.com/tanapon395/sa-67-example/entity"
@@ -127,41 +127,43 @@ func DeleteMember(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Deleted successful"})
 }
 
+// PATCH /members/:id
 func UpdateMember(c *gin.Context) {
     var member entity.Member
 
-    // ดึง id จาก URL และแปลงเป็น int
+    // ดึงค่า MemberID จาก URL parameter
     MemberID := c.Param("id")
-    id, err := strconv.Atoi(MemberID)
-    if err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid member ID"})
-        return
-    }
 
-    // ค้นหาสมาชิกตาม id ที่แปลงแล้ว
+    // ตรวจสอบว่ามีสมาชิกที่มี ID นี้อยู่ในระบบหรือไม่
     db := config.DB()
-    result := db.First(&member, id)
+    result := db.First(&member, MemberID)
     if result.Error != nil {
-        c.JSON(http.StatusNotFound, gin.H{"error": "id not found"})
+        c.JSON(http.StatusNotFound, gin.H{"error": "Member ID not found"})
         return
     }
 
-    // รับข้อมูล JSON จาก request body
-    if err := c.ShouldBindJSON(&member); err != nil {
+    // อ่านข้อมูลจาก JSON และอัปเดตเฉพาะฟิลด์ที่จำเป็น
+    var input struct {
+        TotalPoint int `json:"TotalPoint"`
+    }
+
+    if err := c.ShouldBindJSON(&input); err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request, unable to map payload"})
         return
     }
 
-    // บันทึกข้อมูลที่อัปเดต
-    result = db.Save(&member)
+    // ใช้ db.Model() เพื่ออัปเดตเฉพาะฟิลด์ TotalPoint
+    result = db.Model(&member).Updates(map[string]interface{}{
+        "TotalPoint": input.TotalPoint,
+    })
+    
     if result.Error != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request"})
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to update member"})
         return
     }
 
-    c.JSON(http.StatusOK, gin.H{"message": "Updated successful"})
+    c.JSON(http.StatusOK, gin.H{"message": "Update successful"})
 }
-
 func GetRewardsByMemberID(c *gin.Context) {
     memberID := c.Param("member_id")
 
@@ -190,7 +192,7 @@ func GetRewardsByMemberID(c *gin.Context) {
 
     c.JSON(http.StatusOK, rewards)
 
-	
+
 }
 
 
