@@ -49,7 +49,7 @@ const HistoryPage: React.FC = () => {
     
 
     const handleBack = () => {
-        navigate('/Reward');
+        navigate('/reward');
     };
 
     const generateCode = (reward: RewardInterface) => {
