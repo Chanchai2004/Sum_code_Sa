@@ -89,7 +89,11 @@ func main() {
         router.POST("/codereward", controller.CreateCodeReward) // เส้นทางสำหรับสร้างโค้ดแลกเปลี่ยน
 		router.GET("/check-code-reward", controller.GetCodeReward) // เส้นทางสำหรับดึงข้อมูลโค้ดแลกเปลี่ยน
 
-		
+		//Ticketcheck Routes
+		router.GET("/checkin/ticket_id", controller.CreateTicketCheck)
+		router.POST("/checkin/:ticket_id", controller.CreateTicketCheck)
+		router.GET("/checkin", controller.GetTicketChecks)
+
 
 
 		// เส้นทางสำหรับการเข้าสู่ระบบ

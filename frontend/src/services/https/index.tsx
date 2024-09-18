@@ -644,6 +644,58 @@ try {
 }
 };
 
+// ฟังก์ชันสำหรับเช็คอินด้วย TicketID
+async function Checkin(TicketID: Number) {
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      ticket_id: TicketID,
+      time_stamp: new Date().toISOString(), // กำหนด timestamp
+      status: "Check in", // สถานะของการเช็คอิน
+    }),
+  };
+
+  try {
+    const response = await fetch(`${apiUrl}/checkin/${TicketID}`, requestOptions);
+    const res = await response.json();
+
+    if (res.success) {
+      return { status: true, message: "complete" };
+    } else if (response.status === 409) {
+      return { status: false, message: "failed" };
+    } else {
+      return { status: false, message: "Ticket not found" };
+    }
+  } catch (error) {
+    return { status: false, message: "failed" };
+  }
+}
+// ฟังก์ชันสำหรับดึงข้อมูลทั้งหมดใน ticketcheck
+async function GetTicketcheck() {
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  try {
+    const response = await fetch(`${apiUrl}/checkin`, requestOptions);  // แก้ไขเส้นทางตรงนี้
+    const res = await response.json();
+
+    if (res.data) {
+      return res.data;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error("Error fetching ticket check data:", error);
+    return false;
+  }
+}
 
 
 
@@ -676,6 +728,8 @@ export {
   GetRewardsByMemberID,
   saveCodeReward,
   CheckCodeReward,
-  checkExistingCodeReward
+  checkExistingCodeReward,
+  Checkin,
+  GetTicketcheck
   
 };

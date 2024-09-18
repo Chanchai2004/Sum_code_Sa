@@ -40,6 +40,7 @@ func SetupDatabase() {
 		&entity.Ticket{}, // สร้างหลังจาก BookSeat และ Booking
 		&entity.Reward{},
 		&entity.CodeReward{},
+		&entity.TicketCheck{},
 	)
 	if err != nil {
 		fmt.Println("Error in AutoMigrate:", err)
@@ -54,6 +55,23 @@ func SetupDatabase() {
 	db.FirstOrCreate(&GenderMale, &entity.Gender{Name: "Male"})
 	db.FirstOrCreate(&GenderFemale, &entity.Gender{Name: "Female"})
 
+
+	// สร้างข้อมูลสตาฟ 
+	hashedPasswordStaff, _ := HashPassword("123456")
+	Member4 := &entity.Member{
+		UserName:   "sastaff",
+		FirstName:  "Softwarestaff",
+		LastName:   "Analysisstaff",
+		Email:      "sastaff@gmail.com",
+		Password:   hashedPasswordStaff,
+		GenderID:   GenderMale.ID,
+		TotalPoint: 10,
+		Role:       "staff",
+	}
+	db.FirstOrCreate(Member4, &entity.Member{
+		Email: "sastaff@gmail.com",
+	})
+	
 	// สร้างข้อมูลสมาชิกคนที่หนึ่ง (sa@gmail.com)
 	hashedPassword, _ := HashPassword("123456")
 	Member1 := &entity.Member{

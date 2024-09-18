@@ -40,7 +40,12 @@ const Login: React.FC = () => {
                         localStorage.setItem('isAdmin', 'true');
                         console.log("User is admin, navigating to dashboard...");
                         navigate('/dashboard');
-                    } else {
+                    }else if(email === 'sastaff@gmail.com' && values.password === '123456'){
+                        localStorage.setItem('isStaff', 'true');
+                        console.log("User is staff, navigating to scanner...");
+                        navigate('/scanner');
+                    }
+                     else {
                         localStorage.setItem('isAdmin', 'false');
                         console.log("User is not an admin, navigating to home...");
                         navigate('/home');

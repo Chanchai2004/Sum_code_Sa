@@ -16,19 +16,27 @@ import ShowtimeManagement from './pages/Showtime/Showtime';
 import MovieBooking from './pages/MovieBooking/MovieBooking';
 import Reward from './pages/Reward/Reward';
 import HistoryPage from './pages/History/History';
+import Table from './pages/ticketstatus/ticketstatus';
+import QrScanner from './pages/Qrscanner/QrScanner';
+
+
 const App: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const isLoggedIn = localStorage.getItem('isLogin') === 'true';
     const isAdmin = localStorage.getItem('isAdmin') === 'true';
+    const isStaff = localStorage.getItem('isStaff') === 'true';
 
     useEffect(() => {
         if (isLoggedIn) {
-            if (isAdmin && !['/movie', '/showtimes', '/members', '/analytics'].includes(location.pathname)) {
+            if (isAdmin && !['/movie', '/showtimes', '/members', '/analytics', '/movies/create', '/movies/edit'].includes(location.pathname)) {
                 navigate('/movie');
             }
-            if (!isAdmin && !['/home', '/myticket', '/seatbooking', '/moviebooking' , '/reward' , '/history'].includes(location.pathname)) { // เพิ่ม '/seatbooking' ในการตรวจสอบ
+            else if (!isStaff && !isAdmin && !['/home', '/myticket', '/seatbooking', '/moviebooking', '/reward', '/history'].includes(location.pathname)) { 
                 navigate('/home');
+            }
+            else if (isStaff && !['/scanner','/ticketstatus'].includes(location.pathname)){
+                navigate('/scanner');
             }
         } else {
             navigate('/login');
@@ -64,6 +72,9 @@ const App: React.FC = () => {
                     <Route path="/reward" element={isLoggedIn && !isAdmin ? <Reward /> : <Navigate to="/login" />} />
                     <Route path="/history" element={isLoggedIn && !isAdmin ? <HistoryPage /> : <Navigate to="/login" />} />
                   
+                  {/*เส้นทางสำหรับสตาฟ*/ }
+                  <Route path="/scanner" element={isLoggedIn && isStaff ? <QrScanner /> : <Navigate to="/login"/>} />
+                    <Route path="/ticketstatus" element={isLoggedIn && isStaff ? <Table /> : <Navigate to="/login"/>} />
 
 
                     <Route path="*" element={<Navigate to="/login" />} />

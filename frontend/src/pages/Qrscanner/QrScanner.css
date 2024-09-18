@@ -1,0 +1,53 @@
+/* QrScanner.css */
+
+.ticketcheckcontainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    overflow: hidden;
+}
+
+.scannerContainer {
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+}
+
+/* .ticketcheckheader {
+    margin-bottom: 2px;
+} */
+
+.qrReader {
+    width: auto;
+    max-height: 435px;
+    /* background: #000; */
+    object-fit: cover;
+}
+
+.error {
+    color: red;
+    margin-top: 10px;
+}
+
+/* .dataContainer {
+    text-align: left;
+} */
+
+/* .pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+} */
+
+.ticketcheck h1 {
+    position: sticky;
+    top: 50px;
+    text-align: center;
+    z-index: 10; /* ถ้าต้องการให้ h1 อยู่เหนือองค์ประกอบอื่น */
+    
+}   
+.ticketcheckinput-button-container {
+    display: flex;
+    align-items: center;
+  }
+  

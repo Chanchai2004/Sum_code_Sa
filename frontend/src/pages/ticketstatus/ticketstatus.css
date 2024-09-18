@@ -1,0 +1,35 @@
+/* สีพื้นหลังของแถวปกติ */
+.ant-table-tbody > tr:nth-child(odd) {
+  background-color: #c4c1c1; /* สีสำหรับแถวที่เป็นเลขคี่ */
+  
+}
+
+.ant-table-tbody > tr:nth-child(even) {
+  background-color: #eae6e6; /* สีสำหรับแถวที่เป็นเลขคู่ */
+  
+}
+
+/* ส่วนอื่นๆ ของตาราง */
+.ticketchecktable-container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 130px 16px 16px 16px; /* ขยับขึ้นไปข้างบนมากขึ้น */
+}
+
+
+.ant-table {
+  /* border: 1px solid #000001; เส้นขอบของตาราง */
+  border-radius: 8px; /* มุมโค้งของตาราง */
+}
+
+.ant-table-thead > tr > th {
+  background-color: #6b6889 !important; /* ใช้ !important เพื่อบังคับใช้สี */
+  font-weight: bold;
+  text-align: center !important; /* จัดข้อความให้อยู่กึ่งกลาง */
+}
+
+.ant-table-tbody > tr > td {
+  text-align: center; /* จัดข้อความในเซลล์ให้อยู่กึ่งกลาง */
+  padding: 8px; /* เพิ่มช่องว่างในเซลล์ */
+}
