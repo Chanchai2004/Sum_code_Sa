@@ -37,6 +37,7 @@ func main() {
 		router.DELETE("/members/:id", controller.DeleteMember)
 		router.GET("/mrewards/:member_id", controller.GetRewardsByMemberID)
 
+		router.POST("/check-admin-password", controller.CheckAdminPassword)
 
 		// Movie Routes
 		router.GET("/movies", controller.ListMovies)         // แสดงรายการหนังทั้งหมด

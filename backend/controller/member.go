@@ -3,7 +3,7 @@ package controller
 import (
 	"net/http"
 	"fmt"
-	
+	"strconv"
 	"github.com/gin-gonic/gin"
 	"github.com/tanapon395/sa-67-example/config"
 	"github.com/tanapon395/sa-67-example/entity"
@@ -42,6 +42,35 @@ func Signin(c *gin.Context) {
 	})
 }
 
+func CheckAdminPassword(c *gin.Context) {
+	var input struct {
+		AdminID  uint   `json:"id"`  // รับ adminID มาด้วย โดยใช้ json key "id"
+		Password string `json:"password"`
+	}
+
+	// ตรวจสอบว่า request body ถูกต้องหรือไม่
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		return
+	}
+
+	var admin entity.Member
+	db := config.DB()
+
+	// ค้นหา admin ในฐานข้อมูลตาม adminID ที่ส่งมา
+	if err := db.Where("id = ? AND role = ?", input.AdminID, "admin").First(&admin).Error; err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Admin not found"})
+		return
+	}
+
+	// ใช้ฟังก์ชันจาก config เพื่อตรวจสอบรหัสผ่าน
+	if config.CheckPasswordHash([]byte(input.Password), []byte(admin.Password)) {
+		c.JSON(http.StatusOK, gin.H{"success": true})
+	} else {
+		c.JSON(http.StatusUnauthorized, gin.H{"success": false, "error": "Invalid password"})
+	}
+}
+
 // POST /Member
 func CreateMember(c *gin.Context) {
 	var member entity.Member
@@ -67,13 +96,15 @@ func CreateMember(c *gin.Context) {
 
 	// สร้าง Member
 	u := entity.Member{
-		FirstName:  member.FirstName,
-		LastName:   member.LastName,
-		Email:      member.Email,
+		UserName:   member.UserName,  // ตั้งค่าฟิลด์ UserName
+		FirstName:  member.FirstName, // ตั้งค่าฟิลด์ FirstName
+		LastName:   member.LastName,  // ตั้งค่าฟิลด์ LastName
+		Email:      member.Email,     // ตั้งค่าฟิลด์ Email
 		Password:   hashedPassword,
 		GenderID:   member.GenderID,
-		Gender:     gender,
+		Gender:     gender,           // โยงความสัมพันธ์กับ Entity Gender
 		TotalPoint: member.TotalPoint,
+		Role:       member.Role,      // เพิ่มฟิลด์ Role ที่ผู้ใช้กรอก
 	}
 
 	// บันทึก
@@ -105,6 +136,7 @@ func GetMember(c *gin.Context) {
 
 // GET /Members
 func ListMembers(c *gin.Context) {
+
 	var members []entity.Member
 
 	db := config.DB()
@@ -117,53 +149,98 @@ func ListMembers(c *gin.Context) {
 }
 
 // DELETE /members/:id
+
 func DeleteMember(c *gin.Context) {
 	id := c.Param("id")
+	var member entity.Member
 	db := config.DB()
-	if tx := db.Exec("DELETE FROM members WHERE id = ?", id); tx.RowsAffected == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "id not found"})
+
+	// แปลง id จาก string เป็น uint
+	adminID, err := strconv.ParseUint(id, 10, 32)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "Deleted successful"})
+
+	// ดึงข้อมูลของ user ที่ต้องการลบ
+	if err := db.First(&member, adminID).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		return
+	}
+
+	// ตรวจสอบว่าเป็น admin หรือไม่
+	if member.Role == "admin" {
+		// นับจำนวน admin ที่เหลืออยู่ในระบบ
+		var adminCount int64
+		if err := db.Model(&entity.Member{}).Where("role = ?", "admin").Count(&adminCount).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Error checking admin count"})
+			return
+		}
+
+		// ถ้ามี admin เพียง 1 คน ห้ามลบ
+		if adminCount <= 1 {
+			c.JSON(http.StatusForbidden, gin.H{"error": "Cannot delete the last admin"})
+			return
+		}
+
+		// กรณี admin ต้องให้กรอกรหัสผ่าน
+		var input struct {
+			Password string `json:"password"`
+		}
+
+		// bind ข้อมูลที่กรอกมาจาก frontend
+		if err := c.ShouldBindJSON(&input); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+			return
+		}
+
+		// ตรวจสอบรหัสผ่าน admin
+		if !config.CheckPasswordHash([]byte(input.Password), []byte(member.Password)) {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid admin password"})
+			return
+		}
+	}
+
+	// ลบ user
+	if tx := db.Delete(&member).Error; tx != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error deleting user"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Deleted successfully"})
 }
+
+
 
 // PATCH /members/:id
 func UpdateMember(c *gin.Context) {
-    var member entity.Member
+	var member entity.Member
 
-    // ดึงค่า MemberID จาก URL parameter
-    MemberID := c.Param("id")
+	MemberID := c.Param("id")
 
-    // ตรวจสอบว่ามีสมาชิกที่มี ID นี้อยู่ในระบบหรือไม่
-    db := config.DB()
-    result := db.First(&member, MemberID)
-    if result.Error != nil {
-        c.JSON(http.StatusNotFound, gin.H{"error": "Member ID not found"})
-        return
-    }
+	db := config.DB()
+	result := db.First(&member, MemberID)
+	if result.Error != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "id not found"})
+		return
+	}
 
-    // อ่านข้อมูลจาก JSON และอัปเดตเฉพาะฟิลด์ที่จำเป็น
-    var input struct {
-        TotalPoint int `json:"TotalPoint"`
-    }
+	// Bind JSON ที่ส่งมาใน request body
+	if err := c.ShouldBindJSON(&member); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request, unable to map payload"})
+		return
+	}
 
-    if err := c.ShouldBindJSON(&input); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request, unable to map payload"})
-        return
-    }
+	// บันทึกการอัปเดตข้อมูล
+	result = db.Save(&member)
+	if result.Error != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request"})
+		return
+	}
 
-    // ใช้ db.Model() เพื่ออัปเดตเฉพาะฟิลด์ TotalPoint
-    result = db.Model(&member).Updates(map[string]interface{}{
-        "TotalPoint": input.TotalPoint,
-    })
-    
-    if result.Error != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to update member"})
-        return
-    }
-
-    c.JSON(http.StatusOK, gin.H{"message": "Update successful"})
+	c.JSON(http.StatusOK, gin.H{"message": "Updated successful"})
 }
+
 func GetRewardsByMemberID(c *gin.Context) {
     memberID := c.Param("member_id")
 
