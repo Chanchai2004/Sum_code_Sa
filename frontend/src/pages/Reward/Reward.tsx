@@ -527,9 +527,6 @@ const getRewardImage = (reward: RewardInterface) => {
                 className="profile-image"
               />
               <p>{userName}</p>
-              <Link to="/checkcode">
-                <button className="my-reward-button">MY REWARD</button>
-              </Link>
             </div>
             <div className="divider"></div>
             <div className="points-section">

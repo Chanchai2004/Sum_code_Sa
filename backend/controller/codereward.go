@@ -10,6 +10,7 @@ import (
 )
 
 // CreateCodeReward เป็นฟังก์ชันสำหรับบันทึกโค้ดแลกเปลี่ยน (CodeReward)
+// CreateCodeReward เป็นฟังก์ชันสำหรับบันทึกโค้ดแลกเปลี่ยน (CodeReward)
 func CreateCodeReward(c *gin.Context) {
 	db := config.DB()
 
@@ -39,12 +40,9 @@ func CreateCodeReward(c *gin.Context) {
 		return
 	}
 
-	// สร้างโค้ดใหม่สำหรับรางวัลนี้
+	// ใช้โค้ดที่ถูกส่งมาจาก frontend แทนการสร้างโค้ดสุ่ม
 	codeReward.Status = true
 	codeReward.RewardID = reward.ID
-
-	// คุณอาจสร้างโค้ดสุ่ม (เช่น CODE1234) สำหรับโค้ดแลกเปลี่ยน
-	codeReward.RewardCode = generateRandomCode(8)  // สมมติว่ามีฟังก์ชันสำหรับสร้างโค้ดสุ่ม
 
 	// บันทึก CodeReward ลงในฐานข้อมูล
 	if err := db.Create(&codeReward).Error; err != nil {
@@ -53,11 +51,14 @@ func CreateCodeReward(c *gin.Context) {
 		return
 	}
 
-	// ส่งข้อมูลตอบกลับพร้อมข้อมูลที่บันทึกสำเร็จ
+	// ตรวจสอบว่าโค้ดแลกเปลี่ยนถูกบันทึกสำเร็จแล้ว
 	log.Printf("CodeReward saved successfully: %+v\n", codeReward)
+
+	// ส่งข้อมูลตอบกลับพร้อมข้อมูลที่บันทึกสำเร็จ
 	c.JSON(http.StatusCreated, gin.H{
-		"message": "Code reward created successfully",
-		"data":    codeReward,
+		"message":      "Code reward created successfully",
+		"reward_code":  codeReward.RewardCode,  // ส่งค่า reward_code กลับไปให้ Frontend
+		"data":         codeReward,  // ส่งข้อมูลทั้งหมดของโค้ดที่บันทึกกลับไป
 	})
 }
 

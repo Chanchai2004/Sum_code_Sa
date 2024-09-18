@@ -18,38 +18,49 @@ const HistoryPage: React.FC = () => {
     const [selectedReward, setSelectedReward] = useState<RewardInterface | null>(null); // State for storing selected reward
 
     const handleView = async (reward: RewardInterface) => {
-        // ตรวจสอบว่า type เป็น Discount หรือ Ticket หรือไม่
         if (reward.type === 'discount' || reward.type === 'ticket') {
             message.info(`Rewards of type ${reward.type} cannot be viewed in the popup.`);
-            return; // ไม่ต้องแสดง Popup หากเป็นประเภท Discount หรือ Ticket
+            return;
         }
     
         try {
             // ตรวจสอบว่ามีโค้ดอยู่แล้วหรือไม่
             const existingCode = await checkExistingCodeReward(reward.ID);
+            console.log('Existing code:', existingCode);
     
             if (existingCode && existingCode.reward_code) {
-                // ถ้ามีโค้ดอยู่แล้ว ให้ใช้โค้ดนั้น
-                reward.code = existingCode.reward_code;
+                reward.code = existingCode.reward_code; // ใช้โค้ดที่มีอยู่แล้ว
+                console.log('Reward code found:', reward.code);
             } else {
-                // ถ้าไม่มีโค้ด ให้สร้างโค้ดใหม่
-                const generatedCode = generateCode(reward);  // สร้างโค้ดแบบสุ่ม
-                const savedCode = await saveCodeReward(generatedCode, reward.ID, memberId);  // ส่ง POST เพื่อบันทึกโค้ดลงในฐานข้อมูล
-                reward.code = savedCode.reward_code;  // ใช้โค้ดใหม่ที่สร้างขึ้นและบันทึก
+                // ถ้าไม่มีโค้ด ให้สร้างโค้ดใหม่และบันทึกทันที
+                const generatedCode = generateCode(reward); // สร้างโค้ดแบบสุ่ม
+                console.log('Generated Code:', generatedCode);
+    
+                // ส่ง POST เพื่อบันทึกโค้ด
+                const savedCode = await saveCodeReward(generatedCode, reward.ID, memberId);
+                console.log('Saved Code Response:', savedCode);
+                console.log('Saved Reward Code:', savedCode.reward_code);
+    
+                reward.code = savedCode.reward_code; // อัปเดต reward.code ด้วยโค้ดที่ถูกบันทึก
             }
     
-            // ตั้งค่า reward ที่ถูกเลือกและแสดง modal
-            setSelectedReward({ ...reward });
-            setIsModalVisible(true); // แสดง modal เมื่อข้อมูลพร้อมแล้ว
+            // อัปเดต selectedReward
+            setSelectedReward({ ...reward }); // อัปเดต selectedReward
+            setIsModalVisible(true); // เปิด popup หลังจากอัปเดต state
         } catch (error) {
             console.error('Error fetching or generating reward code:', error);
             message.error('Failed to load or generate reward code');
         }
     };
     
-
+    useEffect(() => {
+        if (selectedReward && selectedReward.code) {
+            setIsModalVisible(true); // เปิด popup เมื่อข้อมูลพร้อม
+        }
+    }, [selectedReward]); // เมื่อ selectedReward ถูกอัปเดต
+    
     const handleBack = () => {
-        navigate('/Reward');
+        navigate('/reward');
     };
 
     const generateCode = (reward: RewardInterface) => {

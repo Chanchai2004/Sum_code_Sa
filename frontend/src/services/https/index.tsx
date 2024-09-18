@@ -578,12 +578,15 @@ const saveCodeReward = async (code: string, rewardId: number, memberId: string |
       }
 
       const data = await response.json();
+      console.log('Backend Response:', data); // ตรวจสอบข้อมูลที่ได้รับจาก Backend
+      console.log('Saved Reward Code:', data.reward_code); // ตรวจสอบว่า reward_code ถูกส่งกลับมาหรือไม่
       return data; // คืนค่าผลลัพธ์ที่บันทึกลงฐานข้อมูล
   } catch (error) {
       console.error('Error saving code reward:', error);
       throw error;
   }
 };
+
 
 
 

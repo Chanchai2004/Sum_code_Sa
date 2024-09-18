@@ -36,6 +36,7 @@ func main() {
 		router.PATCH("/members", controller.UpdateMember)
 		router.DELETE("/members/:id", controller.DeleteMember)
 		router.GET("/mrewards/:member_id", controller.GetRewardsByMemberID)
+		router.PATCH("/members/:id", controller.UpdateMemberReward)
 
 
 		// Movie Routes
