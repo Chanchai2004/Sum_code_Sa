@@ -219,19 +219,18 @@ async function CreateMovie(formData: FormData) {
 
 
 // ฟังก์ชันเพื่ออัปเดตข้อมูลหนัง
-async function UpdateMovie(data: MoviesInterface) {
+async function UpdateMovie(movieId: number, formData: FormData) {
   const requestOptions = {
     method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+    body: formData,  // ส่ง formData โดยตรง ไม่ต้องใช้ JSON.stringify
   };
 
-  let res = await fetch(`${apiUrl}/movies/${data.ID}`, requestOptions)
+  let res = await fetch(`${apiUrl}/movies/${movieId}`, requestOptions)
     .then((res) => {
       if (res.status === 200) {
         return res.json();
       } else {
-        return false;
+        throw new Error("Failed to update movie");
       }
     });
 
