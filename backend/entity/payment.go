@@ -2,6 +2,7 @@ package entity
 
 import (
 	"time"
+
 	"gorm.io/gorm"
 )
 
@@ -10,7 +11,7 @@ type Payment struct {
 	TotalPrice  int
 	Status      string
 	PaymentTime time.Time // ใช้ time.Time เพื่อเก็บข้อมูลเวลาที่ถูกต้อง
-	Slip        string
+	Slip        []byte        `gorm:"type:blob"`
 	MemberID    uint
 	Member      Member `gorm:"foreignKey:MemberID"`
 
