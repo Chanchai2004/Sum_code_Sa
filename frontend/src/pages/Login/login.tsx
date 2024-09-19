@@ -3,6 +3,7 @@ import { Form, Input, Button, Checkbox, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './login.css';
+import Signup from '../Signup/signup';
 
 const Login: React.FC = () => {
     const navigate = useNavigate();
@@ -101,7 +102,7 @@ const Login: React.FC = () => {
 
                     <Form.Item className="login-registerContainer">
                         <span className="login-registerText">Don't have an account?</span>
-                        <Button type="default" className="login-registerButton" onClick={() => navigate('/signup')}>
+                        <Button type="default" className="login-registerButton" onClick={() => navigate('/Signup')}>
                             Register
                         </Button>
                     </Form.Item>

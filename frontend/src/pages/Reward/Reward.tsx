@@ -228,9 +228,9 @@ const getRewardImage = (reward: RewardInterface) => {
       Points: 2,
       Status: false, 
       Discount: 0,
-      Rewardcode: "operconbo" ,
+      Rewardcode: "-" ,
       Reward_time: new Date() ,
-      Describtion:"1 BOX POPCORN M น่ากินสุดๆๆเลย",
+      Describtion:"น่ากินที่สุด",
       Type:"reward",
       ExpirationDate:new Date('2024-09-09'),
       
@@ -239,13 +239,13 @@ const getRewardImage = (reward: RewardInterface) => {
     {
       ID:2,
       imageUrl: "discountnew.png",
-      RewardName: "DISCOUNT",
+      RewardName: "DISCOUNT 50 BATH", 
       Points: 4,
       Status: false, 
       Discount: 50,
-      Rewardcode: "opern" ,
+      Rewardcode: "-" ,
       Reward_time: new Date()  ,
-      Describtion:"น่ากินสุดๆๆเลย",
+      Describtion:"ส่วนลด 50 บาท",
       Type:"discount",
       ExpirationDate:new Date('2024-10-03'),
       
@@ -258,9 +258,9 @@ const getRewardImage = (reward: RewardInterface) => {
       Points: 6,
       Status: false, 
       Discount: 0,
-      Rewardcode: "Opernggggggg" ,
+      Rewardcode: "-" ,
       Reward_time:new Date() ,
-      Describtion:"reward",
+      Describtion:"น่ากินสุดๆ",
       Type:"reward",
       ExpirationDate:new Date('2024-10-17'),
       
@@ -268,13 +268,13 @@ const getRewardImage = (reward: RewardInterface) => {
     {
       ID: 4,
       imageUrl: "discountnew.png",
-      RewardName: "1 SUPERSIZE SET A",
+      RewardName: "DUSCOUNT 100 BATH",
       Points: 9,
       Status: false,
       Discount: 100,
-      Rewardcode: " SUPERSIZE SET A" ,
+      Rewardcode: "-" ,
       Reward_time:new Date(), 
-      Describtion:"น่ากินสุดๆๆเลย",
+      Describtion:"ส่วนลด 100 บาท",
       Type:"discount",
       ExpirationDate:new Date('2024-10-06'),
     },
@@ -285,13 +285,10 @@ const getRewardImage = (reward: RewardInterface) => {
       Points: 12,
       Status: false, 
       Discount: 0,
-      Rewardcode: "SUPERSIZE SET A" ,
-      
+      Rewardcode: "-" ,
       Reward_time:new Date() ,
       Describtion:"น่ากินสุดๆๆเลย",
       Type:"reward",
-     
-      
       ExpirationDate:new Date('2024-10-29'),
       
     },
@@ -302,13 +299,10 @@ const getRewardImage = (reward: RewardInterface) => {
       Points: 15,
       Status: false,
       Discount: 50,
-      Rewardcode: "TICKETZILLA" ,
-      
+      Rewardcode: "-" ,
       Reward_time:new Date(), 
-      Describtion:"น่ากินสุดๆๆเลย",
-      Type:"ticket",
-     
-      
+      Describtion:"บัตรฟรี",
+      Type:"discount",
       ExpirationDate:new Date('2024-10-25'),
       
     },
@@ -319,11 +313,10 @@ const getRewardImage = (reward: RewardInterface) => {
       Points: 18,
       Status: false, 
       Discount: 0,
-      Rewardcode: "SUPERSIZE SET C" ,
+      Rewardcode: "-" ,
       Reward_time:new Date() ,
-      Describtion:"",
+      Describtion:"น่ากินสุดๆ",
       Type:"reward",
-      
       ExpirationDate:new Date('2024-10-08'),
     },
     {
@@ -334,12 +327,9 @@ const getRewardImage = (reward: RewardInterface) => {
       Status: false,
       Discount: 0,
       Rewardcode: "GIFT" ,
-      
       Reward_time:new Date(), 
-      Describtion:"",
+      Describtion:"ของขวัญสุดพิเศษ",
       Type:"reward",
-      
-      
       ExpirationDate:new Date('2024-10-07'),
       
     },
@@ -349,14 +339,11 @@ const getRewardImage = (reward: RewardInterface) => {
       RewardName: "2 NORMAL SEATS",
       Points: 26,
       Status: false,
-      Discount: 0,
+      Discount: 200,
       Rewardcode: "2 NORMAL SEATS" ,
-      
       Reward_time:new Date() , 
       Describtion:"",
-      Type:"ticket",
-      
-      
+      Type:"discount",
       ExpirationDate:new Date('2024-10-09'),
     },
     {
@@ -365,14 +352,11 @@ const getRewardImage = (reward: RewardInterface) => {
       RewardName: "2 SUPERSIZE SET A ",
       Points: 32,
       Status: false,
-      Discount: 100,
-      Rewardcode: "SUPERSIZE SET A" ,
-      
+      Discount: 0,
+      Rewardcode: "-" ,
       Reward_time:new Date() , 
-      Describtion:"",
+      Describtion:"น่ากินสุดๆ",
       Type:"reward",
-      
-      
       ExpirationDate:new Date('2024-11-02'),
     },
     {
@@ -381,14 +365,11 @@ const getRewardImage = (reward: RewardInterface) => {
       RewardName: "2 PERMUIM SEATS ",
       Points: 38,
       Status: false,
-      Discount: 0,
-      Rewardcode: " PERMUIM SEATS " ,
-      
+      Discount: 400,
+      Rewardcode: "-" ,
       Reward_time:new Date() , 
       Describtion:"",
-      Type:"ticket",
-      
-      
+      Type:"discount",
       ExpirationDate:new Date('2024-11-01'),
     },
     {
@@ -398,13 +379,10 @@ const getRewardImage = (reward: RewardInterface) => {
       Points: 45,
       Status: false,
       Discount: 0,
-      Rewardcode: "xxxcombo" ,
-      
+      Rewardcode: "-" ,
       Reward_time:new Date() , 
-      Describtion:"",
+      Describtion:"น่ากินสุดๆ",
       Type:"reward",
-      
-      
       ExpirationDate:new Date('2024-11-22'),
     },
     {
@@ -414,13 +392,10 @@ const getRewardImage = (reward: RewardInterface) => {
       Points: 50,
       Status: false, 
       Discount: 0,
-      Rewardcode: "GIFT" ,
-     
+      Rewardcode: "-" ,
       Reward_time:new Date() ,
       Describtion:"",
       Type:"reward",
-      
-     
       ExpirationDate:new Date('2024-15-20'),
     },
     {
@@ -429,12 +404,11 @@ const getRewardImage = (reward: RewardInterface) => {
       RewardName: "3 PREMUIM SEATS  ",
       Points: 60,
       Status: false, 
-      Discount: 0,
-      Rewardcode: " PREMUIM SEATS" ,
-      
+      Discount: 600,
+      Rewardcode: "-" ,
       Reward_time:new Date(),
-      Describtion:"",
-      Type:"ticket",
+      Describtion:"ที่นั่งสุดพิเศษ",
+      Type:"discount",
       
      
       ExpirationDate:new Date('2024-11-20'),
@@ -445,14 +419,11 @@ const getRewardImage = (reward: RewardInterface) => {
       RewardName: "1 DIRECTOR PACKAGE ",
       Points: 70,
       Status: false,
-      Discount: 0,
-      Rewardcode: "1 DIRECTOR PACKAGE " ,
-      
+      Discount: 900,
+      Rewardcode: "-" ,
       Reward_time:new Date() , 
-      Describtion:"",
-      Type:"ticket",
-     
-      
+      Describtion:"แพ็คเกจหนังสุดพิเศษ",
+      Type:"discount",
       ExpirationDate:new Date('2024-11-09'),
     },
     {
@@ -461,13 +432,11 @@ const getRewardImage = (reward: RewardInterface) => {
       RewardName: " 4 PREMUIM SEATS",
       Points: 80,
       Status: false,
-      Discount: 0,
-      Rewardcode: "PREMUIM SEATS" ,
-      
+      Discount: 800,
+      Rewardcode: "-" ,
       Reward_time:new Date() , 
-      Describtion:"",
-      Type:"ticket",
-      
+      Describtion:"ที่นั่งสุดพิเศษ",
+      Type:"discount",
       ExpirationDate:new Date('2024-12-03'),
     },
     {
@@ -476,14 +445,11 @@ const getRewardImage = (reward: RewardInterface) => {
       RewardName: "4 SUPERSIZE SET c",
       Points: 90,
       Status: false,
-      Discount: 100,
-      Rewardcode: " SUPERSIZE SET C " ,
-      
+      Discount: 0,
+      Rewardcode: "-" ,
       Reward_time:new Date(),
-      Describtion:"", 
+      Describtion:"น่ากินสุดๆ", 
       Type:"reward",
-      
-      
       ExpirationDate:new Date('2024-12-05'),
     },
     {
@@ -492,13 +458,11 @@ const getRewardImage = (reward: RewardInterface) => {
       RewardName: "10 NORMAL SEATS ",
       Points: 100,
       Status: false, 
-      Discount: 0,
-      Rewardcode: "NORMAL SEATS" ,
-     
+      Discount: 1000,
+      Rewardcode: "-" ,
       Reward_time:new Date(),
       Describtion:"",
-      Type:"ticket",
-      
+      Type:"discount",
       ExpirationDate:new Date('2024-12-12'),
     },
     // เพิ่มรายการรางวัลอื่นๆ ที่เหลือที่นี่

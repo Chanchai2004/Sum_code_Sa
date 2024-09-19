@@ -94,29 +94,20 @@ const MovieList: React.FC = () => {
             onMouseLeave={() => setHovered(false)} // Resume auto-slide when not hovering
           >
             {movies.length > 0 && (
-              <Carousel movieID={movies[activeIndex].ID!}>
+             
+                
                 <div className="movie-details">
-                  <h2>{movies[activeIndex].MovieName}</h2>
-                  <p>{movies[activeIndex].Synopsis}</p>
-                  <p><strong>Duration:</strong> {movies[activeIndex].MovieDuration} minutes</p>
-                  {movies[activeIndex].MovieType && <p><strong>Type:</strong> {movies[activeIndex].MovieType}</p>}
-                  {movies[activeIndex].Director && <p><strong>Director:</strong> {movies[activeIndex].Director}</p>}
-                  {movies[activeIndex].Actor && <p><strong>Actors:</strong> {movies[activeIndex].Actor}</p>}
-                  {movies[activeIndex].ReleaseDate && (
-                    <p><strong>Release Date:</strong> {new Date(movies[activeIndex].ReleaseDate!).toLocaleDateString()}</p>
-                  )}
-                  <Button
-                    variant="primary"
-                    onClick={() => {
-                      console.log('Selected Movie ID:', movies[activeIndex].ID);  // Print the movie ID to the console
-                      navigate('/moviebooking', { state: { movieID: movies[activeIndex].ID } });  // Navigate to the booking page
-                    }}
-                  >
-                    จองตั๋ว
-                  </Button>
+                   {/* ฝังวิดีโอ YouTube */}
+  <iframe
+    width="100%"
+    height="300"
+    src="https://www.youtube.com/embed/mG-1yvxbWec"
+    title="YouTube video player"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowFullScreen
+  ></iframe>
 
                 </div>
-              </Carousel>
             )}
             <ProgressBar now={progress} style={{ height: '5px', marginTop: '10px' }} /> {/* Progress bar */}
           </div>

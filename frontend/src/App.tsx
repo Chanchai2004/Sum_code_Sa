@@ -18,6 +18,7 @@ import Reward from './pages/Reward/Reward';
 import HistoryPage from './pages/History/History';
 import Table from './pages/ticketstatus/ticketstatus';
 import QrScanner from './pages/Qrscanner/QrScanner';
+import Signup from './pages/Signup/signup';
 
 
 const App: React.FC = () => {
@@ -32,15 +33,15 @@ const App: React.FC = () => {
             if (isAdmin && !['/movie', '/showtimes', '/members', '/analytics', '/movies/create', '/movies/edit'].includes(location.pathname)) {
                 navigate('/movie');
             }
-            else if (!isStaff && !isAdmin && !['/home', '/myticket', '/seatbooking', '/moviebooking', '/reward', '/history'].includes(location.pathname)) { 
+            else if (!isStaff && !isAdmin && !['/home', '/myticket', '/seatbooking', '/moviebooking', '/reward', '/history',].includes(location.pathname)) { 
                 navigate('/home');
             }
             else if (isStaff && !['/scanner','/ticketstatus'].includes(location.pathname)){
                 navigate('/scanner');
             }
-        } else {
-            navigate('/login');
-        }
+        } //else {
+        //     navigate('/login');
+        // }
     }, [isLoggedIn, isAdmin, navigate, location.pathname]);
 
     return (
@@ -76,6 +77,7 @@ const App: React.FC = () => {
                   <Route path="/scanner" element={isLoggedIn && isStaff ? <QrScanner /> : <Navigate to="/login"/>} />
                     <Route path="/ticketstatus" element={isLoggedIn && isStaff ? <Table /> : <Navigate to="/login"/>} />
 
+                    <Route path="/Signup" element={<Signup />} />
 
                     <Route path="*" element={<Navigate to="/login" />} />
                 </Routes>
