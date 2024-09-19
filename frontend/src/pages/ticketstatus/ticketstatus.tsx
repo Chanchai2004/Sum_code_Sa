@@ -51,6 +51,9 @@ const columns = [
     }, []);
   
     return (
+      <div className='ticketstatus'>
+        <div className="body">
+      <div className="main-content">
       <div className="ticketchecktable-container">
         <Sidebar /> 
         <Header />
@@ -60,6 +63,9 @@ const columns = [
           rowKey="ID"
           bordered // แสดงขอบรอบตาราง
         />
+      </div>
+      </div>
+      </div>
       </div>
     );
   };

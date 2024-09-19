@@ -518,7 +518,7 @@ const getRewardImage = (reward: RewardInterface) => {
         />
   
         <div className="my-points-container">
-          <h1>My points</h1>
+          <h2>My points</h2>
           <div className="points-content">
             <div className="profile-section">
               <img 

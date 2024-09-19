@@ -6,12 +6,14 @@
     align-items: center;
     height: 100%;
     overflow: hidden;
+    background-color: white;
 }
 
 .scannerContainer {
     width: 100%;
     max-width: 500px;
     text-align: center;
+
 }
 
 /* .ticketcheckheader {
@@ -25,10 +27,10 @@
     object-fit: cover;
 }
 
-.error {
+/* .error {
     color: red;
     margin-top: 10px;
-}
+} */
 
 /* .dataContainer {
     text-align: left;
@@ -44,7 +46,8 @@
     top: 50px;
     text-align: center;
     z-index: 10; /* ถ้าต้องการให้ h1 อยู่เหนือองค์ประกอบอื่น */
-    
+    font-weight: bold; /* เพิ่มความหนาของข้อความ */
+    color: #333;
 }   
 .ticketcheckinput-button-container {
     display: flex;

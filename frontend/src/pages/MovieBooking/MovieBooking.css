@@ -1,93 +1,208 @@
-/* Slider Container */
-.slick-slider {
-    position: relative;
-    display: block;
-    box-sizing: border-box;
-    user-select: none;
-    touch-action: pan-y;
-    -webkit-tap-highlight-color: transparent;
-  }
-  
-  /* Hide dots and default arrows */
-  .slick-dots, .slick-prev:before, .slick-next:before {
-    display: none;
-  }
-  
-  /* Arrow Styling */
+/* General Container */
+.mcontainer {
+  margin-top: 60px; /* ให้แน่ใจว่ามีพื้นที่พอสำหรับ Navbar */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%; /* กำหนดความกว้างให้เต็มหน้าจอ */
+  padding: 20px;
+  box-sizing: border-box;
+  overflow: hidden; /* ป้องกันการแสดงผลเนื้อหาที่เกินขอบ */
+}
+
+/* Left Side (Poster) */
+.poster-container {
+  flex: 1;
+  max-width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.poster-container img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+  aspect-ratio: 2 / 3;
+}
+
+/* Right Side (Information) */
+.movie-info {
+  flex: 1;
+  max-width: 50%;
+  padding: 0 20px;
+}
+
+/* Date Slider Styling */
+.moviebooking {
+  background-color: aqua;
+}
+
+.moviebooking .slick-slider {
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  user-select: none;
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Hide dots and default arrows */
+.moviebooking .slick-dots,
+.slick-prev:before,
+.slick-next:before {
+  display: none;
+}
+
+/* Arrow Styling */
+.moviebooking .slick-prev-arrow,
+.slick-next-arrow {
+  font-size: 24px;
+  color: black;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  cursor: pointer;
+}
+
+.moviebooking .slick-prev-arrow {
+  left: -20px;
+}
+
+.moviebooking .slick-next-arrow {
+  right: -20px;
+}
+
+.moviebooking .slick-prev-arrow:hover,
+.slick-next-arrow:hover {
+  color: #333;
+}
+
+/* Slider List (visible area) */
+.moviebooking .slick-list {
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* Slider Track (contains the slides) */
+.moviebooking .slick-track {
+  display: flex; /* Flexbox layout to keep slides in a row */
+  flex-direction: row; /* Ensure the slides are arranged in a row */
+  transition: transform 0.5s ease; /* Smooth slide transition */
+}
+
+.moviebooking .slick-slide {
+  display: inline-block; /* Display each slide in-line */
+  width: 80px; /* Customize width of each card */
+  padding: 0 10px; /* Space between slides */
+}
+
+.date-card {
+  width: 100px; /* กำหนดความกว้างเฉพาะ */
+  height: 100px;
+  margin: 0 10px; /* เพิ่มระยะห่างระหว่างการ์ด */
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  cursor: pointer;
+  text-align: center; /* ทำให้ข้อความอยู่ตรงกลาง */
+}
+
+.date-card.selected {
+  background-color: #b0b0b0;
+  color: white;
+}
+
+.date-card:hover {
+  background-color: #1c2b59;
+  color: white;
+}
+
+.date-text {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.date-month {
+  text-transform: uppercase;
+  margin-top: 5px; /* เพิ่มระยะห่างระหว่างวันที่และเดือน */
+}
+
+/* Arrow Styling */
 .slick-prev-arrow, .slick-next-arrow {
-    font-size: 24px;
-    color: black;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 2;
-    cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 24px;
+  z-index: 2;
+  color: black;
+  cursor: pointer;
+}
+
+.slick-prev-arrow {
+  left: -35px; /* ปรับระยะทางด้านซ้าย */
+}
+
+.slick-next-arrow {
+  right: -35px; /* ปรับระยะทางด้านขวา */
+}
+
+.slick-prev-arrow:hover, .slick-next-arrow:hover {
+  color: #333;
+}
+
+/* ---------------- Responsive Design ---------------- */
+
+/* For tablets and small screens */
+@media (max-width: 768px) {
+  .mcontainer {
+    flex-direction: column; /* จัดการให้เป็น layout แนวตั้งสำหรับหน้าจอขนาดเล็ก */
   }
-  
-  .slick-prev-arrow {
-    left: -20px; /* เพิ่มระยะห่างทางซ้าย */
-  }
-  
-  .slick-next-arrow {
-    right: -20px; /* เพิ่มระยะห่างทางขวา */
-  }
-  
-  .slick-prev-arrow:hover, .slick-next-arrow:hover {
-    color: #333;
-  }
-  
-  /* Slider List (visible area) */
-  .slick-list {
-    overflow: auto;
-    margin: 0;
+
+  .poster-container,
+  .movie-info {
+    max-width: 100%; /* ให้แต่ละส่วนใช้ความกว้าง 100% ของหน้าจอ */
     padding: 0;
   }
-  
-  /* Slider Track (contains the slides) */
-  .slick-track {
-    display: flex;
-    transition: transform 0.5s ease; /* Smooth slide transition */
-  }
-  
-  /* Individual Slide */
-  .slick-slide {
-    display: inline-block;
-    width: 80px; /* Customize width of each card */
-    padding: 0 10px; /* Space between slides */
-  }
-  
-  /* Styling for date card */
+
   .date-card {
-    width: 100%;
-    height: 100px;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease, color 0.3s ease;
-    cursor: pointer;
+    width: 80px; /* ปรับขนาดของ date card ให้เล็กลง */
+    height: 80px;
   }
-  
-  .date-card.selected {
-    background-color: #b0b0b0;
-    color: white;
+
+  .movie-info {
+    padding: 20px; /* เพิ่ม padding สำหรับหน้าจอขนาดเล็ก */
   }
-  
-  .date-card:hover {
-    background-color: #1c2b59;
-    color: white;
+}
+
+/* For mobile phones */
+@media (max-width: 480px) {
+  .mcontainer {
+    padding: 10px;
   }
-  
+
+  .date-card {
+    width: 60px; /* ปรับขนาดของ date card ให้เล็กลง */
+    height: 60px;
+  }
+
   .date-text {
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 14px;
   }
-  
+
   .date-month {
-    text-transform: uppercase;
+    font-size: 12px;
   }
-  
-  
-  
+
+  .slick-prev-arrow, .slick-next-arrow {
+    font-size: 16px; /* ปรับขนาดลูกศรให้เล็กลง */
+  }
+}

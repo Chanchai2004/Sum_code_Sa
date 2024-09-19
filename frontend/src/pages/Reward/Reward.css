@@ -1,5 +1,6 @@
 .reward{
     background-color:#000;
+    
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap');
@@ -19,13 +20,15 @@
 /* Main content area */
 .reward .my-points-container {
     position: relative; /* ถ้าเป็น absolute หรือ fixed ให้ใช้ relative */
-    top: 55px; /* เพิ่มระยะห่างจากด้านบน */
+    top: 120px; /* เพิ่มระยะห่างจากด้านบน */
     text-align: left;
+    left: -50px; /* ขยับไปทางซ้าย 50px */
 }
 
-.reward .my-points-container h1 {
+.reward .my-points-container h2 {
     margin-left: auto; /* เลื่อนข้อความไปทางขวาสุด */
-    margin-left: 110px; /* ปรับระยะห่างจากขอบขวา */
+    margin-left: 20px; 
+    margin-left: 120px; /* ปรับระยะห่างจากขอบขวา */
     display: inline-block; /* ทำให้ margin-left ทำงาน */
     color:#FFF
 }
@@ -55,7 +58,10 @@
     align-items: center; 
     font-weight: bold;
 }
-
+.reward .profile-section p{
+    color: #000;
+    font-size: 20px; /* กำหนดขนาดฟอนต์ */
+}
 .reward .profile-image {
     width: 100px;
     height: 100px;
@@ -97,6 +103,8 @@
     width: 70px;
     height: 60px;
     margin-bottom: 10px; /* เพิ่มระยะห่างจากองค์ประกอบข้างล่าง */
+    margin-left: 260px; /* ขยับรูปไปทางขวา 20px */
+   
 }
 
 
@@ -105,11 +113,13 @@
     font-weight: bold;
     margin: 0;
     margin-bottom: 10px; /* เพิ่มระยะห่างจากด้านล่าง */
+    color:#000;
 }
 
 
 .reward .points-section p {
     margin: 2px 0;
+    
 }
 
 .reward .description {
@@ -466,8 +476,8 @@
 }
 
 .popcorn-box-5 {
-    top: 1780px;
-    width: 170px; /* ปรับขนาดตามที่ต้องการ */
+    top: 1800px;
+    width: 190px; /* ปรับขนาดตามที่ต้องการ */
 }
 
 .popcorn-box-6 {
@@ -557,18 +567,22 @@
 }
 .popcorn-label-1 {
     top: 910px;
+    left: 50.5%;
 }
 
 .popcorn-label-2 {
     top: 1200px;
+    left: 50.5%;
 }
 
 .popcorn-label-3 {
     top: 1450px;
+    left: 50.7%;
 }
 
 .popcorn-label-4 {
     top: 1720px;
+    left: 50.5%;
 }
 
 .popcorn-label-5 {
@@ -805,5 +819,9 @@
 
 
   
+
+
+
+
 
 

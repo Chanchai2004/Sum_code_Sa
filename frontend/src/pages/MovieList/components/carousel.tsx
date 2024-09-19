@@ -77,17 +77,8 @@ const Carousel: React.FC<CarouselProps> = ({ movieID }) => {
                     <Paragraph>{movie.Synopsis}</Paragraph>
                   </div>
 
-                  {/* ปุ่มจองตั๋ว */}
-                  <div style={{ marginTop: "auto", textAlign: "center", width: "100%" }}>
-                    <Button
-                      type="primary"
-                      onClick={() => console.log(`Book ticket for movie ID: ${movie.ID}`)}
-                      block // ทำให้ปุ่มยาวเต็มความกว้าง
-                      size="large"
-                    >
-                      จองตั๋ว
-                    </Button>
-                  </div>
+                  
+                  
                 </div>
               </Col>
 

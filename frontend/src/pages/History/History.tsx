@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Table, message, Modal, Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import Navbar from '../../components/navbar/navbar';
 import 'antd/dist/reset.css';
 import './History.css';
 import { GetRewardsByMemberID, GetMemberById, saveCodeReward, checkExistingCodeReward } from '../../services/https/index'; // Import API calls
@@ -134,6 +135,7 @@ const HistoryPage: React.FC = () => {
         {
             key: 'reward_time',
             title: 'Reward Time',
+            align:'center',
             dataIndex: 'reward_time',
             render: (text: Date) => {
                 const date = new Date(text);
@@ -143,12 +145,14 @@ const HistoryPage: React.FC = () => {
         {
             key: 'RewardName',
             title: 'Reward Name',
+            align:'center',
             dataIndex: 'RewardName',
         },
         {
             key: 'Describtion',
             title: 'Description',
             dataIndex: 'Describtion',
+            align:'center',
         },
         {
             key: 'points',
@@ -158,7 +162,8 @@ const HistoryPage: React.FC = () => {
         },
         {
             key: 'action',
-            title: 'Action',
+            title: 'Reward',
+            align:'center',
             render: (record: RewardInterface) => (
                 <div style={{ textAlign: 'center' }}>
                     {/* ตรวจสอบ type หากไม่ใช่ Ticket หรือ Discount จึงแสดงปุ่มดู */}
@@ -176,7 +181,8 @@ const HistoryPage: React.FC = () => {
     ];
 
     return (
-        <div className="wrapper">
+        <div className="wrapperopern">
+             <Navbar />
             <div className="page-title">
                 My History
                 <button onClick={handleBack} className="back-button">
@@ -221,7 +227,6 @@ const HistoryPage: React.FC = () => {
                 <div>
                     <h2>{selectedReward.RewardName}</h2>
                     <p>{selectedReward.Describtion}</p>
-                    <p>Points: {selectedReward.Points}</p>
 
                     {/* แสดงโค้ดแลกเปลี่ยน */}
                     <p>

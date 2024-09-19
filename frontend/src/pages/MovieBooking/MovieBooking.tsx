@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import 'slick-carousel/slick/slick.css';
 import Slider from 'react-slick';
 import { Button, Card } from 'antd';
 import { ClockCircleOutlined, UserOutlined, StarOutlined, EnvironmentOutlined, FileTextOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import './MovieBooking.css';
-import { GetShowtimes, GetMovieById, GetShowtimeById } from '../../services/https/index'; // Import API calls
+import { GetShowtimes, GetMovieById } from '../../services/https/index'; // Import API calls
 import { MoviesInterface } from '../../interfaces/IMovie'; // Import movie interface
-import { ShowTimesInterface } from '../../interfaces/IShowtime'; // Import showtimes interface
-
+import Navbar from '../../components/navbar/navbar';
 const PrevArrow = (props: any) => {
   const { onClick } = props;
   return (
@@ -17,7 +17,6 @@ const PrevArrow = (props: any) => {
     </div>
   );
 };
-
 
 const NextArrow = (props: any) => {
   const { onClick } = props;
@@ -34,6 +33,7 @@ const MovieBooking: React.FC = () => {
   const { movieID } = location.state || {}; // Extract movieID from location.state
   
   const [selectedDate, setSelectedDate] = useState<number | null>(0);
+  const [selectedTime, setSelectedTime] = useState<string | null>(null); // New state for selected time
   const [showtimes, setShowtimes] = useState<any[]>([]);
   const [filteredTimes, setFilteredTimes] = useState<string[]>([]);
   const [movie, setMovie] = useState<MoviesInterface | null>(null); // State for movie details
@@ -119,16 +119,20 @@ const MovieBooking: React.FC = () => {
     return <div>No movie selected.</div>;
   }
 
-  const navigatetoSeatBooking = async (time: string) => {
+  // Function to navigate to seat booking on button click
+  const handleSelectSeat = async () => {
     try {
       const selectedDateFormatted = moment().add(selectedDate || 0, 'days').format('YYYY-MM-DD');
-      const showtime = showtimes.find((st) => moment(st.Showdate).format('YYYY-MM-DD') === selectedDateFormatted && moment(st.Showdate).format('HH:mm') === time);
-      
+      const showtime = showtimes.find(
+        (st) =>
+          moment(st.Showdate).format('YYYY-MM-DD') === selectedDateFormatted &&
+          moment(st.Showdate).format('HH:mm') === selectedTime
+      );
+
       if (showtime) {
         const showtimeID = showtime.ID;
         const TheaterID = showtime.TheaterID;
         navigate('/seatbooking', { state: { showtimeID, TheaterID } });
-        
       } else {
         console.error('Showtime not found');
       }
@@ -137,103 +141,111 @@ const MovieBooking: React.FC = () => {
     }
   };
 
-  
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Navigation */}
-      <nav className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-bold">MERJE</h1>
-        <div className="space-x-4">
-          <Button type="link">Home</Button>
-          <Button type="link">MyTicket</Button>
-          <Button type="link">MERJE news</Button>
-        </div>
-      </nav>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Movie Poster */}
+    <div>
+       <div className="mnavbar">
+      <Navbar />
+    </div>
+    <div className="mcontainer">
+      
+      
+      {/* Left Side: Movie Poster */}
+      <div className="poster-container">
         <Card style={{ padding: '0', margin: '0', display: 'flex', justifyContent: 'center' }}>
           {moviePoster ? (
-            <img
-              src={moviePoster}
-              alt="Movie Poster"
-              style={{ 
-                width: '100%', 
-                height: 'auto', 
-                maxHeight: '70vh', 
-                aspectRatio: '2 / 3', 
-                objectFit: 'cover',
-                margin: '20px',
-                padding: '0',
-              }}
-            />
+            <img src={moviePoster} alt="Movie Poster" />
           ) : (
             <p>No Poster Available</p>
           )}
         </Card>
-
-        {/* Movie Information */}
-        <div>
-          <h2 className="text-3xl font-bold mb-4">{movie?.MovieName || 'No Movie Selected'}</h2>
-          <div className="flex items-center space-x-4 mb-4">
-            <span className="bg-gray-200 text-gray-800 px-2 py-1 rounded">{movieType}</span>
-            <span className="flex items-center">
-              <ClockCircleOutlined className="w-4 h-4 mr-1" /> {movieDuration}
-            </span>
-            <span className="flex items-center">
-              <UserOutlined className="w-4 h-4 mr-1" /> {director}
-            </span>
-            <span className="flex items-center">
-              <StarOutlined className="w-4 h-4 mr-1" /> {rating}
-            </span>
-          </div>
-
-          {/* Date Slider */}
-          <div className="date-slider mb-4">
-            <Slider {...settings}>
-              {dates.map((date, index) => (
-                <Card
-                  key={index}
-                  className={`date-card ${selectedDate === index ? 'selected' : ''}`}
-                  onClick={() => setSelectedDate(index)} // Change selected date
-                >
-                  <div className="date-text">{date.format('DD')}</div>
-                  <div className="date-month">{date.format('MMM').toUpperCase()}</div>
-                </Card>
-              ))}
-            </Slider>
-          </div>
-
-          {/* Showtimes */}
-          <Card className="mb-4">
-            <Card.Meta title="Round" />
-            <div className="grid grid-cols-3 gap-2 mt-4">
-              {filteredTimes.length > 0
-                ? filteredTimes.map((time) => (
-                    <Button key={time} type="default" onClick={() => navigatetoSeatBooking(time)}>
-                      {time} 
-                    </Button>
-                  ))
-                : <p>No showtimes available</p>}
-            </div>
-          </Card>
-
-          {/* Location */}
-          <Card style={{ marginBottom: '10px' }}>
-            <Card.Meta title="Location" />
-            <div className="flex items-center mt-4">
-              <EnvironmentOutlined className="w-4 h-4 mr-2" />
-              <span>The Mall Korat</span>
-            </div>
-          </Card>
-
-          {/* Synopsis */}
-          <Card>
-            <Card.Meta title="Synopsis" />
-            <p className="mt-4">{synopsis}</p>
-          </Card>
-        </div>
       </div>
+          
+      {/* Right Side: Movie Information */}
+      <div className="movie-info">
+        <h2 className="text-3xl font-bold mb-4">
+          {movie?.MovieName ? movie.MovieName : 'No Movie Selected'}
+        </h2>
+        <div className="flex items-center space-x-4 mb-4">
+          <span className="bg-gray-200 text-gray-800 px-2 py-1 rounded">{movieType}</span>
+          <span className="flex items-center">
+            <ClockCircleOutlined className="w-4 h-4 mr-1" /> {movieDuration}
+          </span>
+          <span className="flex items-center">
+            <UserOutlined className="w-4 h-4 mr-1" /> {director}
+          </span>
+          <span className="flex items-center">
+            <StarOutlined className="w-4 h-4 mr-1" /> {rating}
+          </span>
+        </div>
+  
+        {/* Date Slider */}
+        <div className="date-slider mb-4">
+          <Slider {...settings}>
+            {dates.map((date, index) => (
+              <Card
+                key={index}
+                className={`date-card ${selectedDate === index ? 'selected' : ''}`}
+                onClick={() => setSelectedDate(index)}
+              >
+                <div className="date-text">{date.format('DD')}</div>
+                <div className="date-month">{date.format('MMM').toUpperCase()}</div>
+              </Card>
+            ))}
+          </Slider>
+        </div>
+  
+        {/* Showtimes */}
+        <Card className="mb-4">
+          <Card.Meta title="Round" />
+          <div className="grid grid-cols-3 gap-2 mt-4">
+            {filteredTimes.length > 0 ? (
+              filteredTimes.map((time) => (
+                <Button
+                  key={time}
+                  type={time === selectedTime ? 'primary' : 'default'}
+                  onClick={() => setSelectedTime(time)}
+                >
+                  {time}
+                </Button>
+              ))
+            ) : (
+              <p>No showtimes available</p>
+            )}
+          </div>
+        </Card>
+  
+        {/* Location */}
+        <Card style={{ marginBottom: '10px' }}>
+          <Card.Meta title="Location" />
+          <div className="flex items-center mt-4">
+            <EnvironmentOutlined className="w-4 h-4 mr-2" />
+            <span>The Mall Korat</span>
+          </div>
+        </Card>
+  
+        {/* Synopsis */}
+        <Card style={{ marginBottom: '10px' }}>
+          <Card.Meta title="Synopsis" />
+          <div className="flex items-center mt-4">
+            <FileTextOutlined className="w-4 h-4 mr-2" />
+            <div style={{ padding: '10px' }}>
+              <p>{synopsis}</p>
+            </div>
+          </div>
+        </Card>
+  
+        {/* Select Seat Button */}
+        <Button
+          type="primary"
+          className="w-full mb-4"
+          style={{ marginTop: '10px' }}
+          onClick={handleSelectSeat}
+          disabled={!selectedTime} // Disable button if no time is selected
+        >
+          Select seat
+        </Button>
+      </div>
+    </div>
     </div>
   );
 };

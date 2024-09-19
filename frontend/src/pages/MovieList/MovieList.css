@@ -1,12 +1,13 @@
+/* งงว่ะ */
 /* ตั้งค่าโทนสีพื้นหลังและสีตัวอักษรหลัก */
-body {
+ .movielist   body {
   background-color: #f5f5f5; /* พื้นหลังโทนขาวนวล */
   color: #333333; /* สีข้อความหลักเป็นสีเทาเข้ม */
   font-family: 'Roboto', sans-serif; /* ฟอนต์ที่เหมาะสม */
 }
 
 /* สำหรับการ์ดแต่ละใบ */
-.card-custom {
+ .movielist  .card-custom {
   background-color: #ffffff; /* พื้นหลังการ์ดสีขาว */
   border: 1px solid #cccccc; /* ขอบการ์ดสีเทาอ่อน */
   border-radius: 10px; /* ขอบโค้งมน */
@@ -15,18 +16,18 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* เงาอ่อน */
 }
 
-.card-custom:hover {
+ .movielist  .card-custom:hover {
   transform: scale(1.05); /* ขยายขนาดเล็กน้อยเมื่อ hover */
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15); /* เพิ่มเงาเข้มขึ้นเล็กน้อย */
 }
 
-.card-custom img {
+ .movielist  .card-custom img {
   border-bottom: 1px solid #cccccc; /* ขอบล่างของรูปภาพ */
   height: auto;
   width: 100%;
 }
 
-.card-footer {
+ .movielist  .card-footer {
   background-color: #f7f7f7; /* สีพื้นหลังของ footer ของการ์ด */
   border-top: 1px solid #cccccc;
   padding: 10px;
@@ -34,81 +35,81 @@ body {
 }
 
 /* ปุ่มขนาดเล็ก */
-.btn-sm {
+ .movielist  .btn-sm {
   background-color: #007bff; /* ปุ่มสีฟ้า */
   border: none;
   color: white;
   transition: background-color 0.3s ease;
 }
 
-.btn-sm:hover {
+ .movielist  .btn-sm:hover {
   background-color: #0056b3; /* ปุ่มสีเข้มเมื่อ hover */
 }
 
 /* การจัดการ container หลัก */
-.container {
+ .movielist  .ccontainer {
   padding: 20px;
 }
 
 /* การจัดการหัวข้อ */
-h1, h2, h3, h4, h5, h6 {
+movielisth1, h2, h3, h4, h5, h6 {
   color: #333333; /* สีหัวข้อเป็นสีเทาเข้ม */
 }
 
-p {
+movielistp {
   color: #555555; /* สีข้อความทั่วไปเป็นสีเทากลาง */
 }
 
 /* ปรับการแสดงผลสำหรับ Modal */
-.ant-modal-content {
+ .movielist  .ant-modal-content {
   background-color: #ffffff; /* พื้นหลัง Modal สีขาว */
   color: #333333; /* สีข้อความภายใน Modal */
   border-radius: 10px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2); /* เพิ่มเงา */
 }
 
-.ant-modal-header {
+ .movielist  .ant-modal-header {
   background-color: #f7f7f7;
   border-bottom: 1px solid #cccccc;
 }
 
-.ant-modal-title {
+ .movielist  .ant-modal-title {
   color: #333333;
 }
 
-.ant-modal-body {
+ .movielist  .ant-modal-body {
   padding: 20px;
   color: #555555; /* สีข้อความภายใน body */
 }
 
-.ant-btn-primary {
+ .movielist  .ant-btn-primary {
   background-color: #007bff; /* สีปุ่มหลัก */
   border: none;
 }
 
-.ant-btn-primary:hover {
+ .movielist  .ant-btn-primary:hover {
   background-color: #0056b3;
 }
 
 /* จัดการ Carousel */
-.carousel-container {
+ .movielist  .carousel-container {
   background-color: #f5f5f5; /* พื้นหลังภายใน Carousel สีขาว */
   padding: 20px;
 }
 
-.carousel-container img {
+ .movielist   .carousel-container img {
   border-radius: 10px; /* รูปภาพใน Carousel */
 }
 
-.carousel-indicators {
+ .movielist  .carousel-indicators {
   background-color: #d3d3d3; /* ตัวบอกตำแหน่ง Carousel สีเทาอ่อน */
 }
 
 /* จัดการแถวและคอลัมน์ */
-.row {
+ .movielist  .row {
   margin-bottom: 30px; /* ระยะห่างระหว่างแถว */
 }
 
-.col-md-6 {
+ .movielist  .col-md-6 {
   margin-bottom: 30px;
 }

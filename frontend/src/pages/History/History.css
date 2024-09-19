@@ -8,7 +8,7 @@ body {
     overflow: auto; /* ป้องกันการ scroll */
 }
 
-.wrapper {
+.wrapperopern {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -17,19 +17,29 @@ body {
     height: 100%; /* ขยาย wrapper เต็มความสูง */
     width: 100%; /* ขยาย wrapper เต็มความกว้าง */
     box-sizing: border-box; /* รวม padding และ border ในขนาด */
+    margin-top: 60px;
+    margin-left: -50px; /* เลื่อนไปทางซ้าย 50px */
 }
 
-.page-title {
+.wrapperopern .page-title {
     font-size: 24px;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
     text-align: center;
     position: relative;
     width: 100%;
     flex-shrink: 0; /* ให้แน่ใจว่า title ไม่ย่อขนาด */
     padding: 10px;
+    
+}
+.wrapperopern .page-title p {
+    font-size: 32px; /* ขนาดตัวอักษร */
+    color: #e6a940; /* สีตัวอักษร */
+    font-weight: bold; /* ตัวหนา */
+    margin: 0; /* ลบ margin ของ p เพื่อไม่ให้มีช่องว่างเกินไป */
 }
 
-.back-button {
+.wrapperopern .back-button {
+
     position: absolute;
     right: 10px;
     top: 0;
@@ -41,9 +51,10 @@ body {
     font-weight: bold;
     border: none;
     cursor: pointer;
+    border-radius: 8px; /* ทำขอบปุ่มมน */
 }
 
-.profile-container {
+.wrapperopern .profile-container {
     background-color: #FFC700; /* พื้นหลังสีเหลือง */
     border-radius: 20px; /* มุมโค้งมน */
     padding: 20px;
@@ -53,26 +64,28 @@ body {
     flex-shrink: 0; /* ให้แน่ใจว่าโปรไฟล์ไม่ย่อขนาด */
 }
 
-.profile-picture img {
+.wrapperopern .profile-picture img {
     width: 50px; /* ขนาดของรูปโปรไฟล์ */
     height: 50px;
     margin-bottom: 10px;
+    margin-left: 105px; /* เลื่อนไปทางขวา 20px */
 }
 
-.profile-name {
+.wrapperopern .profile-name {
     font-size: 18px; /* ขนาดตัวอักษรของชื่อผู้ใช้ */
     font-weight: bold; /* ตัวอักษรหนา */
     margin-bottom: 5px;
+    color: #000;
 }
 
-.reward-icon {
+.wrapperopern .reward-icon {
     font-size: 16px; /* ขนาดของไอคอนเหรียญ */
     font-weight: bold;
     color: #000; /* สีดำสำหรับตัวอักษร */
 }
 
 /* รายการประวัติ */
-.history-list {
+.wrapperopern .history-list {
     background-color: #000;
     border-radius: 10px;
     padding: 20px;
@@ -88,7 +101,7 @@ body {
     box-sizing: border-box; /* รวม padding และ border ในขนาด */
 }
 
-.history-item {
+.wrapperopern .history-item {
     background-color: #000; /* สีพื้นหลังของรายการ */
     padding: 15px 0; /* เพิ่ม padding ให้ด้านบนและด้านล่าง */
     border-bottom: 1px solid #444; /* เส้นใต้ */
@@ -97,7 +110,7 @@ body {
     align-items: center;
 }
 
-.history-detail {
+.wrapperopern .history-detail {
     display: flex; /* ใช้ Flexbox เพื่อจัดวางในบรรทัดเดียวกัน */
     justify-content: space-between; /* กระจายองค์ประกอบสองด้าน */
     align-items: center; /* จัดให้อยู่กลางในแนวตั้ง */
@@ -110,24 +123,143 @@ body {
 
 
 /* ตาราง */
-.ant-table {
+.wrapperopern .ant-table {
     background-color: #ddb45e !important; /* ใช้ !important เพื่อบังคับการเปลี่ยนแปลง */
 }
 
-.ant-table-thead > tr > th {
+.wrapperopern .ant-table-thead > tr > th {
     background-color: #fdce55 !important; /* ใช้ !important เพื่อบังคับการเปลี่ยนแปลง */
     color: white !important;
 }
 
 
-.ant-table-tbody > tr:nth-child(even) {
+.wrapperopern .ant-table-tbody > tr:nth-child(even) {
     background-color: #eaf4e5 !important;
 }
 
-.ant-table-tbody > tr:nth-child(odd) {
+.wrapperopern .ant-table-tbody > tr:nth-child(odd) {
     background-color: #ffffff !important;
 }
 
-.ant-table-cell {
+.wrapperopern .ant-table-cell {
     color: #333 !important;
 }
+
+
+/* General styling for the Modal */
+.wrapperopern .ant-modal {
+    width: 100%;
+    max-width: 600px; /* Limit the max width */
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Title styling */
+.wrapperopern .ant-modal-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+}
+
+/* Close button styling */
+.wrapperopern .ant-modal-close {
+    font-size: 16px;
+    color: #555;
+}
+
+/* Body styling */
+.wrapperopern .ant-modal-body {
+    padding: 20px;
+    font-size: 16px;
+    
+}
+
+
+/* Reward name */
+.wrapperopern .ant-modal-body h2 {
+    font-size: 22px;
+    font-weight: bold;
+    color: #4a90e2;
+    margin-bottom: 10px;
+}
+
+/* Reward description */
+.wrapperopern .ant-modal-body p {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+/* Strong styling for reward code */
+.wrapperopern .ant-modal-body strong {
+    font-weight: bold;
+    color: #000;
+}
+
+/* Footer button styling */
+.wrapperopern .ant-modal-footer {
+    text-align: center;
+    padding: 10px 0;
+}
+
+.wrapperopern .ant-modal-footer .ant-btn {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.wrapperopern .ant-modal-footer .ant-btn:hover {
+    background-color: #357ABD;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    .ant-modal {
+        padding: 15px;
+        max-width: 100%;
+    }
+
+    .ant-modal-title {
+        font-size: 20px;
+    }
+
+    .ant-modal-body h2 {
+        font-size: 18px;
+    }
+
+    .ant-modal-body p {
+        font-size: 14px;
+    }
+
+    .ant-modal-footer .ant-btn {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

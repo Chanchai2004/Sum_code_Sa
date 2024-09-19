@@ -138,7 +138,7 @@ const SeatMap: React.FC = () => {
 
   return (
     <div className='seat-container'>
-      <div className="container">
+      <div className="SeatMapcontainer">
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <div>
             {seats.map((row, rowIndex) => (

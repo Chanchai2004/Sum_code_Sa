@@ -84,7 +84,8 @@ const MovieList: React.FC = () => {
   return (
     <div>
       <Navbar />
-      <div className="container mt-5">
+      <div className='movielist'>
+      <div className="ccontainer mt-5">
         <div className="row">
           {/* Carousel with movie details */}
           <div
@@ -137,6 +138,7 @@ const MovieList: React.FC = () => {
           ))}
         </MultiCarousel>
       </div>
+    </div>
     </div>
   );
 };

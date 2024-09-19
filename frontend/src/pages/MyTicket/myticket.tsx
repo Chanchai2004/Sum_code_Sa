@@ -85,6 +85,7 @@ const MyTicket: React.FC = () => {
   ];
 
   return (
+  <div className="ticket">
     <div className="ticket-container">
       <Navbar />
       <h1 className="ticket-title">My Ticket History</h1>
@@ -96,6 +97,7 @@ const MyTicket: React.FC = () => {
         className="ticket-table"
         rowClassName={(record, index) => (index % 2 === 0 ? 'row-light' : 'row-dark')}
       />
+    </div>
     </div>
   );
 };

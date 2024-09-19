@@ -1,4 +1,4 @@
-.ticket-container {
+.ticket .ticket-container {
   padding: 100px;
   background-color: black;
   display: flex;
@@ -17,30 +17,28 @@
   text-align: center;
 }
 
-.ticket-table {
+.ticket .ticket-table {
   background-color: #001529;
-  border-color: #ffcc00;
+  border-color: #0c0c0c;
   border-radius: 10px;
-  overflow: auto;
   width: 100%; /* ให้ตารางแสดงเต็มความกว้าง */
-  max-width: 1300px;
-
+  max-width: 1350px;
   margin: 0 auto;
   overflow-y: visible; /* แสดงตารางให้ครบ */
 
 }
 
-.ant-table-thead > tr > th {
+.ticket .ant-table-thead > tr > th {
   background-color: #001529 !important;
   color: white !important;
   font-weight: bold;
   text-align: center;
 }
 
-.ant-table-row.row-light {
+.ticket .ant-table-row.row-light {
   background-color: #ffffff;
 }
 
-.ant-table-row.row-dark {
+.ticket .ant-table-row.row-dark {
   background-color: #e0e0e0;
 }
