@@ -19,6 +19,7 @@ import HistoryPage from './pages/History/History';
 import Table from './pages/ticketstatus/ticketstatus';
 import QrScanner from './pages/Qrscanner/QrScanner';
 import Signup from './pages/Signup/signup';
+import CheckCodeReward from './pages/Checkcodereward/checkcode';
 
 
 const App: React.FC = () => {
@@ -30,20 +31,31 @@ const App: React.FC = () => {
 
     useEffect(() => {
         if (isLoggedIn) {
-            if (isAdmin && !['/movie', '/showtimes', '/members', '/analytics', '/movies/create', '/movies/edit'].includes(location.pathname)) {
-                navigate('/movie');
-            }
-            else if (!isStaff && !isAdmin && !['/home', '/myticket', '/seatbooking', '/moviebooking', '/reward', '/history',].includes(location.pathname)) { 
+            // กรณีที่ผู้ใช้งานเป็น Admin
+            if (isAdmin) {
+                if (!['/movie', '/showtimes', '/members', '/analytics', '/movies/create', '/movies/edit'].includes(location.pathname)) {
+                    navigate('/movie');
+                }
+            } 
+            // กรณีที่ผู้ใช้งานเป็น Staff
+            else if (isStaff) {
+                if (!['/scanner', '/ticketstatus', '/checkcode'].includes(location.pathname)) {
+                    navigate('/scanner');
+                }
+            } 
+            // กรณีที่ผู้ใช้งานเป็น User ทั่วไป (ไม่ใช่ Admin หรือ Staff)
+            else if (!['/home', '/myticket', '/seatbooking', '/moviebooking', '/reward', '/history'].includes(location.pathname)) {
                 navigate('/home');
             }
-            else if (isStaff && !['/scanner','/ticketstatus'].includes(location.pathname)){
-                navigate('/scanner');
+        } 
+        // กรณีที่ผู้ใช้งานยังไม่ได้ล็อกอิน
+        else {
+            if (!['/login', '/Signup'].includes(location.pathname)) {
+                navigate('/login');  // ถ้าไม่ใช่หน้าล็อกอินหรือสมัครสมาชิก ให้ไปที่หน้าล็อกอิน
             }
-        } //else {
-        //     navigate('/login');
-        // }
-    }, [isLoggedIn, isAdmin, navigate, location.pathname]);
-
+        }
+    }, [isLoggedIn, isAdmin, isStaff, navigate, location.pathname]);
+    
     return (
         <div className="app">
             {isLoggedIn && isAdmin && <Sidebar />}
@@ -76,6 +88,7 @@ const App: React.FC = () => {
                   {/*เส้นทางสำหรับสตาฟ*/ }
                   <Route path="/scanner" element={isLoggedIn && isStaff ? <QrScanner /> : <Navigate to="/login"/>} />
                     <Route path="/ticketstatus" element={isLoggedIn && isStaff ? <Table /> : <Navigate to="/login"/>} />
+                    <Route path="/checkcode" element={isLoggedIn && isStaff ? <CheckCodeReward /> : <Navigate to="/login"/>} />
 
                     <Route path="/Signup" element={<Signup />} />
 

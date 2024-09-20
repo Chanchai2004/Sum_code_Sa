@@ -697,6 +697,63 @@ async function GetTicketcheck() {
   }
 }
 
+export const getRewardCode = async (code: string) => {
+  try {
+      const response = await fetch(`${apiUrl}/checkreward/${code}`);
+      if (!response.ok) {
+          throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      return data;
+  } catch (error) {
+      console.error('Error fetching reward code:', error);
+      throw error;
+  }
+};
+
+export const updateRewardCodeStatus = async (code: string, newStatus: boolean) => {
+  try {
+      const response = await fetch(`${apiUrl}/updaterewardstatus/${code}`, {
+          method: 'PATCH',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ status: newStatus }), // ส่งสถานะใหม่
+      });
+      if (!response.ok) {
+          throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      return data;
+  } catch (error) {
+      console.error('Error updating reward code status:', error);
+      throw error;
+  }
+};
+
+async function ReleaseSeats() {
+  const requestOptions = {
+    method: "PATCH", // ใช้ PATCH สำหรับการอัปเดต
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  let res = await fetch(`${apiUrl}/release-seats, requestOptions`)
+    .then((res) => {
+      if (res.status === 200) {
+        return res.json();
+      } else {
+        return false;
+      }
+    })
+    .catch((error) => {
+      console.error("Error releasing seats:", error);
+      return false;
+    });
+
+  return res;
+}
 
 
 
@@ -730,6 +787,7 @@ export {
   CheckCodeReward,
   checkExistingCodeReward,
   Checkin,
-  GetTicketcheck
+  GetTicketcheck,
+  ReleaseSeats,
   
 };

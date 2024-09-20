@@ -120,18 +120,20 @@ const MovieBooking: React.FC = () => {
   }
 
   // Function to navigate to seat booking on button click
-  const handleSelectSeat = async () => {
+  const handleSelectSeat = async () => { 
     try {
       const selectedDateFormatted = moment().add(selectedDate || 0, 'days').format('YYYY-MM-DD');
       const showtime = showtimes.find(
         (st) =>
-          moment(st.Showdate).format('YYYY-MM-DD') === selectedDateFormatted &&
-          moment(st.Showdate).format('HH:mm') === selectedTime
+          moment(st.Showdate).format('YYYY-MM-DD') === selectedDateFormatted && // ตรวจสอบวันที่
+          moment(st.Showdate).format('HH:mm') === selectedTime && // ตรวจสอบเวลาที่ตรง
+          st.MovieID === movie?.ID // ตรวจสอบ MovieID ที่ต้องตรงกับ ID ของหนังที่เลือก
       );
-
+  
       if (showtime) {
         const showtimeID = showtime.ID;
         const TheaterID = showtime.TheaterID;
+        console.log('Showtime ID:', showtimeID);
         navigate('/seatbooking', { state: { showtimeID, TheaterID } });
       } else {
         console.error('Showtime not found');

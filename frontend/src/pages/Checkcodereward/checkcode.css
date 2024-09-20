@@ -1,0 +1,33 @@
+.containeropern {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #ffffff; /* พื้นหลังสีเทาอ่อน */
+}
+
+.containeropern .checkcode-box {
+    background-color: #e3e3e3; /* กล่องสีเทาอ่อน */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 600px;
+}
+
+.containeropern .input {
+    padding: 10px;
+    font-size: 16px;
+}
+
+.containeropern .button {
+    width: 100%;
+    background-color: #333; /* ปุ่มสีเทาเข้ม */
+    color: #fff;
+}
+
+.containeropern .message {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #000000;
+}

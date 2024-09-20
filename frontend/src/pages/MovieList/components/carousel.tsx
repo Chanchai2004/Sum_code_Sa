@@ -3,7 +3,7 @@ import { Carousel as AntCarousel, Row, Col, Button, Card } from "antd"; // ใ�
 import { ClockCircleOutlined, UserOutlined, CalendarOutlined, VideoCameraOutlined } from "@ant-design/icons"; // Icons จาก Ant Design
 import { GetMovieById } from "../../../services/https/index"; // ฟังก์ชัน GetMovieById
 import { MoviesInterface } from "../../../interfaces/IMovie"; // Interface สำหรับข้อมูลหนัง
-
+import "./carousel.css";
 import { Typography } from "antd"; // สำหรับ Typography ของ Ant Design
 
 const { Title, Paragraph } = Typography;
@@ -33,8 +33,8 @@ const Carousel: React.FC<CarouselProps> = ({ movieID }) => {
   }
 
   return (
-    <div className="carousel-container" style={{ padding: "20px" }}>
-      {/* ใช้ Ant Design Carousel */}
+    
+      
       <AntCarousel autoplay effect="fade">
         <div>
           <Card style={{ borderRadius: '15px', overflow: 'hidden' }}>
@@ -94,7 +94,7 @@ const Carousel: React.FC<CarouselProps> = ({ movieID }) => {
           </Card>
         </div>
       </AntCarousel>
-    </div>
+    
   );
 };
 

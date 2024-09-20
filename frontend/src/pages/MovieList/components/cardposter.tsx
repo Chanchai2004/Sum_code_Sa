@@ -75,7 +75,7 @@ const CardShowPoster: React.FC<CardShowPosterProps> = ({ movieID }) => {
           className="poster-img"
         />
       }>
-        <Card.Meta title={movie?.MovieType || "Loading..."} />
+        <Card.Meta title={movie?.MovieName || "Loading..."} />
       </Card>
 
       {/* Modal for displaying movie details */}

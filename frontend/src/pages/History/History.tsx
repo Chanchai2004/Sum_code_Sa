@@ -78,7 +78,7 @@ const HistoryPage: React.FC = () => {
     };
 
     const fetchRewards = async () => {
-        const memberID = localStorage.getItem('memberID');
+        const memberID = localStorage.getItem('id');
         const token = localStorage.getItem('token');
 
         if (!memberID || !token) {

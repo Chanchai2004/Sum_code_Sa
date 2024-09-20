@@ -1,0 +1,44 @@
+.foot .footer {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  background-color: #ffcc00; /* เปลี่ยนสีพื้นหลังเป็นสีเหลือง */
+  color: #000000; /* เปลี่ยนสีข้อความให้เป็นสีดำเพื่อความชัดเจน */
+}
+
+.foot .footer h5 {
+  margin-bottom: 15px;
+  font-weight: bold;
+  color: #000000; /* เปลี่ยนสีของหัวข้อเป็นสีดำ */
+}
+
+.foot .footer p {
+  margin-bottom: 10px;
+  color: #000000; /* เปลี่ยนสีข้อความเป็นสีดำ */
+}
+
+.foot .footer a {
+  color: #ffffff; /* สีลิงก์เป็นสีขาว */
+  text-decoration: none;
+}
+
+.foot .footer a:hover {
+  color: #000000; /* เปลี่ยนเป็นสีดำเมื่อ hover */
+}
+
+.foot .footer ul {
+  padding-left: 0;
+}
+
+.foot .footer ul li {
+  list-style: none;
+  margin-bottom: 10px;
+}
+
+.foot .footer .d-flex {
+  display: flex;
+  gap: 10px;
+}
+
+.foot .footer .text-light {
+  color: #ffffff; /* สีข้อความและไอคอนเป็นสีขาว */
+}

@@ -22,7 +22,7 @@ func ListTickets(c *gin.Context) {
 }
 
 // GetTicketsById รับข้อมูลตั๋วตาม ID โดยใช้ SQL ดิบ
-func GetTicketsById(c *gin.Context) {
+func GetTicketsById(c *gin.Context) { 
 	memberID := c.Param("id")
 
 	log.Println("Received Member ID:", memberID)
@@ -37,21 +37,23 @@ func GetTicketsById(c *gin.Context) {
 
 	var results []BookingResponse
 
-	// ใช้ SQL ดิบเพื่อดึงข้อมูล
+	// ใช้ SQL ดิบเพื่อดึงข้อมูล โดยเพิ่มเงื่อนไข WHERE b.status = 'Booked'
 	err := config.DB().Raw(`
-		SELECT 
-		    m.movie_name AS Movie,
-		    s.showdate AS Date,
-		    GROUP_CONCAT(se.seat_no, ', ') AS Seats,
-		    t.theater_name AS Theater
-		FROM bookings b
-		JOIN show_times s ON b.show_time_id = s.id
-		JOIN movies m ON s.movie_id = m.id
-		JOIN seats se ON b.seat_id = se.id
-		JOIN theaters t ON se.theater_id = t.id
-		WHERE b.member_id = ?
-		GROUP BY b.ticket_id, s.showdate, t.theater_name
-		ORDER BY b.ticket_id DESC;
+	SELECT  
+    	m.movie_name AS Movie,
+    	s.showdate AS Date,
+    	GROUP_CONCAT(se.seat_no, ', ') AS Seats,
+    	t.theater_name AS Theater
+	FROM bookings b
+	JOIN show_times s ON b.show_time_id = s.id
+	JOIN movies m ON s.movie_id = m.id
+	JOIN seats se ON b.seat_id = se.id
+	JOIN theaters t ON se.theater_id = t.id
+	JOIN tickets tk ON b.ticket_id = tk.id  -- เข้าร่วมกับตาราง tickets
+	WHERE b.member_id = ? AND tk.status = 'Booked'  -- เพิ่มเงื่อนไขให้แสดงเฉพาะที่ status เป็น Booked
+	GROUP BY b.ticket_id, s.showdate, t.theater_name
+	ORDER BY b.ticket_id DESC;
+
 	`, memberID).Scan(&results).Error
 
 	if err != nil {

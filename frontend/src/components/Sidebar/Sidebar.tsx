@@ -22,18 +22,6 @@ const Sidebar: React.FC = () => {
     <div className="sidebar">
       <ul>
         <li>
-          <Link to="/dashboard">
-            <FontAwesomeIcon icon={faTachometerAlt} />
-            <span>Dashboard</span>
-          </Link>
-        </li>
-        <li>
-          <Link to="/discount">
-            <FontAwesomeIcon icon={faTag} />
-            <span>Discount</span>
-          </Link>
-        </li>
-        <li>
           <Link to="/members">
             <FontAwesomeIcon icon={faUser} />
             <span>Members</span>
@@ -49,12 +37,6 @@ const Sidebar: React.FC = () => {
           <Link to="/movies">
             <FontAwesomeIcon icon={faFilm} />
             <span>Movies</span>
-          </Link>
-        </li>
-        <li>
-          <Link to="/analytics">
-            <FontAwesomeIcon icon={faChartBar} />
-            <span>Analytics</span>
           </Link>
         </li>
         <li className="logout" onClick={handleLogout}> {/* เรียกใช้ handleLogout เมื่อคลิก */}

@@ -33,7 +33,7 @@
   }
   
   .ticketcheck li {
-    padding: 70px 0; /* Padding adjusted to center content vertically */
+    padding: 70px ; /* Padding adjusted to center content vertically */
     display: flex;
     flex-direction: column;
     align-items: center; /* Center items horizontally */

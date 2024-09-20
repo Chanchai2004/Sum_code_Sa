@@ -1,14 +1,4 @@
-import {
-  Button,
-  Card,
-  Form,
-  Input,
-  message,
-  Flex,
-  Row,
-  Col,
-  Select,
-} from "antd";
+import { Button, Card, Form, Input, message, Flex, Row, Col } from "antd";
 import { useNavigate } from "react-router-dom";
 import { CreateMember } from '../../services/https/index'; 
 import { MembersInterface } from '../../interfaces/IMember';
@@ -17,26 +7,38 @@ import './signup.css';
 function Signup() {
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
-  const onFinish = async (values: MembersInterface ) => {
-    let res = await CreateMember(values);
-    if (res.status == 201) {
-      messageApi.open({
-        type: "success",
-        content: res.data.message,
-      });
-      setTimeout(function () {
-        navigate("/");
-      }, 2000);
-    } else {
+
+  const onFinish = async (values: MembersInterface) => {
+    try {
+      const res = await CreateMember(values);
+      console.log('Response:', res);  // แสดงผล response ทั้งหมด
+      console.log('Response Status:', res.status);  // แสดงผล status
+  
+      if (res && res.status === true) {
+        messageApi.open({
+          type: "success",
+          // ใช้ข้อมูล message ที่ได้จาก response
+          content: 'Member created successfully. ID: ' + res.message.ID,
+        });
+        navigate('/login');
+      } else {
+        messageApi.open({
+          type: "error",
+          content: res.message?.error || 'An unexpected error occurred.',
+        });
+      }
+    } catch (error: any) {
+      // จัดการกรณีที่มีข้อผิดพลาดในการเชื่อมต่อ API
       messageApi.open({
         type: "error",
-        content: res.data.error,
+        content: error.message || 'An error occurred while creating the member.',
       });
     }
   };
+  
+
   return (
     <div className="signup">
-    <>
       {contextHolder}
       <Flex justify="center" align="center" className="login">
         <Card className="card-login" style={{ width: 600 }}>
@@ -56,11 +58,11 @@ function Signup() {
                   <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                     <Form.Item
                       label="Firstname"
-                      name="first_name"
+                      name="firstName"
                       rules={[
                         {
                           required: true,
-                          message: "Please enter your firstname !",
+                          message: "Please enter your firstname!",
                         },
                       ]}
                     >
@@ -70,11 +72,25 @@ function Signup() {
                   <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                     <Form.Item
                       label="Lastname"
-                      name="last_name"
+                      name="lastName"
                       rules={[
                         {
                           required: true,
-                          message: "Please enter your lastname !",
+                          message: "Please enter your lastname!",
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                    <Form.Item
+                      label="Username"
+                      name="userName"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please enter your Username!",
                         },
                       ]}
                     >
@@ -88,51 +104,29 @@ function Signup() {
                       rules={[
                         {
                           type: "email",
-                          message: "Please enter your email !",
+                          message: "Please enter a valid email!",
                         },
                         {
                           required: true,
-                          message: "Please enter your email !",
+                          message: "Please enter your email!",
                         },
                       ]}
                     >
                       <Input />
                     </Form.Item>
                   </Col>
-                  <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                  <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                     <Form.Item
                       label="Password"
                       name="password"
                       rules={[
                         {
                           required: true,
-                          message: "Please enter your password !",
+                          message: "Please enter your password!",
                         },
                       ]}
                     >
                       <Input.Password />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-                    <Form.Item
-                      label="Gender"
-                      name="gender_id"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please enter your gender !",
-                        },
-                      ]}
-                    >
-                      <Select
-                        defaultValue=""
-                        style={{ width: "100%" }}
-                        options={[
-                          { value: "", label: "Please enter your gender !", disabled: true },
-                          { value: 1, label: "Male" },
-                          { value: 2, label: "Female" },
-                        ]}
-                      />
                     </Form.Item>
                   </Col>
                   <Col xs={24} sm={24} md={24} lg={24} xl={24}>
@@ -145,7 +139,7 @@ function Signup() {
                       >
                         Sign up
                       </Button>
-                      Or <a onClick={() => navigate("/")}>signin now !</a>
+                      <a onClick={() => navigate('/login')}>Signin now!</a>
                     </Form.Item>
                   </Col>
                 </Row>
@@ -154,7 +148,6 @@ function Signup() {
           </Row>
         </Card>
       </Flex>
-    </>
     </div>
   );
 }

@@ -409,7 +409,8 @@ const ShowtimeManagement: React.FC = () => {
 
   return (
     
-    <div>
+    <div className='showtime'>
+      <div className='app'>
       <Card style={{ margin: "20px" }}>
       {/* Header Section */}
       <div className="header">
@@ -477,14 +478,14 @@ const ShowtimeManagement: React.FC = () => {
           </Select>
         </div>
         <div className="header-item">
-          <button className="add-btn" onClick={handleAddShowTime}>
+          <button className="aadd-btn" onClick={handleAddShowTime}>
             <PlusOutlined /> Add
           </button>
         </div>
       </div>
 
       {/* Showtime Table Section */}
-      <Table className="table table-bordered">
+      <table className="table table-bordered">
         <thead>
           <tr>
             <th>Theater / Time</th>
@@ -528,7 +529,7 @@ const ShowtimeManagement: React.FC = () => {
             </tr>
           ))}
         </tbody>
-      </Table>
+      </table>
 
 
       {/* Popup สำหรับการอัปเดตและลบ */}
@@ -539,6 +540,7 @@ const ShowtimeManagement: React.FC = () => {
   footer={null} 
   className="modal-content" // เพิ่ม className ที่นี่
 >
+  <div className='modal-content'>
 <Card style={{ padding: '0', margin: '20', display: 'flex', justifyContent: 'center' , marginBottom: '20px'}}>
   {moviePoster ? (
     <img
@@ -579,7 +581,7 @@ const ShowtimeManagement: React.FC = () => {
       allowClear={false}
     />
   </div>
-  <div className="header-item search-movie-container">
+  <div className="header-item">
     <label>Movie:</label>
     <Select
       value={selectedMovieID}
@@ -601,7 +603,7 @@ const ShowtimeManagement: React.FC = () => {
       ))}
     </Select>
   </div>
-  <div className="header-item search-theater-container">
+  <div className="header-item">
     <label>Theater:</label>
     <Select
       value={selectedTheaterID}
@@ -623,18 +625,19 @@ const ShowtimeManagement: React.FC = () => {
       ))}
     </Select>
   </div>
-  <div className="header-item button-group">
-    <button className="update-btn" onClick={handleUpdateShowTime}>
+  
+    <button className="uupdate-btn" onClick={handleUpdateShowTime}>
     Update <EditOutlined/>
     </button>
-    <button className="delete-btn" onClick={handleDeleteShowTime}>
+    <button className="ddelete-btn" onClick={handleDeleteShowTime}>
       Delete <DeleteOutlined/>
     </button>
+  
   </div>
 </Modal>
 </Card>
     </div>
-    
+    </div>
   );
 };
 

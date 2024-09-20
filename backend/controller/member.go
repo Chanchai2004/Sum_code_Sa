@@ -3,12 +3,21 @@ package controller
 import (
 	"net/http"
 	"fmt"
+	// "strconv"
+	"time"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/tanapon395/sa-67-example/config"
 	"github.com/tanapon395/sa-67-example/entity"
 )
 
-// POST /signin
+var jwtKey = []byte("your_secret_key")
+
+type Claims struct {
+	Email string `json:"email"`
+	jwt.StandardClaims
+}
+
 func Signin(c *gin.Context) {
 	var loginData struct {
 		Email    string `json:"email"`
@@ -35,11 +44,30 @@ func Signin(c *gin.Context) {
 		return
 	}
 
+	// สร้าง JWT token
+	expirationTime := time.Now().Add(24 * time.Hour)
+	claims := &Claims{
+		Email: loginData.Email,
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: expirationTime.Unix(),
+		},
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenString, err := token.SignedString(jwtKey)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not generate token"})
+		return
+	}
+
+	// ส่ง response กลับไปพร้อมกับ token
 	c.JSON(http.StatusOK, gin.H{
 		"id":    member.ID,
 		"email": member.Email,
+		"role":  member.Role,   // assuming you have a role field in your Member struct
+		"token": tokenString,   // ส่ง token กลับไปด้วย
 	})
 }
+
 
 // POST /Member
 func CreateMember(c *gin.Context) {
@@ -54,25 +82,27 @@ func CreateMember(c *gin.Context) {
 	db := config.DB()
 
 	// ค้นหา gender ด้วย id
-	var gender entity.Gender
-	db.First(&gender, member.GenderID)
-	if gender.ID == 0 {
-		c.JSON(http.StatusNotFound, gin.H{"error": "gender not found"})
-		return
-	}
+	// var gender entity.Gender
+	// db.First(&gender, member.GenderID)
+	// if gender.ID == 0 {
+	// 	c.JSON(http.StatusNotFound, gin.H{"error": "gender not found"})
+	// 	return
+	// }
 
 	// เข้ารหัสลับรหัสผ่านที่ผู้ใช้กรอกก่อนบันทึกลงฐานข้อมูล
 	hashedPassword, _ := config.HashPassword(member.Password)
 
 	// สร้าง Member
 	u := entity.Member{
+		UserName: member.UserName,
 		FirstName:  member.FirstName,
 		LastName:   member.LastName,
 		Email:      member.Email,
 		Password:   hashedPassword,
-		GenderID:   member.GenderID,
-		Gender:     gender,
+		// GenderID:   member.GenderID,
+		// Gender:     gender,
 		TotalPoint: member.TotalPoint,
+		Role:      "user",
 	}
 
 	// บันทึก

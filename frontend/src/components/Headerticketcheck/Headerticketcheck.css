@@ -1,5 +1,5 @@
 /* src/components/Header.css */
-.ticketcheck header {
+.ticketcheck .headerder {
     background-color: #333;
     color: white;
     display: flex;
@@ -9,10 +9,10 @@
     width: 100%; /* Full width */
     height: 60px;
     border-radius: 0; /* เอามุมมนออก */
-    margin: 0;
+    margin: 0 !important;
 }
 
-.header .icon {
+.headerder .icon {
     padding-top: 5px ;
     font-size: 30px;
 }

@@ -28,6 +28,7 @@ func main() {
 		// Booking Routes
 		router.GET("/booked-seats/:showtimeID", controller.GetBookedSeats)
 		router.POST("/book-seats", controller.BookSeats) // เพิ่มเส้นทางสำหรับการจองที่นั่ง
+		router.PATCH("/release-seats", controller.ReleaseSeatsForUnfinishedTickets)
 
 		// Member Routes
 		router.GET("/members", controller.ListMembers)
@@ -88,6 +89,9 @@ func main() {
 		// CodeReward Routes
         router.POST("/codereward", controller.CreateCodeReward) // เส้นทางสำหรับสร้างโค้ดแลกเปลี่ยน
 		router.GET("/check-code-reward", controller.GetCodeReward) // เส้นทางสำหรับดึงข้อมูลโค้ดแลกเปลี่ยน
+		router.GET("/checkreward/:reward_code", controller.CheckRewardCode)
+		router.PATCH("/updaterewardstatus/:code", controller.UpdateCodeRewardStatus)
+
 
 		//Ticketcheck Routes
 		router.GET("/checkin/ticket_id", controller.CreateTicketCheck)

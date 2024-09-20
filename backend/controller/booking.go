@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"log"
 	"net/http"
 	"time"
 
@@ -49,7 +50,7 @@ func BookSeats(c *gin.Context) {
 	// สร้างรายการ ticket โดยใช้ข้อมูลจากผู้ใช้ เช่น จำนวนที่นั่ง
 	ticket := entity.Ticket{
 		MemberID: req.MemberID,
-		Point:    len(seats) * 5,  // สามารถกำหนดสูตรการคำนวณเองตามที่ผู้ใช้ต้องการ
+		Point:    len(seats) * 5, // สามารถกำหนดสูตรการคำนวณเองตามที่ผู้ใช้ต้องการ
 		Status:   "on process",
 	}
 	if err := tx.Create(&ticket).Error; err != nil {
@@ -65,7 +66,7 @@ func BookSeats(c *gin.Context) {
 			MemberID:    req.MemberID,
 			ShowTimeID:  req.ShowtimeID,
 			SeatID:      seat.ID,
-			TicketID:    ticket.ID,  // เชื่อมโยงกับ ticket ที่เพิ่งสร้าง
+			TicketID:    ticket.ID, // เชื่อมโยงกับ ticket ที่เพิ่งสร้าง
 			BookingTime: time.Now(),
 			Status:      "confirmed",
 		}
@@ -98,14 +99,47 @@ func BookSeats(c *gin.Context) {
 	// บันทึก transaction
 	if err := tx.Commit().Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Transaction failed"})
-		return	
+		return
 	}
 
 	// ส่งข้อความตอบกลับเมื่อการจองเสร็จสิ้น
 	c.JSON(http.StatusOK, gin.H{
-		"success": true,
-		"message": "Booking confirmed successfully",
-		"ticketID": ticket.ID,  // ส่ง ticketID กลับไปที่ frontend
+		"success":  true,
+		"message":  "Booking confirmed successfully",
+		"ticketID": ticket.ID, // ส่ง ticketID กลับไปที่ frontend
 	})
-	
+
+}
+
+func ReleaseSeatsForUnfinishedTickets(c *gin.Context) {
+	db := config.DB()
+
+	// ดึงข้อมูล tickets ที่มีสถานะ unfinish
+	var tickets []entity.Ticket
+	if err := db.Where("status = ?", "unfinish").Find(&tickets).Error; err != nil {
+		log.Println("Failed to fetch unfinish tickets:", err)
+		c.JSON(500, gin.H{"error": "Failed to fetch unfinish tickets"})
+		return
+	}
+
+	// ปล่อยที่นั่งที่ถูกจองให้กลับมาเป็นว่าง
+	for _, ticket := range tickets {
+		// อัปเดตสถานะที่นั่งที่เกี่ยวข้องกับตั๋ว
+		if err := db.Model(&entity.Seat{}).Where("id IN (SELECT seat_id FROM bookings WHERE ticket_id = ?)", ticket.ID).Updates(map[string]interface{}{
+			"Status": "Available",
+		}).Error; err != nil {
+			log.Println("Failed to update seat status for ticket:", ticket.ID)
+			c.JSON(500, gin.H{"error": "Failed to update seat status for ticket"})
+			return
+		}
+
+		// ลบข้อมูลการจองที่เกี่ยวข้องใน booking
+		if err := db.Where("ticket_id = ?", ticket.ID).Delete(&entity.Booking{}).Error; err != nil {
+			log.Println("Failed to delete booking for ticket:", ticket.ID)
+			c.JSON(500, gin.H{"error": "Failed to delete booking for ticket"})
+			return
+		}
+	}
+
+	c.JSON(200, gin.H{"message": "Seats released for unfinished tickets"})
 }

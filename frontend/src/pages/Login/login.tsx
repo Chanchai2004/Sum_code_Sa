@@ -3,7 +3,6 @@ import { Form, Input, Button, Checkbox, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './login.css';
-import Signup from '../Signup/signup';
 
 const Login: React.FC = () => {
     const navigate = useNavigate();
@@ -22,37 +21,40 @@ const Login: React.FC = () => {
             if (response.status === 200) {
                 console.log("Login successful. Response data:", response.data);
     
-                // ตรวจสอบว่า memberID และ token มีอยู่หรือไม่
-                const { email, memberID = 1, token = 'dummy-token' } = response.data;  // ใช้ค่า default เพื่อทดสอบ
-                if (memberID && token) {
-                    console.log("Storing memberID and token in localStorage...");
+                // รับค่า role จาก API
+                const { email, id, role, token } = response.data;
+    
+                if (id && role && token) { // แก้ไขจาก memberID เป็น id
+                    console.log("Storing id, token, and role in localStorage...");
     
                     // ตั้งค่า Local Storage
                     message.success('Login successful');
                     localStorage.setItem('isLogin', 'true');
-                    localStorage.setItem('email', email); 
-                    // หลังจากล็อกอินสำเร็จ
-                    localStorage.setItem('memberID', response.data.id);  // ตรวจสอบว่าค่า id นี้ถูกต้อง
-
-                    localStorage.setItem('token', token); 
+                    localStorage.setItem('email', email);
+                    localStorage.setItem('id', id); // เปลี่ยนเป็น id
+                    localStorage.setItem('token', token); // ตรวจสอบว่า API ส่ง token กลับมาหรือไม่
+                    localStorage.setItem('role', role); // เก็บ role ใน localStorage
     
-                    console.log("Checking if the user is an admin...");
-                    if (email === 'sa@gmail.com' && values.password === '123456') {
+                    console.log("Checking the user role...");
+                    // ตรวจสอบ role ที่ได้จาก API
+                    if (role === 'admin') {
                         localStorage.setItem('isAdmin', 'true');
                         console.log("User is admin, navigating to dashboard...");
                         navigate('/dashboard');
-                    }else if(email === 'sastaff@gmail.com' && values.password === '123456'){
+                    } else if (role === 'staff') {
                         localStorage.setItem('isStaff', 'true');
                         console.log("User is staff, navigating to scanner...");
                         navigate('/scanner');
-                    }
-                     else {
+                    } else if (role === 'user') {
                         localStorage.setItem('isAdmin', 'false');
-                        console.log("User is not an admin, navigating to home...");
+                        console.log("User is a regular user, navigating to home...");
                         navigate('/home');
+                    } else {
+                        console.error("Unknown role received from the API");
+                        message.error('Unknown role received. Please contact support.');
                     }
                 } else {
-                    console.error("Invalid login response: memberID or token is missing");
+                    console.error("Invalid login response: id, token, or role is missing");
                     message.error('Invalid login response');
                 }
             }
@@ -61,6 +63,7 @@ const Login: React.FC = () => {
             message.error('Login failed. Please check your username and password.');
         }
     };
+    
     
 
     return (

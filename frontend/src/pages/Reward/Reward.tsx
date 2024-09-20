@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+// import axios from 'axios';
 import Navbar from '../../components/navbar/navbar';
 import './Reward.css';
 import RewardPopup from '../Popup/RewardPopup';
 import { CreateReward, GetMemberById,UpdateMember } from '../../services/https/index'; 
 import { RewardInterface } from "../../interfaces/IReward";
-import { MembersInterface } from '../../interfaces/IMember';
+// import { MembersInterface } from '../../interfaces/IMember';
 import { message } from "antd";
 
 
 const Reward: React.FC = () => {
-  const apiUrl = "http://localhost:8000/api";
+  // const apiUrl = "http://localhost:8000/api";
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedReward, setSelectedReward] = useState<RewardInterface | null>(null);
   const [userName, setUserName] = useState<string>('');
   const [userPoints, setUserPoints] = useState<number>(0);
-  const [messageApi, contextHolder] = message.useMessage();
+  const [messageApi] = message.useMessage();
   
   const navigate = useNavigate();
 
@@ -32,7 +32,7 @@ const Reward: React.FC = () => {
         return;
     }
 
-    const memberID = localStorage.getItem('memberID'); // ดึง memberID ที่เก็บไว้ใน localStorage
+    const memberID = localStorage.getItem('id'); // ดึง memberID ที่เก็บไว้ใน localStorage
     console.log("memberID:", memberID);
 
     if (!memberID) {
@@ -63,7 +63,7 @@ const Reward: React.FC = () => {
         // ตรวจสอบว่า `data` มี `UserName` และ `TotalPoint` หรือไม่
         const userName = data.UserName ? data.UserName : "Name data not available";
         const points = Number(data.TotalPoint); // แปลง TotalPoint เป็นตัวเลข
-        const displayPoints = !isNaN(points) ? points : "Points data not available";
+        const displayPoints = isNaN(points) ? 0 : points;
 
         console.log("User Name:", userName); // แสดงค่า name
         console.log("User Points:", displayPoints); // แสดงค่า points
@@ -165,7 +165,7 @@ const getRewardImage = (reward: RewardInterface) => {
   
       try {
         // ดึง member_id จาก localStorage หรือแหล่งข้อมูลอื่น
-        const memberID = localStorage.getItem("memberID");
+        const memberID = localStorage.getItem("id");
   
         // ตรวจสอบว่า memberID มีค่าหรือไม่
         if (!memberID) {

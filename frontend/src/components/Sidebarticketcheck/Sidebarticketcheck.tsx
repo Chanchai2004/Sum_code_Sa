@@ -29,6 +29,9 @@ const Sidebarticketcheck: React.FC = () => {
             <Link to="/scanner" className="sidebar-item">📷<br />Scanner</Link>
             </li>
             <li>
+            <Link to="/checkcode" className="sidebar-item">🏷️<br />Checkcode</Link>
+            </li>
+            <li>
             {/* Use a button for logout, as it needs an onClick handler */}
             <button className="sidebar-item logout-button" onClick={handleLogout}>🔓<br />Logout</button>
             </li>
