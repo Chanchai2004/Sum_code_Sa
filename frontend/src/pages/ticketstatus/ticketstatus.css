@@ -11,6 +11,7 @@
 
 /* ส่วนอื่นๆ ของตาราง */
 .ticketstatus .ticketchecktable-container {
+  overflow-y: hidden;
   width: 100%;
   max-width: 1000px;
   margin: 0 auto;
@@ -36,10 +37,9 @@
   padding: 8px; /* เพิ่มช่องว่างในเซลล์ */
 }
 .ticketstatus .main-content{
+  height: 695px;
   background-color: white;
+  overflow-y: hidden;
 }
 
-.ticketstatus .body{
-  background-color: white;
-}
 

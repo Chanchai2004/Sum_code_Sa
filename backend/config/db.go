@@ -81,7 +81,7 @@ func SetupDatabase() {
 		Email:      "sa@gmail.com",
 		Password:   hashedPassword,
 		GenderID:   GenderMale.ID,
-		TotalPoint: 10,
+		TotalPoint: 1000,
 		Role:       "customer",
 	}
 	db.FirstOrCreate(Member1, &entity.Member{

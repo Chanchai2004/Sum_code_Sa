@@ -9,7 +9,7 @@
   height: 100vh;
   width: calc(100% - 100px); /* กำหนดความกว้างของเนื้อหา ลดขนาดจาก sidebar */
   background-color: white; /* เปลี่ยนพื้นหลังเป็นสีที่ต้องการ */
-  overflow: hidden;
+  
 }
 
 .showtime .main-content {

@@ -33,7 +33,8 @@ func BookSeats(c *gin.Context) {
 
 	// ค้นหาที่นั่งที่เลือกและตรวจสอบว่าที่นั่งว่างหรือไม่
 	var seats []entity.Seat
-	if err := db.Where("seat_no IN ? AND theater_id = ? AND id NOT IN (SELECT seat_id FROM bookings WHERE show_time_id = ?)", req.Seats, req.TheaterID, req.ShowtimeID).Find(&seats).Error; err != nil {
+	// เพิ่มการเช็คให้แน่ใจว่าที่นั่งไม่ถูกจองและข้อมูลการจองเก่าได้ถูกลบ
+	if err := db.Where("seat_no IN ? AND theater_id = ? AND status = 'Available'", req.Seats, req.TheaterID).Find(&seats).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch seat information"})
 		return
 	}
@@ -108,8 +109,8 @@ func BookSeats(c *gin.Context) {
 		"message":  "Booking confirmed successfully",
 		"ticketID": ticket.ID, // ส่ง ticketID กลับไปที่ frontend
 	})
-
 }
+
 
 func ReleaseSeatsForUnfinishedTickets(c *gin.Context) {
 	db := config.DB()
@@ -124,6 +125,19 @@ func ReleaseSeatsForUnfinishedTickets(c *gin.Context) {
 
 	// ปล่อยที่นั่งที่ถูกจองให้กลับมาเป็นว่าง
 	for _, ticket := range tickets {
+		// ตรวจสอบก่อนว่ามีที่นั่งที่เชื่อมโยงกับ ticket นี้หรือไม่
+		var bookings []entity.Booking
+		if err := db.Where("ticket_id = ?", ticket.ID).Find(&bookings).Error; err != nil {
+			log.Println("Failed to fetch bookings for ticket:", ticket.ID)
+			c.JSON(500, gin.H{"error": "Failed to fetch bookings for ticket"})
+			return
+		}
+
+		if len(bookings) == 0 {
+			log.Println("No bookings found for ticket:", ticket.ID)
+			continue
+		}
+
 		// อัปเดตสถานะที่นั่งที่เกี่ยวข้องกับตั๋ว
 		if err := db.Model(&entity.Seat{}).Where("id IN (SELECT seat_id FROM bookings WHERE ticket_id = ?)", ticket.ID).Updates(map[string]interface{}{
 			"Status": "Available",

@@ -1,11 +1,12 @@
 /* QrScanner.css */
 
 .ticketcheckcontainer {
+    padding-top: 81px;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
-    overflow: hidden;
+    overflow-y: hidden;
     background-color: white;
 }
 

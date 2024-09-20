@@ -1,27 +1,17 @@
 /* งงว่ะ */
 /* ตั้งค่าโทนสีพื้นหลังและสีตัวอักษรหลัก */
- .movielist   body {
-  background-color: #000000; /* พื้นหลังโทนขาวนวล */
+.movielist   body {
+  background-color: #f5f5f5; /* พื้นหลังโทนขาวนวล */
   color: #333333; /* สีข้อความหลักเป็นสีเทาเข้ม */
   font-family: 'Roboto', sans-serif; /* ฟอนต์ที่เหมาะสม */
 }
-.imgcontentner{
-  margin-top: 60px;
-  background-image: url('../../assets/snapedit_1726730535994.jpeg');
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  height: 1080px;
-  align-items: center;
-  justify-content: center;
-  color: white;
-}
+
 /* สำหรับการ์ดแต่ละใบ */
  .movielist  .card-custom {
   background-color: #ffffff; /* พื้นหลังการ์ดสีขาว */
   border: 1px solid #cccccc; /* ขอบการ์ดสีเทาอ่อน */
   border-radius: 10px; /* ขอบโค้งมน */
-  
+ 
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* เงาอ่อน */
 }
@@ -59,15 +49,14 @@
 /* การจัดการ container หลัก */
  .movielist  .ccontainer {
   padding: 20px;
-  background-color: #000000;
 }
 
 /* การจัดการหัวข้อ */
-.movielist h1, h2, h3, h4, h5, h6 {
+movielisth1, h2, h3, h4, h5, h6 {
   color: #333333; /* สีหัวข้อเป็นสีเทาเข้ม */
 }
 
-.movielist p {
+movielistp {
   color: #555555; /* สีข้อความทั่วไปเป็นสีเทากลาง */
 }
 
@@ -105,7 +94,7 @@
 /* จัดการ Carousel */
  .movielist  .carousel-container {
   background-color: #f5f5f5; /* พื้นหลังภายใน Carousel สีขาว */
-  padding: 20px;
+  padding: 40px;
 }
 
  .movielist   .carousel-container img {
@@ -123,69 +112,9 @@
 
  .movielist  .col-md-6 {
   margin-bottom: 30px;
-}
-
-.video-container {
-  width: 100%;
-  background-image: url('../../assets/123.png');
-  background-size: cover;
-  background-position: center;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  padding-top: 10px;
-  padding-bottom: 20px; /* เพิ่ม padding ด้านล่างเพื่อให้ห่างจากเนื้อหาข้างล่าง */
-}
-
-.video-container h2 {
-  color: #FFD700;
-  margin: 0;
-  margin-bottom: 10px;
-  text-align: center;
-  z-index: 2;
-}
-
-.video-card {
-  width: 80%;
-  background-color: rgba(39, 0, 39, 0.3);
-  border-radius: 20px;
-  padding: 20px;
-  backdrop-filter: blur(30px);
-  position: relative;
-  z-index: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.video-card video {
-  width: 100%;
-  border-radius: 15px;
-  overflow: hidden;
-}
-
-/* เพิ่ม Media Query เพื่อปรับขนาดวิดีโอและ Card ในหน้าจอที่เล็กลง */
-@media (max-width: 1200px) {
-  .video-card {
-    width: 90%; /* ขยายความกว้างของ Card ในหน้าจอที่เล็กลง */
-  }
-}
-
-@media (max-width: 768px) {
-  .video-card {
-    width: 100%; /* ขยายความกว้างของ Card ในหน้าจอมือถือ */
-  }
   
-  .video-container h2 {
-    font-size: 1.5rem; /* ลดขนาดฟอนต์ของ h2 ในหน้าจอที่เล็กลง */
-  }
 }
 
-@media (max-width: 576px) {
-  .video-card video {
-    max-height: 50vh; /* ลดความสูงของวิดีโอในหน้าจอที่เล็กที่สุด */
-  }
+.movielist  .col-md-12 {
+  padding-top: 40px;
 }
-

@@ -9,15 +9,17 @@
     width: 100%; /* Full width */
     height: 60px;
     border-radius: 0; /* เอามุมมนออก */
-    margin: 0 !important;
+    top: 0;
 }
 
 .headerder .icon {
+    padding-left: 15px;
     padding-top: 5px ;
     font-size: 30px;
 }
 
 .ticketcheck h2{
+    padding-left: 5px;
     margin: 0;
     color:white;
     padding-top: 7px;

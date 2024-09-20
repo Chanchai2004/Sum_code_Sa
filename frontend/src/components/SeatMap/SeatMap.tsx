@@ -42,12 +42,14 @@ const SeatMap: React.FC = () => {
   const navigate = useNavigate(); // ใช้ navigate เพื่อนำทางไปหน้าอื่น
   const location = useLocation(); // รับค่าจาก navigate
   const { showtimeID, TheaterID } = location.state || {}; // ดึง showtimeID และ theaterID จาก location.state
-
+  
   // ดึงข้อมูลจาก localStorage
   useEffect(() => {
     const storedMemberID = localStorage.getItem('memberID');
     if (storedMemberID) setMemberID(Number(storedMemberID));
   }, []);
+
+ 
 
   // สร้าง seatMap โดยใช้ theaterID เพื่อกำหนด seatID ให้ถูกต้อง
   const seatMap = generateSeatMap(seats, TheaterID);
@@ -70,9 +72,7 @@ const SeatMap: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    fetchBookedSeats();
-  }, [showtimeID, TheaterID]);
+  
 
   const onSelectSeat = (seat: string) => {
     if (selectedSeats.includes(seat)) {
@@ -136,6 +136,10 @@ const SeatMap: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    fetchBookedSeats();
+  }, [showtimeID, TheaterID]);
+  
   return (
     <div className='seat-container'>
       <div className="SeatMapcontainer">
