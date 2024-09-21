@@ -73,7 +73,7 @@ const PaymentDetail: React.FC = () => {
     }
 
     // Fetch coupons (rewards) based on memberID
-    const memberID = parseInt(localStorage.getItem("memberID") || "0", 10);
+    const memberID = parseInt(localStorage.getItem("id") || "0", 10);
     if (memberID) {
       GetDiscountRewardsByMemberID(memberID).then((rewards) => {
         console.log("Fetched Rewards:", rewards);
@@ -128,7 +128,7 @@ const PaymentDetail: React.FC = () => {
 
   const handleConfirm = async () => {
     try {
-        const memberID = parseInt(localStorage.getItem("memberID") || "0", 10);
+        const memberID = parseInt(localStorage.getItem("id") || "0", 10);
         if (!memberID || !ticketID) {
             console.error("Member ID, Ticket ID หายไปหรือไม่ถูกต้อง");
             return;

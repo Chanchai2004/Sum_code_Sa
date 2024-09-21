@@ -40,7 +40,7 @@ const ScanPayment: React.FC = () => {
   const [poster, setPoster] = useState<string>("");
   const [totalPrice, setTotalPrice] = useState<number | null>(null);
 
-  const [timeLeft, setTimeLeft] = useState(30); // Time countdown in seconds
+  const [timeLeft, setTimeLeft] = useState(600); // Time countdown in seconds
   const [files, setFiles] = useState<File | null>(null);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [showButtons, setShowButtons] = useState(false);

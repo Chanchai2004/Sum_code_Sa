@@ -44,7 +44,7 @@ const App: React.FC = () => {
                 }
             } 
             // กรณีที่ผู้ใช้งานเป็น User ทั่วไป (ไม่ใช่ Admin หรือ Staff)
-            else if (!['/home', '/myticket', '/seatbooking', '/moviebooking', '/reward', '/history'].includes(location.pathname)) {
+            else if (!['/home', '/myticket', '/seatbooking', '/moviebooking', '/reward', '/history','/paymentdetail','/scanpayment','/ticket'].includes(location.pathname)) {
                 navigate('/home');
             }
         } 

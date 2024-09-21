@@ -168,3 +168,22 @@ func ReleaseSeatsForUnfinishedTickets(c *gin.Context) {
 
 	c.JSON(200, gin.H{"message": "Seats released for unfinished tickets"})
 }
+
+func GetBookingByTicketID(c *gin.Context) {
+    ticketID := c.Param("ticketid")
+    var booking entity.Booking
+
+    db := config.DB()
+    // Preload nested relations
+    if err := db.Preload("Member").
+        Preload("Ticket").
+        Preload("ShowTime.Movie").
+        Preload("ShowTime.Theater").
+        Preload("Seat").
+        Where("ticket_id = ?", ticketID).
+        First(&booking).Error; err != nil {
+        c.JSON(http.StatusNotFound, gin.H{"error": "Booking not found"})
+        return
+    }
+    c.JSON(http.StatusOK, booking)
+}

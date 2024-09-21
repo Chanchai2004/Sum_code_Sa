@@ -11,7 +11,7 @@ const MyTicket: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const memberID = localStorage.getItem('memberID');
+    const memberID = localStorage.getItem('id');
     const token = localStorage.getItem('token');
 
     console.log("Using Member ID:", memberID);
