@@ -29,6 +29,7 @@ func main() {
 		router.GET("/booked-seats/:showtimeID", controller.GetBookedSeats)
 		router.POST("/book-seats", controller.BookSeats) // เพิ่มเส้นทางสำหรับการจองที่นั่ง
 		router.PATCH("/release-seats", controller.ReleaseSeatsForUnfinishedTickets)
+		
 		// Member Routes
 		router.GET("/members", controller.ListMembers)
 		router.GET("/member/:id", controller.GetMember)
@@ -70,13 +71,17 @@ func main() {
 		router.POST("/tickets", controller.CreateTicket)
 		router.PATCH("/ticket/:id", controller.UpdateTicket)
 		router.DELETE("/tickets/:id", controller.DeleteTicket)
+		router.PATCH("/tickets/status/:id", controller.UpdateTicketStatus)
 
 		// Payment Routes
 		router.GET("/payments", controller.ListPayments)
-		router.GET("/payment/:id", controller.GetPayment)
-		router.POST("/payments", controller.CreatePayment)
-		router.PATCH("/payments/:id", controller.UpdatePayment)
-		router.DELETE("/payments/:id", controller.DeletePayment)
+	router.GET("/payment/:id", controller.GetPayment)
+	router.POST("/payments", controller.CreatePayment)
+	router.PATCH("/payments/:id", controller.UpdatePayment)
+	router.DELETE("/payments/:id", controller.DeletePayment)
+	router.GET("/payments/ticket/:ticketid", controller.GetPaymentByTicketID)
+	router.PATCH("/payments/status/:ticketID", controller.UpdatePaymentStatusByTicketID)
+	router.PATCH("/payments/upload-slip", controller.UpdatePaymentSlipByTicketID)
 
 		// Reward Routes
         router.GET("/rewards", controller.ListRewards)          // เส้นทางสำหรับดึงข้อมูลรางวัลทั้งหมด
@@ -84,6 +89,7 @@ func main() {
         router.POST("/rewards", controller.CreateReward)        // สร้างรางวัล
         router.PATCH("/rewards/:id", controller.UpdateReward)   // อัปเดตรางวัล
         router.DELETE("/rewards/:id", controller.DeleteReward)  // ลบรางวัล
+		router.GET("/rewards/member/:member_id/discount", controller.GetDiscountRewardsByMemberID)
 
 		// CodeReward Routes
         router.POST("/codereward", controller.CreateCodeReward) // เส้นทางสำหรับสร้างโค้ดแลกเปลี่ยน

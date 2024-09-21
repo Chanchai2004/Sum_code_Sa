@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from "react-router-dom"; // Use `useLocation` to get the state
+import React, { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import Navbar from "../../components/navbar/navbar";
 import Poster from "../../assets/poster.jpg";
 import IconDate from "../../assets/icondate.png";
@@ -11,105 +11,198 @@ import Iconcoupon from "../../assets/iconcoupon.png";
 import Iconcoin from "../../assets/iconcoin.png";
 import Iconchair from "../../assets/iconchair.png";
 import PromptPayLogo from "../../assets/promptpaylogo.png";
+import {
+  GetShowtimeById,
+  GetMovieById,
+  GetDiscountRewardsByMemberID,
+  createPayment,
+  updateRewardStatus,
+} from "../../services/https/index"; // Adjust path as needed
+import styles from "./PaymentDetail.module.css"; // Import the CSS module
+
+interface SelectedCoupon {
+  id: string;
+  discount: string;
+}
 
 const PaymentDetail: React.FC = () => {
   const navigate = useNavigate();
-  const location = useLocation(); // ใช้ `useLocation` เพื่อดึง state จาก SeatMap
+  const location = useLocation();
 
-  // รับค่า totalPrice, selectedSeats, ticketID, และ showtimeID จาก state ที่ส่งมาจาก SeatMap
-  const { totalPrice, selectedSeats, ticketID, showtimeID } = location.state || {};
+  // Get state passed from SeatMap
+  const { totalPrice, selectedSeats, showtimeID, ticketID } =
+    location.state || {};
+  console.log("Received in PaymentDetail: ", {
+    totalPrice,
+    selectedSeats,
+    showtimeID,
+    ticketID,
+  });
 
-
-  const [movieName, setMovieName] = useState<string>("");
-  const [theaterID, setTheaterID] = useState<number | null>(null);
-  const [showDate, setShowDate] = useState<string>(""); // กำหนด state สำหรับ ShowDate
-  const [showTime, setShowTime] = useState<string>(""); // เก็บค่าเวลา
-
+  const [movieName, setMovieName] = useState<string>("Loading...");
+  const [showDate, setShowDate] = useState<string>("Loading...");
+  const [showTime, setShowTime] = useState<string>("Loading...");
+  const [theaterID, setTheaterID] = useState<number | string>("Loading...");
+  const [poster, setPoster] = useState<string>("");
+  const [coupons, setCoupons] = useState<any[]>([]); // Store fetched coupons
+  const [selectedCoupon, setSelectedCoupon] = useState<SelectedCoupon | null>(
+    null
+  );
+  const [discountedTotalPrice, setDiscountedTotalPrice] =
+    useState<number>(totalPrice); // New state to store the discounted total price
 
   useEffect(() => {
-    // ถ้ามี showtimeID ให้ทำการ fetch ข้อมูลภาพยนตร์
+    // Fetch showtime and movie details
     if (showtimeID) {
-      fetchMovieDetailsByShowtimeID(showtimeID);
-    } else {
-      console.error("Showtime ID not found");
+      GetShowtimeById(showtimeID).then((showtime) => {
+        if (showtime) {
+          setShowDate(new Date(showtime.Showdate).toLocaleDateString());
+          setShowTime(new Date(showtime.Showdate).toLocaleTimeString());
+          setTheaterID(showtime.TheaterID || "Unknown");
+
+          if (showtime.MovieID) {
+            GetMovieById(showtime.MovieID).then((movie) => {
+              if (movie) {
+                setMovieName(movie.MovieName);
+                setPoster(movie.Poster);
+              }
+            });
+          }
+        }
+      });
+    }
+
+    // Fetch coupons (rewards) based on memberID
+    const memberID = parseInt(localStorage.getItem("memberID") || "0", 10);
+    if (memberID) {
+      GetDiscountRewardsByMemberID(memberID).then((rewards) => {
+        console.log("Fetched Rewards:", rewards);
+
+        if (Array.isArray(rewards)) {
+          setCoupons(rewards); // Set the coupons state directly with the rewards array
+        } else {
+          console.warn("No rewards data found");
+          setCoupons([]); // Set to an empty array if no data found
+        }
+      });
     }
   }, [showtimeID]);
 
-  // ฟังก์ชันดึงข้อมูลชื่อภาพยนตร์และ ShowDate จาก showtimeID
-  const fetchMovieDetailsByShowtimeID = async (id: number) => {
-    try {
-      console.log("Fetching details for Showtime ID:", id);
-      const response = await fetch(`http://localhost:8000/api/showtimes/${id}`);
-      const responseData = await response.json();
-
-      if (response.ok) {
-        console.log("Ticket ID:", ticketID, "Showtime ID:", showtimeID, "Selected Seats:", selectedSeats, "Total Price:", totalPrice);
-        const data = responseData.data;
-        if (data.Movie && data.Movie.MovieName) {
-          setMovieName(data.Movie.MovieName);
-          const showDateObj = new Date(data.ShowDate);
-          setShowDate(showDateObj.toLocaleDateString());
-          setShowTime(showDateObj.toLocaleTimeString());
-          setTheaterID(data.Theater?.TheaterName || "Unknown Theater");
-        } else {
-          console.error("Movie data not found in the response.");
-        }
-      } else {
-        console.error("Error fetching movie details:", response.statusText);
-      }
-    } catch (error) {
-      console.error("Error fetching movie details:", error);
+  const handleCouponChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const [id, discount] = e.target.value.split("|");
+    if (id && discount) {
+      setSelectedCoupon({ id, discount });
+      console.log("Coupon selected:", { id, discount });
+    } else {
+      console.error("Failed to parse selected coupon");
     }
   };
 
-  const [selectedCoupon, setSelectedCoupon] = useState("");
+  const handleApplyCoupon = () => {
+    console.log("Apply Click!!!!");
 
-  const handleCouponChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedCoupon(e.target.value);
+    if (selectedCoupon) {
+      const discount = parseInt(selectedCoupon.discount);
+      console.log("Apply value:", selectedCoupon.discount);
+
+      if (discount > totalPrice) {
+        alert("ไม่สามารถใช้คูปองนี้ได้ เนื่องจากส่วนลดเกินกว่าราคาสินค้า");
+        return;
+      }
+
+      setDiscountedTotalPrice(Math.max(0, totalPrice - discount));
+      console.log(
+        "Discounted Total Price:",
+        Math.max(0, totalPrice - discount)
+      ); // แสดงค่าหลังใช้คูปอง
+    } else {
+      console.warn("No valid coupon selected");
+    }
   };
 
   const handleCancel = () => {
-    setSelectedCoupon(""); // Reset the selected coupon value
+    setSelectedCoupon(null); // Reset the selected coupon value to null
+    setDiscountedTotalPrice(totalPrice); // Reset the discounted total price
+    console.log("Coupon selection canceled"); // แสดงข้อความเมื่อยกเลิกการเลือกคูปอง
   };
 
-  const handleConfirm = () => {
-    navigate("/scanpayment"); // Navigate to ScanPayment page
-  };
+  const handleConfirm = async () => {
+    try {
+        const memberID = parseInt(localStorage.getItem("memberID") || "0", 10);
+        if (!memberID || !ticketID) {
+            console.error("Member ID, Ticket ID หายไปหรือไม่ถูกต้อง");
+            return;
+        }
 
-  useEffect(() => {
-    navigate("/paymentdetail");
-    
-  }, [totalPrice, selectedSeats, ticketID, navigate]);
-  
+        // ถ้าผู้ใช้เลือกคูปอง ให้ใช้ ID ของคูปองนั้น, ถ้าไม่เลือก ให้ส่งเป็น null
+        const selectedCouponId = selectedCoupon ? selectedCoupon.id : null;
+
+        const paymentData = {
+          totalPrice: discountedTotalPrice,
+          status: "Pending",
+          memberID: memberID,
+          ticketID: ticketID,
+          rewardID: selectedCoupon ? Number(selectedCoupon.id) : null, // แปลง id เป็น number หรือส่ง null หากไม่มีการเลือก coupon
+        };             
+
+        console.log("Sending Payment Data:", paymentData);
+
+        // เรียกใช้ฟังก์ชันสร้างการชำระเงิน
+        const paymentResult = await createPayment(paymentData);
+        console.log("Payment created:", paymentResult);
+
+        // อัปเดตสถานะรางวัลหากมีการเลือกคูปอง
+        if (selectedCouponId) {
+            const updateRewardResult = await updateRewardStatus(selectedCouponId);
+            console.log("Reward status updated:", updateRewardResult);
+        }
+
+        // ถ้าราคาหลังส่วนลดเป็น 0 ให้ไปที่หน้า ticket
+        if (discountedTotalPrice === 0) {
+            navigate("/ticket", { state: { ticketID } });
+        } else {
+            // ถ้าราคาหลังส่วนลดมากกว่า 0 ให้ไปที่หน้า scanpayment
+            navigate("/scanpayment", { state: { ticketID, showtimeID, selectedSeats } });
+        }
+    } catch (error) {
+        console.error("Error confirming payment:", error);
+        alert("มีข้อผิดพลาดในการประมวลผลการชำระเงินของคุณ โปรดลองอีกครั้ง");
+    }
+};
+
+
+
+
 
   return (
     <>
       <Navbar />
-      <div style={styles.container}>
+      <div className={styles.container}>
         {/* Content ด้านบน */}
-        <div style={styles.content}>
+        <div className={styles.content}>
           <p>
-            <img src={Poster} alt="Inside Out 2" style={styles.poster} />
+            <img src={Poster || poster} alt="movie" className={styles.poster} />
           </p>
-          <div style={styles.details}>
-            <h1 style={styles.title}>{movieName}</h1>
-            <div style={styles.info}>
+          <div className={styles.details}>
+            <h1 className={styles.title}>{movieName}</h1>
+            <div className={styles.info}>
               <p>
-                <img src={IconDate} alt="date" style={styles.icon} /> {showDate || "Loading..."}
+                <img src={IconDate} alt="date" className={styles.icon} /> {showDate}
               </p>
               <p>
-                <img src={Icontime} alt="time" style={styles.icon} /> {showTime || "Loading..."}
+                <img src={Icontime} alt="time" className={styles.icon} /> {showTime}
               </p>
               <p>
-                <img src={Iconlo} alt="location" style={styles.icon} /> Merje Cineplex
+                <img src={Iconlo} alt="location" className={styles.icon} /> Merje
+                Cineplex
               </p>
-              <h2>{theaterID} </h2>
-              <div style={styles.languages}>
+              <h2>Theater {theaterID}</h2>
+              <div className={styles.languages}>
                 <p>
-                  <img src={Iconsound} alt="sound" style={styles.icon} /> TH{" "}
+                  <img src={Iconsound} alt="sound" className={styles.icon} /> TH{" "}
                 </p>
                 <p>
-                  <img src={Iconsub} alt="subtitle" style={styles.icon} /> ENG{" "}
+                  <img src={Iconsub} alt="subtitle" className={styles.icon} /> ENG{" "}
                 </p>
               </div>
             </div>
@@ -117,61 +210,78 @@ const PaymentDetail: React.FC = () => {
         </div>
 
         {/* Content สำหรับ Select Seat และ Total */}
-        <div style={styles.selectSeatContent}>
-          <div style={styles.item}>
-            <h3 style={styles.label}>Select Seat</h3>
-            <div style={styles.innerContent}>
-              <img src={Iconchair} alt="seat" style={styles.icon} />
-              <span style={styles.text}>{selectedSeats && selectedSeats.length > 0 ? selectedSeats.join(", ") : "No seats selected"}</span>
-
+        <div className={styles.selectSeatContent}>
+          <div className={styles.item}>
+            <h3 className={styles.label}>Select Seat</h3>
+            <div className={styles.innerContent}>
+              <img src={Iconchair} alt="seat" className={styles.icon} />
+              <span className={styles.text}>
+                {selectedSeats && selectedSeats.length > 0
+                  ? selectedSeats.join(", ")
+                  : "No seats selected"}
+              </span>
             </div>
           </div>
-          <div style={styles.item}>
-            <h3 style={styles.label}>Total</h3>
-            <div style={styles.innerContent}>
-              <img src={Iconcoin} alt="total" style={styles.icon} />
-              <span style={styles.text}> {totalPrice ? `${totalPrice} THB` : "THB"}</span>
+          <div className={styles.item}>
+            <h3 className={styles.label}>Total</h3>
+            <div className={styles.innerContent}>
+              <img src={Iconcoin} alt="total" className={styles.icon} />
+              <span className={styles.text}>
+                {" "}
+                {discountedTotalPrice ? `${discountedTotalPrice} THB` : "0 THB"}
+              </span>
             </div>
           </div>
         </div>
 
         {/* Content สำหรับ Select Coupon และ Payment Method */}
-        <div style={styles.contentColumn}>
-          <div style={styles.fullWidth}>
-            <h3 style={styles.label}>Select Coupon</h3>
-            <div style={styles.couponContent}>
-              <img src={Iconcoupon} alt="coupon" style={styles.icon} />
+        <div className={styles.contentColumn}>
+          <div className={styles.fullWidth}>
+            <h3 className={styles.label}>Select Coupon</h3>
+            <div className={styles.couponContent}>
+              <img src={Iconcoupon} alt="coupon" className={styles.icon} />
               <select
-                style={styles.select}
-                value={selectedCoupon}
+                className={styles.select}
+                value={selectedCoupon?.id || ""} // ใช้ selectedCoupon?.id หรือถ้าเป็น null ให้เป็น ""
                 onChange={handleCouponChange}
               >
                 <option value="">Select Coupon</option>
-                <option value="discount50">Discount 50THB</option>
-                <option value="discount100">Discount 100THB</option>
+                {Array.isArray(coupons) && coupons.length > 0 ? (
+                  coupons.map((coupon) => (
+                    <option
+                      key={coupon.rewardID}
+                      value={`${coupon.rewardID}|${coupon.discount}`}
+                    >
+                      {coupon.rewardName}
+                    </option>
+                  ))
+                ) : (
+                  <option>No Coupons Available</option>
+                )}
               </select>
-              <div style={styles.buttonGroup}>
-                <button style={styles.button}>Apply</button>
-                <button style={styles.cancelbutton} onClick={handleCancel}>
+
+              <div className={styles.buttonGroup}>
+                <button className={styles.button} onClick={handleApplyCoupon}>
+                  Apply
+                </button>
+                <button className={styles.cancelbutton} onClick={handleCancel}>
                   Cancel
                 </button>
               </div>
             </div>
           </div>
 
-          <div style={styles.fullWidth}>
-            <h3 style={styles.label}>Select Payment Method</h3>
-            <div style={styles.paymentContent}>
-              <button style={styles.promptPayButton}>
-                <img
-                  src={PromptPayLogo}
-                  alt="PromptPay"
-                  style={styles.promptPayLogo}
-                />
-              </button>
+          <div className={styles.fullWidth}>
+            <h3 className={styles.label}> Payment Method</h3>
+            <div className={styles.paymentContent}>
+              <img
+                src={PromptPayLogo}
+                alt="PromptPay"
+                className={styles.promptPayLogo}
+              />
             </div>
-            <div style={styles.paymentButtonWrapper}>
-              <button style={styles.confirmButton} onClick={handleConfirm}>
+            <div className={styles.paymentButtonWrapper}>
+              <button className={styles.confirmButton} onClick={handleConfirm}>
                 Confirm
               </button>
             </div>
@@ -180,175 +290,6 @@ const PaymentDetail: React.FC = () => {
       </div>
     </>
   );
-};
-const styles = {
-  container: {
-    width: "1520px",
-    height: "100%",
-    backgroundColor: "#000",
-    display: "flex",
-    flexDirection: "column" as "column",
-    alignItems: "center",
-    paddingTop: "80px",
-    boxSizing: "border-box" as "border-box",
-  },
-  content: {
-    display: "flex",
-    backgroundColor: "#FFC700",
-    padding: "20px",
-    borderRadius: "20px",
-    width: "70%",
-    height: "auto",
-    margin: "50px auto",
-    boxSizing: "border-box" as "border-box",
-    justifyContent: "space-between",
-  },
-  selectSeatContent: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "#FFC700",
-    padding: "20px",
-    paddingLeft: "200px",
-    paddingRight: "200px",
-    borderRadius: "20px",
-    width: "70%",
-    height: "auto",
-    margin: "20px auto",
-    boxSizing: "border-box" as "border-box",
-  },
-  innerContent: {
-    display: "flex",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    width: "100%",
-  },
-  contentColumn: {
-    display: "flex",
-    backgroundColor: "#FFC700",
-    padding: "20px",
-    borderRadius: "20px",
-    width: "70%",
-    height: "auto",
-    margin: "20px auto",
-    boxSizing: "border-box" as "border-box",
-    flexDirection: "column" as "column",
-  },
-  fullWidth: {
-    width: "100%",
-    marginBottom: "70px",
-  },
-  poster: {
-    width: "250px",
-    height: "auto",
-    marginRight: "20px",
-    borderRadius: "10px",
-    paddingLeft: "20%",
-  },
-  details: {
-    display: "flex",
-    flexDirection: "column" as "column",
-    justifyContent: "space-between",
-    color: "#000",
-    width: "100%",
-    paddingLeft: "20%",
-  },
-  title: {
-    fontSize: "30px",
-    fontWeight: "bold" as "bold",
-    paddingTop: "5%",
-  },
-  info: {
-    fontSize: "20px",
-    fontWeight: "bold" as "bold",
-  },
-  languages: {
-    display: "flex",
-    gap: "10px",
-  },
-  icon: {
-    width: "25px",
-    marginRight: "8px",
-    verticalAlign: "middle",
-  },
-  item: {
-    display: "flex",
-    flexDirection: "column" as "column",
-    alignItems: "center",
-  },
-  label: {
-    fontSize: "20px",
-    color: "#000",
-    marginBottom: "10px",
-    textAlign: "center" as "center",
-  },
-  text: {
-    fontSize: "24px",
-    fontWeight: "bold" as "bold",
-    color: "#000",
-  },
-  couponContent: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "30px",
-  },
-  buttonGroup: {
-    display: "flex",
-    gap: "30px",
-  },
-  paymentContent: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: "30px",
-  },
-  paymentButtonWrapper: {
-    display: "flex",
-    justifyContent: "center",
-    marginTop: "20px",
-  },
-  select: {
-    padding: "5px 10px",
-    fontSize: "20px",
-    aligntext: "center",
-    borderRadius: "5px",
-    border: "1px solid #ccc",
-  },
-  button: {
-    backgroundColor: "#007bff",
-    color: "#fff",
-    padding: "5px 10px",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-  },
-  cancelbutton: {
-    backgroundColor: "#fff",
-    color: "#000",
-    padding: "5px 10px",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-  },
-  promptPayLogo: {
-    width: "150px",
-    height: "auto",
-  },
-  promptPayButton: {
-    backgroundColor: "transparent",
-    border: "none",
-    cursor: "pointer",
-    padding: "0",
-  },
-  confirmButton: {
-    backgroundColor: "#007bff",
-    color: "#fff",
-    padding: "10px 20px",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-  },
 };
 
 export default PaymentDetail;

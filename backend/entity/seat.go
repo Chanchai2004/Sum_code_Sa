@@ -4,7 +4,6 @@ import "gorm.io/gorm"
 
 type Seat struct {
    gorm.Model
-   Price     int
    Status    string
    SeatNo    string
 

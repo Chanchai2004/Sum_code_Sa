@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import Navbar from "../../components/navbar/navbar.tsx";
 import Poster from "../../assets/poster.jpg";
 import IconDate from "../../assets/icondate.png";
@@ -11,118 +11,87 @@ import Iconcoin from "../../assets/iconcoin.png";
 import Iconchair from "../../assets/iconchair.png";
 import BGPromptPay from "../../assets/bg-qrcode.jpg";
 import PromptPayQRCode from "../../components/promptpayqrcode/promptpayqrcode.tsx";
+import CheckSlip from "../../components/checkslip/checkslip";
+import {
+  GetShowtimeById,
+  GetMovieById,
+  GetPaymentByTicketID,
+  updateTicketStatus,
+  updatePaymentStatus,
+  saveSlipAndUpdatePayment,
+} from "../../services/https/index";
+import styles from "./ScanPayment.module.css";
 
 const ScanPayment: React.FC = () => {
-  const [showtimeID, setShowtimeID] = useState<number | null>(null);
-  const [movieName, setMovieName] = useState<string>("");
-  const [seatNo, setSeatNo] = useState<string[]>([]); // สำหรับข้อมูลที่นั่ง
-  const [totalPrice, setTotalPrice] = useState<number>(0); // สำหรับข้อมูลราคาทั้งหมด
-  const [ticketID, setTicketID] = useState<number | null>(null); // สำหรับ TicketID
-  const [theaterID, setTheaterID] = useState<number | null>(null);
-  const [Showdate, setShowdate] = useState<string>(""); // กำหนด state สำหรับ Showdate
-  const [showTime, setShowTime] = useState<string>(""); // เก็บค่าเวลา
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const { selectedSeats, showtimeID, ticketID } = location.state || {};
+  console.log("Received in ScanPayment: ", {
+    selectedSeats,
+    showtimeID,
+    ticketID,
+  });
+
+  const [movieName, setMovieName] = useState<string>("Loading...");
+  const [showDate, setShowDate] = useState<string>("Loading...");
+  const [showTime, setShowTime] = useState<string>("Loading...");
+  const [theaterID, setTheaterID] = useState<number | string>("Loading...");
+  const [poster, setPoster] = useState<string>("");
+  const [totalPrice, setTotalPrice] = useState<number | null>(null);
+
+  const [timeLeft, setTimeLeft] = useState(30); // Time countdown in seconds
+  const [files, setFiles] = useState<File | null>(null);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [showButtons, setShowButtons] = useState(false);
+  const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
+  const [isCheckingSlip, setIsCheckingSlip] = useState<boolean>(false);
+  const [checkResult, setCheckResult] = useState<boolean | null>(null);
+  const [timeUpPopup, setTimeUpPopup] = useState(false);
 
   useEffect(() => {
-    // Fetch ข้อมูลจาก localStorage หรือ API
-    localStorage.setItem("showtimeID", "1");
-    localStorage.setItem("ticketID", "1");
-    const storedShowtimeID = localStorage.getItem("showtimeID");
-    const storedTheaterID = localStorage.getItem("theaterID");
-    const storedSeatNo = JSON.parse(localStorage.getItem("seatNo") || "[]");
-    const storedTotalPrice = localStorage.getItem("totalPrice");
+    if (showtimeID) {
+      GetShowtimeById(showtimeID).then((showtime) => {
+        if (showtime) {
+          setShowDate(new Date(showtime.Showdate).toLocaleDateString());
+          setShowTime(new Date(showtime.Showdate).toLocaleTimeString());
+          setTheaterID(showtime.TheaterID || "Unknown");
 
-    if (storedShowtimeID) {setShowtimeID(parseInt(storedShowtimeID));}
-    if (storedTheaterID) { setTheaterID(parseInt(storedTheaterID)); }
-    if (storedSeatNo) {setSeatNo(storedSeatNo);}
-    if (storedTotalPrice) {setTotalPrice(parseFloat(storedTotalPrice));}
-
-    // Fetch ชื่อภาพยนตร์และ Showdate จาก ShowTimeID
-    if (showtimeID) { fetchMovieDetailsByShowtimeID(showtimeID);}}, [showtimeID]);
-
-  // ฟังก์ชันดึงข้อมูลชื่อภาพยนตร์และ Showdate จาก ShowTimeID
-  const fetchMovieDetailsByShowtimeID = async (id: number) => {
-    try {
-      const response = await fetch(`http://localhost:8000/api/showtimes/${id}`);
-      const data = await response.json();
-  
-      console.log("Response Data:", data); // ตรวจสอบโครงสร้างข้อมูล
-  
-      if (response.ok) {
-        if (data.Movie && data.Movie.MovieName) {
-          setMovieName(data.Movie.MovieName); // แสดงชื่อภาพยนตร์จาก Movie.MovieName
-  
-          // แยกวันที่และเวลาออกจาก Showdate
-          const ShowdateObj = new Date(data.Showdate);
-          setShowdate(ShowdateObj.toLocaleDateString()); // แปลงวันที่
-          setShowTime(ShowdateObj.toLocaleTimeString()); // แปลงเวลา
-  
-          setTheaterID(data.Theater.TheaterName); // แสดงชื่อโรงภาพยนตร์จาก Theater.TheaterName
-        } else {
-          console.error('Movie data not found in the response.');
+          if (showtime.MovieID) {
+            GetMovieById(showtime.MovieID).then((movie) => {
+              if (movie) {
+                setMovieName(movie.MovieName);
+                setPoster(movie.Poster);
+              }
+            });
+          }
         }
-      } else {
-        console.error('Error fetching movie details:', response.statusText);
-      }
-    } catch (error) {
-      console.error('Error fetching movie details:', error);
-    }
-  };
-  
-  // ฟังก์ชันเพื่อดึงข้อมูลการจองที่นั่งและราคาจาก TicketID
-const fetchSeatAndPriceByTicketID = async (id: number) => {
-  try {
-    // ดึงข้อมูลการจอง (Booking) จาก TicketID
-    const bookingResponse = await fetch(`http://localhost:8000/api/bookings/${id}`);
-    const bookingData = await bookingResponse.json();
-
-    console.log("Booking Data:", bookingData);
-
-    if (bookingResponse.ok) {
-      setSeatNo(bookingData.seats || []); // ตั้งค่าที่นั่ง
-    } else {
-      console.error('Error fetching booking details:', bookingResponse.statusText);
+      });
     }
 
-    // ดึงข้อมูลราคาทั้งหมด (TotalPrice) จาก TicketID
-    const ticketResponse = await fetch(`http://localhost:8000/api/tickets/${id}`);
-    const ticketData = await ticketResponse.json();
-
-    console.log("Ticket Data:", ticketData);
-
-    if (ticketResponse.ok) {
-      setTotalPrice(ticketData.totalPrice || 0); // ตั้งค่าราคาทั้งหมด
-    } else {
-      console.error('Error fetching ticket details:', ticketResponse.statusText);
+    if (ticketID) {
+      GetPaymentByTicketID(ticketID)
+        .then((payment) => {
+          if (payment && payment.TotalPrice) {
+            setTotalPrice(payment.TotalPrice);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching payment:", error);
+        });
     }
-
-  } catch (error) {
-    console.error('Error fetching details:', error);
-  }
-};
-
-useEffect(() => {
-  // ดึง TicketID จาก localStorage
-  const storedTicketID = localStorage.getItem("ticketID");
-
-  if (storedTicketID) {
-    const ticketID = parseInt(storedTicketID);
-    setTicketID(ticketID);
-
-    // ดึงข้อมูลที่นั่งและราคาตาม TicketID
-    fetchSeatAndPriceByTicketID(ticketID);
-  }
-}, []);
-
-  const [timeLeft, setTimeLeft] = useState(600); // 10 minutes countdown
-  const [files, setFiles] = useState<File | null>(null);
-  const [slipOkData, setSlipOkData] = useState<any | null>(null);
-  const [showSuccessPopup, setShowSuccessPopup] = useState(false); // State สำหรับแสดงป็อปอัพ
-
-  const navigate = useNavigate();
+  }, [showtimeID, ticketID]);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTimeLeft((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
+      setTimeLeft((prevTime) => {
+        if (prevTime <= 1) {
+          clearInterval(interval);
+          handleTimeUp(); // Call the function to update status and show popup
+          return 0;
+        }
+        return prevTime - 1;
+      });
     }, 1000);
 
     return () => clearInterval(interval);
@@ -136,82 +105,121 @@ useEffect(() => {
       .padStart(2, "0")}`;
   };
 
+  const handleTimeUp = async () => {
+    if (ticketID) {
+      try {
+        await updatePaymentStatus(ticketID, "unfinish");
+        await updateTicketStatus(ticketID, "unfinish");
+        setTimeUpPopup(true); // Show the time-up popup
+      } catch (error) {
+        console.error("Error updating status:", error);
+      }
+    }
+  };
+
+  const handleCancelClick = () => {
+    setShowCancelConfirmation(true);
+  };
+
+  const handleConfirmCancel = async () => {
+    try {
+      if (ticketID) {
+        await updatePaymentStatus(ticketID, "unfinish");
+        await updateTicketStatus(ticketID, "unfinish");
+        navigate("/home");
+      }
+    } catch (error) {
+      console.error("Error updating status:", error);
+      alert("เกิดข้อผิดพลาดในการอัปเดตสถานะ");
+    }
+  };
+
+  const handleCloseCancelConfirmation = () => {
+    setShowCancelConfirmation(false);
+  };
+
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setFiles(e.target.files[0]);
+      setShowButtons(true);
     }
+  };
+
+  const handleReset = () => {
+    setFiles(null);
+    setShowButtons(false);
+  };
+
+  const handleSlipCheckResult = async (result: boolean) => {
+    if (result && files) {
+      try {
+        const saveResult = await saveSlipAndUpdatePayment(
+          ticketID,
+          files,
+          "Paid"
+        );
+        if (saveResult.status) {
+          setShowSuccessPopup(true);
+        } else {
+          alert("เกิดข้อผิดพลาดในการบันทึกการชำระเงิน");
+        }
+      } catch (error) {
+        console.error("Error during saving payment:", error);
+        alert("เกิดข้อผิดพลาดในการบันทึกการชำระเงิน โปรดลองใหม่อีกครั้ง");
+      }
+    } else {
+      alert("Slip ไม่ถูกต้อง กรุณาอัพโหลดสลิปใหม่");
+    }
+
+    setIsCheckingSlip(false);
   };
 
   const handleSubmit = async () => {
-    if (!files) {
-      console.error("No file selected");
+    if (!files || !ticketID) {
+      console.error("No file selected or ticket ID is missing");
       return;
     }
 
-    const formData = new FormData();
-    formData.append("files", files);
-
-    try {
-      const res = await fetch("https://api.slipok.com/api/line/apikey/27555", {
-        method: "POST",
-        headers: {
-          "x-authorization": "SLIPOKM0Z75J5", // ใส่คีย์หรือ Token ที่ต้องการ
-        },
-        body: formData,
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to send a request");
-      }
-
-      const data = await res.json();
-      setSlipOkData(data.data);
-      console.log("Slipok data: ", data);
-
-      if (data.data.success) {
-        setShowSuccessPopup(true); // แสดงป็อปอัพเมื่อสำเร็จ
-      } else {
-        console.error("Slip validation failed");
-      }
-    } catch (error) {
-      console.log("Error during fetching data: ", error);
-    }
+    setIsCheckingSlip(true);
   };
 
   const handleOkClick = () => {
-    setShowSuccessPopup(false); // ปิดป็อปอัพ
-    navigate("/ticket"); // โยงไปหน้า Ticket
+    setShowSuccessPopup(false);
+    navigate("/ticket", { state: { ticketID, selectedSeats } });
   };
 
   return (
     <>
       <Navbar />
-      <div style={styles.container}>
+      <div className={styles.container}>
         {/* Content ด้านบน */}
-        <div style={styles.content}>
+        <div className={styles.content}>
           <p>
-            <img src={Poster} alt="Inside Out 2" style={styles.poster} />
+            <img src={Poster || poster} alt="movie" className={styles.poster} />
           </p>
-          <div style={styles.details}>
-            <h1 style={styles.title}>{movieName}</h1>
-            <div style={styles.info}>
+          <div className={styles.details}>
+            <h1 className={styles.title}>{movieName}</h1>
+            <div className={styles.info}>
               <p>
-                <img src={IconDate} alt="date" style={styles.icon} /> {Showdate || "Loading..."}
+                <img src={IconDate} alt="date" className={styles.icon} />{" "}
+                {showDate || "Loading..."}
               </p>
               <p>
-                <img src={Icontime} alt="time" style={styles.icon} /> {showTime || "Loading..."}
+                <img src={Icontime} alt="time" className={styles.icon} />{" "}
+                {showTime || "Loading..."}
               </p>
               <p>
-                <img src={Iconlo} alt="location" style={styles.icon} /> Merje
-                Cineplex
+                <img src={Iconlo} alt="location" className={styles.icon} />{" "}
+                Merje Cineplex
               </p>
-              <h2>{theaterID} </h2>
-              <div style={styles.languages}>
+              <h2>Theater {theaterID} </h2>
+              <div className={styles.languages}>
                 <p>
-                  <img src={Iconsound} alt="sound" style={styles.icon} /> TH{" "}
+                  <img src={Iconsound} alt="sound" className={styles.icon} /> TH{" "}
                 </p>
                 <p>
-                  <img src={Iconsub} alt="subtitle" style={styles.icon} /> ENG{" "}
+                  <img src={Iconsub} alt="subtitle" className={styles.icon} />{" "}
+                  ENG{" "}
                 </p>
               </div>
             </div>
@@ -219,46 +227,55 @@ useEffect(() => {
         </div>
 
         {/* Content สำหรับ Select Seat และ Total */}
-        <div style={styles.selectSeatContent}>
-          <div style={styles.item}>
-            <h3 style={styles.label}>Select Seat</h3>
-            <div style={styles.innerContent}>
-              <img src={Iconchair} alt="seat" style={styles.icon} />
-              <span style={styles.text}>{seatNo.length > 0 ? seatNo.join(", ") : "No seats selected"} </span>
+        <div className={styles.selectSeatContent}>
+          <div className={styles.item}>
+            <h3 className={styles.label}>Select Seat</h3>
+            <div className={styles.innerContent}>
+              <img src={Iconchair} alt="seat" className={styles.icon} />
+              <span className={styles.text}>
+                {selectedSeats && selectedSeats.length > 0
+                  ? selectedSeats.join(", ")
+                  : "No seats selected"}
+              </span>
             </div>
           </div>
-          <div style={styles.item}>
-            <h3 style={styles.label}>Total</h3>
-            <div style={styles.innerContent}>
-              <img src={Iconcoin} alt="total" style={styles.icon} />
-              <span style={styles.text}> {totalPrice} THB</span>
+          <div className={styles.item}>
+            <h3 className={styles.label}>Total</h3>
+            <div className={styles.innerContent}>
+              <img src={Iconcoin} alt="total" className={styles.icon} />
+              <span className={styles.text}>
+                {" "}
+                {totalPrice !== 0 ? totalPrice : 0} THB
+              </span>
             </div>
           </div>
         </div>
 
-
         {/* Content สำหรับ PromptPay QR Code */}
-        <div style={styles.paymentContent}>
-          <div style={styles.timeLeft}>
+        <div className={styles.paymentContent}>
+          <div className={styles.timeLeft}>
             <p>Time left to purchase</p>
-            <div style={styles.timer}>{formatTime(timeLeft)}</div>
+            <div className={styles.timer}>{formatTime(timeLeft)}</div>
           </div>
           <img
             src={BGPromptPay}
             alt="PromptPay QR Code"
-            style={styles.bgqrCode}
+            className={styles.bgqrCode}
           />
 
           {/* แสดง PromptPay QR Code */}
-          <div style={styles.qrCodeContent}>
-            <div style={styles.qrCodeOverlay}>
-              <PromptPayQRCode phoneNumber="0967360797" amount={10} />{" "}
+          <div className={styles.qrCodeContent}>
+            <div className={styles.qrCodeOverlay}>
+              <PromptPayQRCode
+                phoneNumber="0967360797"
+                amount={totalPrice !== null ? totalPrice : undefined}
+              />
             </div>
           </div>
 
-          {/* ปุ่ม Upload Slip และ Cancel */}
-          <div style={styles.buttonGroup}>
-            <label htmlFor="file-upload" style={styles.button}>
+          {/* Content สำหรับการอัปโหลดสลิปและการยกเลิก */}
+          <div className={styles.buttonGroup}>
+            <label htmlFor="file-upload" className={styles.button}>
               Upload Slip
             </label>
             <input
@@ -266,41 +283,98 @@ useEffect(() => {
               type="file"
               accept="image/*"
               onChange={handleFile}
-              style={styles.fileInput} // ซ่อน input จริงๆ และใช้ label ในการแสดงผลแทน
+              className={styles.fileInput}
             />
             <button
-              style={{ ...styles.button, ...styles.cancelButton }}
-              onClick={() => setFiles(null)}
+              className={`${styles.button} ${styles.cancelButton}`}
+              onClick={handleCancelClick}
             >
               Cancel
             </button>
           </div>
 
+          {/* การยืนยันการยกเลิก */}
+          {showCancelConfirmation && (
+            <div className={styles.confirmationOverlay}>
+              <div className={styles.confirmationBox}>
+                <p>คุณต้องการยกเลิกการชำระเงินและออกจากหน้านี้หรือไม่?</p>
+                <div className={styles.confirmationButtons}>
+                  <button
+                    className={styles.button}
+                    onClick={handleConfirmCancel}
+                  >
+                    ใช่
+                  </button>
+                  <button
+                    className={styles.button}
+                    onClick={handleCloseCancelConfirmation}
+                  >
+                    ยกเลิก
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Display uploaded slip */}
           {files && (
-            <div style={styles.screenshotContainer}>
+            <div className={styles.screenshotContainer}>
               <img
                 src={URL.createObjectURL(files)}
-                alt="SCB Slip"
-                style={styles.screenshot}
+                alt="Slip"
+                className={styles.screenshot}
               />
             </div>
           )}
 
-          {/* Confirm Button */}
-          <div style={styles.paymentButtonWrapper}>
-            <button style={styles.button} onClick={handleSubmit}>
-              Confirm
-            </button>
-          </div>
+          {/* Confirm and Reset Buttons */}
+          {showButtons && (
+            <div className={styles.paymentButtonWrapper}>
+              <button className={styles.button} onClick={handleReset}>
+                Reset
+              </button>
+              <button className={styles.button} onClick={handleSubmit}>
+                Confirm
+              </button>
+            </div>
+          )}
         </div>
+
+        {/* Render CheckSlip component only if isCheckingSlip is true */}
+        {isCheckingSlip && (
+          <CheckSlip
+            file={files}
+            totalPrice={totalPrice}
+            onResult={handleSlipCheckResult}
+          />
+        )}
 
         {/* Success Popup */}
         {showSuccessPopup && (
-          <div style={styles.popupOverlay}>
-            <div style={styles.popup}>
-              <p style={styles.popupMessage}>Payment Successful!</p>
-              <button style={styles.popupButton} onClick={handleOkClick}>
+          <div className={styles.rewardPopupOverlay}>
+            <div className={styles.rewardPopup}>
+              <p className={styles.rewardPopupMessage}>Payment Successful!</p>
+              <button
+                className={styles.rewardPopupButton}
+                onClick={handleOkClick}
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Time Up Popup */}
+        {timeUpPopup && (
+          <div className={styles.rewardPopupOverlay}>
+            <div className={styles.rewardPopup}>
+              <p className={styles.rewardPopupMessage}>
+                หมดเวลาในการชำระเงิน กรุณาทำรายการจองใหม่อีกครั้ง
+              </p>
+              <button
+                className={styles.rewardPopupButton}
+                onClick={handleConfirmCancel}
+              >
                 OK
               </button>
             </div>
@@ -309,234 +383,6 @@ useEffect(() => {
       </div>
     </>
   );
-};
-
-const styles = {
-  container: {
-    width: "1520px",
-    height: "100%", // Full height of the screen
-    backgroundColor: "#000",
-    display: "flex",
-    flexDirection: "column" as "column",
-    alignItems: "center",
-    paddingTop: "80px", // Adjust this based on your navbar height
-    boxSizing: "border-box" as "border-box",
-  },
-  content: {
-    display: "flex",
-    backgroundColor: "#FFC700",
-    padding: "20px",
-    borderRadius: "20px",
-    width: "70%",
-    height: "auto",
-    margin: "20px auto", // เพิ่ม margin ให้ห่างจาก content อื่น
-    boxSizing: "border-box" as "border-box",
-    justifyContent: "space-between", // จัดวาง content ให้ห่างกันในแนวนอน
-  },
-  selectSeatContent: {
-    display: "flex",
-    justifyContent: "space-between", // จัดวาง content ให้อยู่ห่างกันในแนวนอน
-    alignItems: "center",
-    backgroundColor: "#FFC700",
-    padding: "20px",
-    paddingLeft: "200px", // เพิ่ม padding ด้านซ้าย
-    paddingRight: "200px", // เพิ่ม padding ด้านขวา
-    borderRadius: "20px",
-    width: "70%",
-    height: "auto",
-    margin: "20px auto", // เพิ่ม margin เพื่อเว้นขอบด้านบนและล่าง
-    boxSizing: "border-box" as "border-box",
-  },
-  innerContent: {
-    display: "flex",
-    justifyContent: "flex-start", // Align items to the start (left)
-    alignItems: "center", // Align items center vertically
-    width: "100%",
-  },
-  poster: {
-    width: "250px",
-    height: "auto",
-    marginRight: "20px",
-    borderRadius: "10px",
-    paddingLeft: "20%",
-  },
-  details: {
-    display: "flex",
-    flexDirection: "column" as "column",
-    justifyContent: "space-between",
-    color: "#000",
-    width: "100%",
-    paddingLeft: "20%",
-  },
-  title: {
-    fontSize: "30px",
-    fontWeight: "bold" as "bold",
-    paddingTop: "5%",
-  },
-  info: {
-    fontSize: "20px",
-    fontWeight: "bold" as "bold",
-  },
-  languages: {
-    display: "flex",
-    gap: "10px",
-  },
-  icon: {
-    width: "25px", // Adjust size as needed
-    marginRight: "8px",
-    verticalAlign: "middle",
-  },
-  item: {
-    display: "flex",
-    flexDirection: "column" as "column",
-    alignItems: "center",
-  },
-  label: {
-    fontSize: "20px",
-    color: "#000",
-    marginBottom: "10px",
-    textAlign: "center" as "center", // จัดข้อความให้อยู่ตรงกลาง
-  },
-  text: {
-    fontSize: "24px",
-    fontWeight: "bold" as "bold",
-    color: "#000",
-  },
-  paymentContent: {
-    display: "flex",
-    flexDirection: "column" as "column",
-    alignItems: "center",
-    backgroundColor: "#FFC700",
-    padding: "30px",
-    borderRadius: "20px",
-    width: "70%",
-    height: "auto",
-    margin: "20px auto", // เพิ่ม margin เพื่อเว้นขอบด้านบนและล่าง
-    boxSizing: "border-box" as "border-box",
-    position: "relative" as "relative",
-  },
-  paymentSection: {
-    display: "flex",
-    flexDirection: "column" as "column", // Stack elements vertically
-    alignItems: "center",
-    width: "100%",
-    position: "relative" as "relative",
-  },
-  bgqrCode: {
-    width: "350px",
-    height: "auto",
-    borderRadius: "10px",
-    marginTop: "70px", // ลดระยะห่างด้านบน
-    marginBottom: "-50px", // ลดระยะห่างด้านล่าง
-  },
-  timeLeft: {
-    position: "absolute" as "absolute",
-    top: "10px",
-    right: "10px",
-    padding: "5px 10px",
-    borderRadius: "10px",
-    backgroundColor: "#FFC700",
-    border: "2px solid #000", // Add border to the timer
-    color: "#000",
-    fontWeight: "bold" as "bold",
-    display: "flex",
-    flexDirection: "column" as "column",
-    alignItems: "center",
-  },
-  timer: {
-    fontSize: "30px",
-    fontWeight: "bold" as "bold",
-    marginTop: "-10px",
-  },
-  buttonGroup: {
-    display: "flex",
-    gap: "10px", // ลดระยะห่างระหว่างปุ่ม
-    marginTop: "-20px", // ลดระยะห่างจาก QR Code
-  },
-  button: {
-    backgroundColor: "#007bff",
-    color: "#fff",
-    padding: "10px 20px",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-    textAlign: "center" as "center",
-    display: "inline-block",
-    marginBottom: "10px",
-    minWidth: "120px", // กำหนดขนาดขั้นต่ำของปุ่ม
-  },
-  cancelButton: {
-    backgroundColor: "#fff",
-    color: "#000",
-  },
-  fileInput: {
-    display: "none", // ซ่อน input ไฟล์
-  },
-  screenshotContainer: {
-    display: "flex",
-    justifyContent: "center",
-    marginTop: "10px", // เพิ่มระยะห่างจากปุ่ม Confirm
-  },
-  screenshot: {
-    width: "300px",
-    height: "auto",
-    borderRadius: "10px",
-  },
-  paymentButtonWrapper: {
-    display: "flex",
-    justifyContent: "center",
-    marginTop: "20px", // เพิ่มระยะห่างระหว่างสลิปและปุ่ม Confirm
-  },
-  qrCodeContent: {
-    display: "flex",
-    flexDirection: "column" as "column",
-    alignItems: "center",
-    backgroundColor: "#FFC700",
-    padding: "30px",
-    borderRadius: "20px",
-    width: "70%",
-    height: "auto",
-    margin: "20px auto",
-    boxSizing: "border-box" as "border-box",
-    position: "relative" as "relative",
-  },
-  qrCodeOverlay: {
-    position: "absolute" as "absolute",
-    top: "-180px", // ปรับตามที่ต้องการ
-    left: "50%", // ปรับตามที่ต้องการ
-    transform: "translate(-50%, -50%)", // เพื่อให้ QR Code อยู่ตรงกลางภาพ
-    width: "220px",
-    height: "auto",
-  },
-  popupOverlay: {
-    position: "fixed" as "fixed",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  popup: {
-    backgroundColor: "#fff",
-    padding: "20px",
-    borderRadius: "10px",
-    textAlign: "center" as "center",
-  },
-  popupMessage: {
-    fontSize: "20px",
-    marginBottom: "20px",
-  },
-  popupButton: {
-    backgroundColor: "#007bff",
-    color: "#fff",
-    padding: "10px 20px",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-  },
 };
 
 export default ScanPayment;

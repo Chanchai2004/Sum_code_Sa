@@ -1,20 +1,21 @@
 package entity
 
-import (
-	"time"
-	"gorm.io/gorm"
-)
+import "gorm.io/gorm"
+import "time"
 
 type Payment struct {
 	gorm.Model
 	TotalPrice  int
 	Status      string
 	PaymentTime time.Time // ใช้ time.Time เพื่อเก็บข้อมูลเวลาที่ถูกต้อง
-	Slip        string
+	Slip        []byte    `gorm:"type:blob"`
 	MemberID    uint
-	Member      Member `gorm:"foreignKey:MemberID"`
+	Member      Member    `gorm:"foreignKey:MemberID"`
 
 	// ความสัมพันธ์กับ Ticket
 	TicketID uint   // เพิ่มฟิลด์ TicketID สำหรับเชื่อมโยง
 	Ticket   Ticket `gorm:"foreignKey:TicketID"` // เชื่อมโยง TicketID กับตาราง Ticket
+
+	RewardID *uint  // ใช้ *uint เพื่อให้ RewardID สามารถเป็น null ได้
+	Reward   Reward `gorm:"foreignKey:RewardID"` // เชื่อมโยง RewardID กับตาราง Reward
 }

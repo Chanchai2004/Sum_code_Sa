@@ -755,6 +755,178 @@ async function ReleaseSeats() {
   return res;
 }
 
+export async function GetDiscountRewardsByMemberID(memberID: number) {
+  try {
+    const response = await fetch(`${apiUrl}/rewards/member/${memberID}/discount`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const data = await response.json();
+    console.log("API response data:", data);
+
+    // Check if data is an object and has a 'data' field that is an array
+    if (data && Array.isArray(data.data)) {
+      return data.data; // Return the array of rewards directly
+    } else {
+      console.warn("Expected an array but got something else", data);
+      return []; // Return an empty array if the structure is unexpected
+    }
+  } catch (error) {
+    console.error('Error fetching rewards:', error);
+    return []; // Return an empty array in case of error
+  }
+}
+
+export async function createPayment(paymentData: any) {
+  try {
+    const response = await fetch(`${apiUrl}/payments`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(paymentData),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to create payment record");
+    }
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Error creating payment:", error);
+    throw error;
+  }
+}
+
+export async function updateRewardStatus(rewardID: string) {
+  try {
+    const response = await fetch(`${apiUrl}/rewards/${rewardID}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status: false }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to update reward status");
+    }
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Error updating reward status:", error);
+    throw error;
+  }
+}
+
+export async function GetPaymentByTicketID(ticketID: number) {
+  try {
+    const response = await fetch(`${apiUrl}/payments/ticket/${ticketID}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch payment record");
+    }
+
+    const paymentData = await response.json();
+    return paymentData;
+  } catch (error) {
+    console.error("Error fetching payment:", error);
+    throw error;
+  }
+}
+
+export async function updatePaymentStatus(ticketID: number, status: string) {
+  try {
+    const response = await fetch(`${apiUrl}/payments/status/${ticketID}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to update payment status");
+    }
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Error updating payment status:", error);
+    throw error;
+  }
+}
+
+// อัปเดตสถานะของ ticket
+export async function updateTicketStatus(ticketID: number, status: string) {
+  try {
+    const response = await fetch(`${apiUrl}/tickets/status/${ticketID}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to update ticket status");
+    }
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Error updating ticket status:", error);
+    throw error;
+  }
+}
+
+export async function GetBookingByTicketID(ticketID: number) {
+  try {
+    const response = await fetch(`${apiUrl}/bookings/ticket/${ticketID}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch booking record");
+    }
+
+    const bookingData = await response.json();
+    return bookingData;
+  } catch (error) {
+    console.error("Error fetching booking:", error);
+    throw error;
+  }
+}
+
+export const saveSlipAndUpdatePayment = async (ticketID: string, slipFile: File, paymentStatus: string) => {
+  const formData = new FormData();
+  formData.append("ticketID", ticketID);
+  formData.append("Slip", slipFile);
+  formData.append("status", paymentStatus); // เพิ่มสถานะการชำระเงินที่ต้องการส่งไป
+
+  const response = await fetch(`${apiUrl}/payments/upload-slip`, {
+    method: "PATCH",
+    body: formData,
+  });
+
+  const result = await response.json();
+  return result;
+};
+
+
 
 
 export {

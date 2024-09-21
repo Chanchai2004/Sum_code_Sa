@@ -1,16 +1,32 @@
 import React from "react";
 import { QRCodeCanvas } from "qrcode.react"; // ใช้ named import จาก qrcode.react
 
-const TicketQRCode: React.FC = () => {
-  const text = "8"; // ใส่ข้อความที่ต้องการสร้าง QR Code
+// อินเตอร์เฟสที่กำหนด props ที่จะถูกส่งเข้ามาในคอมโพเนนต์
+interface TicketQRCodeProps {
+  ticketID: string; // รับค่า ticketID เป็น prop
+}
 
+const TicketQRCode: React.FC<TicketQRCodeProps> = ({ ticketID }) => {
+  // แปลงค่า ticketID ให้เป็น string เพื่อความแน่ใจว่าค่าที่ส่งไปเป็น string แน่นอน
+  const ticketIDString = String(ticketID);
+
+  // แสดงค่า ticketIDString ใน console เพื่อการตรวจสอบ
+  console.log("Received in QR-CODE :", ticketIDString);
+
+  // ใช้ ticketIDString แทนที่ text เพื่อสร้าง QR code
   return (
     <div style={styles.qrContainer}>
-      <QRCodeCanvas value={text} size={150} level={"H"} includeMargin={true} />
+      <QRCodeCanvas
+        value={ticketIDString}  // ใช้ ticketIDString แทน text
+        size={150}
+        level={"H"}
+        marginSize={4}
+      />
     </div>
   );
 };
 
+// สไตล์ที่ใช้ในคอมโพเนนต์
 const styles = {
   container: {
     display: "flex",

@@ -119,5 +119,35 @@ func UpdateReward(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": reward})
 }
 
+func GetDiscountRewardsByMemberID(c *gin.Context) {
+    // ดึงค่า member_id จาก query string
+    memberID := c.Param("member_id")
+
+    // ตรวจสอบว่ามีการส่ง member_id มาใน query string หรือไม่
+    if memberID == "" {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Member ID is required"})
+        return
+    }
+
+    var rewards []struct {
+        RewardID   int    `json:"rewardID"`   // เพิ่ม RewardID เข้ามา
+        RewardName string `json:"rewardName"` // ควรใช้ตัวพิมพ์เล็กสำหรับ JSON field เพื่อให้สอดคล้องกัน
+        Discount   int    `json:"discount"`
+    }
+    db := config.DB()
+
+    // ค้นหาข้อมูล rewards ที่มี type เป็น "discount" และ status เป็น 1 โดยใช้ member_id
+    if err := db.Table("rewards").
+        Select("id as reward_id, reward_name, discount").
+        Where("member_id = ? AND type = ? AND status = ?", memberID, "discount", true).
+        Find(&rewards).Error; err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch rewards"})
+        return
+    }
+
+    // ส่งข้อมูล rewards ที่ได้กลับไปยัง frontend
+    c.JSON(http.StatusOK, gin.H{"data": rewards})
+}
+
 
 

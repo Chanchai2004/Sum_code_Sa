@@ -29,17 +29,19 @@ func GetTicketsById(c *gin.Context) {
 
 	// สร้างโครงสร้างที่จะเก็บผลลัพธ์
 	type BookingResponse struct {
-		Movie   string `json:"movie"`
-		Date    string `json:"date"`
-		Seats   string `json:"seats"`
-		Theater string `json:"theater"`
-	}
+        TicketID int    `json:"ticketId"`
+        Movie    string `json:"movie"`
+        Date     string `json:"date"`
+        Seats    string `json:"seats"`
+        Theater  string `json:"theater"`
+    }
 
 	var results []BookingResponse
 
 	// ใช้ SQL ดิบเพื่อดึงข้อมูล โดยเพิ่มเงื่อนไข WHERE b.status = 'Booked'
 	err := config.DB().Raw(`
 	SELECT  
+	    b.ticket_id AS TicketID,
     	m.movie_name AS Movie,
     	s.showdate AS Date,
     	GROUP_CONCAT(se.seat_no, ', ') AS Seats,
@@ -121,4 +123,34 @@ func DeleteTicket(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Ticket deleted"})
+}
+
+// UpdateTicketStatus อัปเดตสถานะของตั๋วตาม ticket ID
+func UpdateTicketStatus(c *gin.Context) {
+	ticketID := c.Param("id")
+	var ticket entity.Ticket
+
+	// ค้นหาตั๋วตาม ticket ID
+	if err := config.DB().First(&ticket, ticketID).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Ticket not found"})
+		return
+	}
+
+	// Binding ข้อมูลจาก request body เพื่ออัปเดต status
+	var input struct {
+		Status string `json:"status"`
+	}
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
+		return
+	}
+
+	// อัปเดต status ของตั๋ว
+	ticket.Status = input.Status
+	if err := config.DB().Save(&ticket).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update ticket status"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Ticket status updated", "data": ticket})
 }

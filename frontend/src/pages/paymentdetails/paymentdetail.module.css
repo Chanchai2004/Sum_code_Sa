@@ -1,0 +1,192 @@
+.container {
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 80px;
+    box-sizing: border-box;
+  }
+  
+  .content {
+    display: flex;
+    background-color: #ffc700;
+    padding: 20px;
+    border-radius: 20px;
+    width: 70%;
+    height: auto;
+    margin: 50px auto;
+    box-sizing: border-box;
+    justify-content: space-between;
+  }
+  
+  .selectSeatContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffc700;
+    padding: 20px;
+    padding-left: 200px;
+    padding-right: 200px;
+    border-radius: 20px;
+    width: 70%;
+    height: auto;
+    margin: 20px auto;
+    box-sizing: border-box;
+  }
+  
+  .innerContent {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .contentColumn {
+    display: flex;
+    background-color: #ffc700;
+    padding: 20px;
+    border-radius: 20px;
+    width: 70%;
+    height: auto;
+    margin: 20px auto;
+    box-sizing: border-box;
+    flex-direction: column;
+  }
+  
+  .fullWidth {
+    width: 100%;
+    margin-bottom: 70px;
+  }
+  
+  .poster {
+    width: 250px;
+    height: auto;
+    margin-right: 20px;
+    border-radius: 10px;
+    padding-left: 20%;
+  }
+  
+  .details {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: #000;
+    width: 100%;
+    padding-left: 20%;
+  }
+  
+  .title {
+    font-size: 30px;
+    font-weight: bold;
+    padding-top: 5%;
+  }
+  
+  .info {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  .languages {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .icon {
+    width: 25px;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  
+  .item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .label {
+    font-size: 20px;
+    color: #000;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  .text {
+    font-size: 24px;
+    font-weight: bold;
+    color: #000;
+  }
+  
+  .couponContent {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+  }
+  
+  .buttonGroup {
+    display: flex;
+    gap: 30px;
+  }
+  
+  .paymentContent {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+  }
+  
+  .paymentButtonWrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .select {
+    padding: 5px 10px;
+    font-size: 20px;
+    text-align: center;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .cancelbutton {
+    background-color: #fff;
+    color: #000;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .promptPayLogo {
+    width: 150px;
+    height: auto;
+  }
+  
+  .promptPayButton {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+  
+  .confirmButton {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  

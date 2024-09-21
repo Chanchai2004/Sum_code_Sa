@@ -12,7 +12,7 @@ const PromptPayQRCode: React.FC<PromptPayQRCodeProps> = ({
   const ppUrl = `https://promptpay.io/${phoneNumber}.png${
     amount ? `/${amount}` : ""
   }`;
-
+  console.log("เข้า pp-QR : ",phoneNumber,amount)
   return (
     <div>
       <img src={ppUrl} alt="PromptPay QR Code" />

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table, message, Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { YoutubeOutlined } from '@ant-design/icons'; // นำเข้าไอคอน YouTube
+import { TagOutlined } from '@ant-design/icons'; // นำเข้าไอคอน YouTube
 import './myticket.css';
 import Navbar from '../../components/navbar/navbar';
 import { GetTicketById } from '../../services/https/index';
@@ -11,7 +11,7 @@ const MyTicket: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const memberID = localStorage.getItem('id');
+    const memberID = localStorage.getItem('memberID');
     const token = localStorage.getItem('token');
 
     console.log("Using Member ID:", memberID);
@@ -35,7 +35,6 @@ const MyTicket: React.FC = () => {
         }
       } catch (error) {
         console.error('no ticket');
-     
       }
     };
 
@@ -46,6 +45,11 @@ const MyTicket: React.FC = () => {
     const date = new Date(dateString);
     return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
   };
+
+  const handleViewDetails = (ticketId: number, selectseat: string) => {
+    const seatsArray = selectseat.split(", "); // ถ้า selectseat เป็น string แยกที่มีเครื่องหมายจุลภาคแล้วแปลงเป็น array
+    navigate('/ticket', { state: { ticketID: ticketId, selectedSeats: seatsArray } });
+  };  
 
   const columns = [
     {
@@ -72,20 +76,19 @@ const MyTicket: React.FC = () => {
     {
       title: 'Ticket',
       key: 'ticket',
-      render: () => (
+      render: (text: any, record: any) => (
         <Button
           type="link"
-          icon={<YoutubeOutlined />} // ใช้ไอคอน YouTube
-          onClick={() => window.open('https://www.youtube.com', '_blank')} // ลิ้งค์ไปยัง YouTube
+          icon={<TagOutlined />}
+          onClick={() => handleViewDetails(record.ticketId, record.seats)} // ส่งทั้ง ticketId และ seats
         >
-          View Details
+          View Ticket
         </Button>
       ),
     },
   ];
 
   return (
-  <div className="ticket">
     <div className="ticket-container">
       <Navbar />
       <h1 className="ticket-title">My Ticket History</h1>
@@ -97,7 +100,6 @@ const MyTicket: React.FC = () => {
         className="ticket-table"
         rowClassName={(record, index) => (index % 2 === 0 ? 'row-light' : 'row-dark')}
       />
-    </div>
     </div>
   );
 };
