@@ -34,7 +34,7 @@ func BookSeats(c *gin.Context) {
 	// ค้นหาที่นั่งที่เลือกและตรวจสอบว่าที่นั่งว่างหรือไม่
 	var seats []entity.Seat
 	// เพิ่มการเช็คให้แน่ใจว่าที่นั่งไม่ถูกจองและข้อมูลการจองเก่าได้ถูกลบ
-	if err := db.Where("seat_no IN ? AND theater_id = ? AND status = 'Available'", req.Seats, req.TheaterID).Find(&seats).Error; err != nil {
+	if err := db.Where("seat_no IN ? AND theater_id = ? ", req.Seats, req.TheaterID).Find(&seats).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch seat information"})
 		return
 	}
@@ -115,7 +115,7 @@ func BookSeats(c *gin.Context) {
 func ReleaseSeatsForUnfinishedTickets(c *gin.Context) {
 	db := config.DB()
 
-	// ดึงข้อมูล tickets ที่มีสถานะ unfinish
+	// ดึงข้อมูลตั๋วที่ยังไม่เสร็จ
 	var tickets []entity.Ticket
 	if err := db.Where("status = ?", "unfinish").Find(&tickets).Error; err != nil {
 		log.Println("Failed to fetch unfinish tickets:", err)
@@ -123,9 +123,8 @@ func ReleaseSeatsForUnfinishedTickets(c *gin.Context) {
 		return
 	}
 
-	// ปล่อยที่นั่งที่ถูกจองให้กลับมาเป็นว่าง
+	// ปล่อยที่นั่งที่ถูกจอง
 	for _, ticket := range tickets {
-		// ตรวจสอบก่อนว่ามีที่นั่งที่เชื่อมโยงกับ ticket นี้หรือไม่
 		var bookings []entity.Booking
 		if err := db.Where("ticket_id = ?", ticket.ID).Find(&bookings).Error; err != nil {
 			log.Println("Failed to fetch bookings for ticket:", ticket.ID)
@@ -138,8 +137,12 @@ func ReleaseSeatsForUnfinishedTickets(c *gin.Context) {
 			continue
 		}
 
-		// อัปเดตสถานะที่นั่งที่เกี่ยวข้องกับตั๋ว
-		if err := db.Model(&entity.Seat{}).Where("id IN (SELECT seat_id FROM bookings WHERE ticket_id = ?)", ticket.ID).Updates(map[string]interface{}{
+		// ปล่อยที่นั่งกลับมาเป็นว่าง
+		var seatIDs []uint
+		for _, booking := range bookings {
+			seatIDs = append(seatIDs, booking.SeatID)
+		}
+		if err := db.Model(&entity.Seat{}).Where("id IN ?", seatIDs).Updates(map[string]interface{}{
 			"Status": "Available",
 		}).Error; err != nil {
 			log.Println("Failed to update seat status for ticket:", ticket.ID)
@@ -147,10 +150,18 @@ func ReleaseSeatsForUnfinishedTickets(c *gin.Context) {
 			return
 		}
 
-		// ลบข้อมูลการจองที่เกี่ยวข้องใน booking
+
+		// ลบข้อมูลการจอง
 		if err := db.Where("ticket_id = ?", ticket.ID).Delete(&entity.Booking{}).Error; err != nil {
 			log.Println("Failed to delete booking for ticket:", ticket.ID)
 			c.JSON(500, gin.H{"error": "Failed to delete booking for ticket"})
+			return
+		}
+
+		// อัปเดตสถานะ ticket เป็น "cancelled"
+		if err := db.Model(&ticket).Update("Status", "cancelled").Error; err != nil {
+			log.Println("Failed to update ticket status:", ticket.ID)
+			c.JSON(500, gin.H{"error": "Failed to update ticket status"})
 			return
 		}
 	}
