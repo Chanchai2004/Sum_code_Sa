@@ -18,7 +18,7 @@ import {
   GetPaymentByTicketID,
   updateTicketStatus,
   updatePaymentStatus,
-  saveSlipAndUpdatePayment,
+  saveSlipAndUpdateStatus,
 } from "../../services/https/index";
 import styles from "./ScanPayment.module.css";
 
@@ -151,28 +151,30 @@ const ScanPayment: React.FC = () => {
   };
 
   const handleSlipCheckResult = async (result: boolean) => {
-    if (result && files) {
-      try {
-        const saveResult = await saveSlipAndUpdatePayment(
-          ticketID,
-          files,
-          "Paid"
-        );
-        if (saveResult.status) {
-          setShowSuccessPopup(true);
-        } else {
-          alert("เกิดข้อผิดพลาดในการบันทึกการชำระเงิน");
-        }
-      } catch (error) {
-        console.error("Error during saving payment:", error);
-        alert("เกิดข้อผิดพลาดในการบันทึกการชำระเงิน โปรดลองใหม่อีกครั้ง");
+  if (result && files) {
+    try {
+      const saveResult = await saveSlipAndUpdateStatus(
+        ticketID,
+        files,
+        "Paid",   // Payment status
+        "Booked"  // Ticket status set to "Booked"
+      );
+      if (saveResult.status) {
+        setShowSuccessPopup(true);
+      } else {
+        alert("เกิดข้อผิดพลาดในการบันทึกการชำระเงิน");
       }
-    } else {
-      alert("Slip ไม่ถูกต้อง กรุณาอัพโหลดสลิปใหม่");
+    } catch (error) {
+      console.error("Error during saving payment:", error);
+      alert("เกิดข้อผิดพลาดในการบันทึกการชำระเงิน โปรดลองใหม่อีกครั้ง");
     }
+  } else {
+    alert("Slip ไม่ถูกต้อง กรุณาอัพโหลดสลิปใหม่");
+  }
 
-    setIsCheckingSlip(false);
-  };
+  setIsCheckingSlip(false);
+};
+
 
   const handleSubmit = async () => {
     if (!files || !ticketID) {

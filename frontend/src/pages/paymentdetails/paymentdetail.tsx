@@ -17,6 +17,8 @@ import {
   GetDiscountRewardsByMemberID,
   createPayment,
   updateRewardStatus,
+  updateTicketStatus,
+  updatePaymentStatus,
 } from "../../services/https/index"; // Adjust path as needed
 import styles from "./PaymentDetail.module.css"; // Import the CSS module
 
@@ -128,51 +130,57 @@ const PaymentDetail: React.FC = () => {
 
   const handleConfirm = async () => {
     try {
-        const memberID = parseInt(localStorage.getItem("id") || "0", 10);
-        if (!memberID || !ticketID) {
-            console.error("Member ID, Ticket ID หายไปหรือไม่ถูกต้อง");
-            return;
+      const memberID = parseInt(localStorage.getItem("id") || "0", 10);
+      if (!memberID || !ticketID) {
+        console.error("Member ID, Ticket ID หายไปหรือไม่ถูกต้อง");
+        return;
+      }
+
+      // ถ้าผู้ใช้เลือกคูปอง ให้ใช้ ID ของคูปองนั้น, ถ้าไม่เลือก ให้ส่งเป็น null
+      const selectedCouponId = selectedCoupon ? selectedCoupon.id : null;
+
+      const paymentData = {
+        totalPrice: discountedTotalPrice,
+        status: "Pending",
+        memberID: memberID,
+        ticketID: ticketID,
+        rewardID: selectedCoupon ? Number(selectedCoupon.id) : null, // แปลง id เป็น number หรือส่ง null หากไม่มีการเลือก coupon
+      };
+
+      console.log("Sending Payment Data:", paymentData);
+
+      // เรียกใช้ฟังก์ชันสร้างการชำระเงิน
+      const paymentResult = await createPayment(paymentData);
+      console.log("Payment created:", paymentResult);
+
+      // อัปเดตสถานะรางวัลหากมีการเลือกคูปอง
+      if (selectedCouponId) {
+        const updateRewardResult = await updateRewardStatus(selectedCouponId);
+        console.log("Reward status updated:", updateRewardResult);
+      }
+
+      // ถ้าราคาหลังส่วนลดเป็น 0 ให้ไปที่หน้า ticket
+      if (discountedTotalPrice === 0) {
+        if (ticketID) {
+          try {
+            await updatePaymentStatus(ticketID, "Paid");
+            await updateTicketStatus(ticketID, "Booked");
+          } catch (error) {
+            console.error("Error updating status:", error);
+          }
         }
-
-        // ถ้าผู้ใช้เลือกคูปอง ให้ใช้ ID ของคูปองนั้น, ถ้าไม่เลือก ให้ส่งเป็น null
-        const selectedCouponId = selectedCoupon ? selectedCoupon.id : null;
-
-        const paymentData = {
-          totalPrice: discountedTotalPrice,
-          status: "Pending",
-          memberID: memberID,
-          ticketID: ticketID,
-          rewardID: selectedCoupon ? Number(selectedCoupon.id) : null, // แปลง id เป็น number หรือส่ง null หากไม่มีการเลือก coupon
-        };             
-
-        console.log("Sending Payment Data:", paymentData);
-
-        // เรียกใช้ฟังก์ชันสร้างการชำระเงิน
-        const paymentResult = await createPayment(paymentData);
-        console.log("Payment created:", paymentResult);
-
-        // อัปเดตสถานะรางวัลหากมีการเลือกคูปอง
-        if (selectedCouponId) {
-            const updateRewardResult = await updateRewardStatus(selectedCouponId);
-            console.log("Reward status updated:", updateRewardResult);
-        }
-
-        // ถ้าราคาหลังส่วนลดเป็น 0 ให้ไปที่หน้า ticket
-        if (discountedTotalPrice === 0) {
-            navigate("/ticket", { state: { ticketID } });
-        } else {
-            // ถ้าราคาหลังส่วนลดมากกว่า 0 ให้ไปที่หน้า scanpayment
-            navigate("/scanpayment", { state: { ticketID, showtimeID, selectedSeats } });
-        }
+        navigate("/ticket", { state: { ticketID } });
+      } else {
+        // ถ้าราคาหลังส่วนลดมากกว่า 0 ให้ไปที่หน้า scanpayment
+        navigate("/scanpayment", {
+          state: { ticketID, showtimeID, selectedSeats },
+        });
+      }
     } catch (error) {
-        console.error("Error confirming payment:", error);
-        alert("มีข้อผิดพลาดในการประมวลผลการชำระเงินของคุณ โปรดลองอีกครั้ง");
+      console.error("Error confirming payment:", error);
+      alert("มีข้อผิดพลาดในการประมวลผลการชำระเงินของคุณ โปรดลองอีกครั้ง");
     }
-};
-
-
-
-
+  };
 
   return (
     <>
@@ -187,14 +195,16 @@ const PaymentDetail: React.FC = () => {
             <h1 className={styles.title}>{movieName}</h1>
             <div className={styles.info}>
               <p>
-                <img src={IconDate} alt="date" className={styles.icon} /> {showDate}
+                <img src={IconDate} alt="date" className={styles.icon} />{" "}
+                {showDate}
               </p>
               <p>
-                <img src={Icontime} alt="time" className={styles.icon} /> {showTime}
+                <img src={Icontime} alt="time" className={styles.icon} />{" "}
+                {showTime}
               </p>
               <p>
-                <img src={Iconlo} alt="location" className={styles.icon} /> Merje
-                Cineplex
+                <img src={Iconlo} alt="location" className={styles.icon} />{" "}
+                Merje Cineplex
               </p>
               <h2>Theater {theaterID}</h2>
               <div className={styles.languages}>
@@ -202,7 +212,8 @@ const PaymentDetail: React.FC = () => {
                   <img src={Iconsound} alt="sound" className={styles.icon} /> TH{" "}
                 </p>
                 <p>
-                  <img src={Iconsub} alt="subtitle" className={styles.icon} /> ENG{" "}
+                  <img src={Iconsub} alt="subtitle" className={styles.icon} />{" "}
+                  ENG{" "}
                 </p>
               </div>
             </div>

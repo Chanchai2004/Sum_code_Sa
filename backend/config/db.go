@@ -72,7 +72,7 @@ func SetupDatabase() {
 		Email: "sastaff@gmail.com",
 	})
 	
-	// สร้างข้อมูลสมาชิกคนที่หนึ่ง (sa@gmail.com)
+	// สร้างข้อมูลสมาชิกคนที่หนึ่ง (saadmin@gmail.com)
 	hashedPassword, _ := HashPassword("123456")
 	Member1 := &entity.Member{
 		UserName:   "saadmin",

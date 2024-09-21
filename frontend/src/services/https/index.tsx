@@ -932,15 +932,17 @@ export async function GetBookingByTicketID(ticketID: number) {
   }
 }
 
-export const saveSlipAndUpdatePayment = async (
+export const saveSlipAndUpdateStatus = async (
   ticketID: string,
   slipFile: File,
-  paymentStatus: string
+  paymentStatus: string,
+  ticketStatus: string // Add ticketStatus parameter
 ) => {
   const formData = new FormData();
   formData.append("ticketID", ticketID);
   formData.append("Slip", slipFile);
-  formData.append("status", paymentStatus); // เพิ่มสถานะการชำระเงินที่ต้องการส่งไป
+  formData.append("status", paymentStatus); // Payment status
+  formData.append("ticketStatus", ticketStatus); // Ticket status
 
   const response = await fetch(`${apiUrl}/payments/upload-slip`, {
     method: "PATCH",
@@ -950,6 +952,7 @@ export const saveSlipAndUpdatePayment = async (
   const result = await response.json();
   return result;
 };
+
 
 export {
   GetTicketById,
