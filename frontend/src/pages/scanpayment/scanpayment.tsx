@@ -37,7 +37,7 @@ const ScanPayment: React.FC = () => {
   const [showDate, setShowDate] = useState<string>("Loading...");
   const [showTime, setShowTime] = useState<string>("Loading...");
   const [theaterID, setTheaterID] = useState<number | string>("Loading...");
-  const [poster, setPoster] = useState<string>("");
+  const [moviePoster, setMoviePoster] = useState<string | null>(null);
   const [totalPrice, setTotalPrice] = useState<number | null>(null);
 
   const [timeLeft, setTimeLeft] = useState(600); // Time countdown in seconds
@@ -58,10 +58,12 @@ const ScanPayment: React.FC = () => {
           setTheaterID(showtime.TheaterID || "Unknown");
 
           if (showtime.MovieID) {
+            const posterUrl = `http://localhost:8000/api/movie/${showtime.MovieID}/poster`;
+            setMoviePoster(posterUrl);
+
             GetMovieById(showtime.MovieID).then((movie) => {
               if (movie) {
                 setMovieName(movie.MovieName);
-                setPoster(movie.Poster);
               }
             });
           }
@@ -196,9 +198,11 @@ const ScanPayment: React.FC = () => {
       <div className={styles.container}>
         {/* Content ด้านบน */}
         <div className={styles.content}>
-          <p>
-            <img src={Poster || poster} alt="movie" className={styles.poster} />
-          </p>
+        <img
+            src={moviePoster || Poster} // Use the fallback Poster image if moviePoster is null
+            alt="Movie Poster"
+            className={styles.poster}
+          />
           <div className={styles.details}>
             <h1 className={styles.title}>{movieName}</h1>
             <div className={styles.info}>

@@ -23,7 +23,7 @@ const Ticket: React.FC = () => {
   const [showDate, setShowDate] = useState<string>("Loading...");
   const [showTime, setShowTime] = useState<string>("Loading...");
   const [theaterID, setTheaterID] = useState<number | string>("Loading...");
-  const [poster, setPoster] = useState<string>("");
+  const [moviePoster, setMoviePoster] = useState<string | null>(null);
   const [totalPrice, setTotalPrice] = useState<number | null>(null);
 
   useEffect(() => {
@@ -43,12 +43,12 @@ const Ticket: React.FC = () => {
                   setTheaterID(showtime.TheaterID || "Unknown");
 
                   if (showtime.MovieID) {
+                    const posterUrl = `http://localhost:8000/api/movie/${showtime.MovieID}/poster`;
+                    setMoviePoster(posterUrl);
+        
                     GetMovieById(showtime.MovieID).then((movie) => {
                       if (movie) {
                         setMovieName(movie.MovieName);
-                        setPoster(movie.Poster);
-                      } else {
-                        console.error("Movie not found");
                       }
                     });
                   }
@@ -89,7 +89,11 @@ const Ticket: React.FC = () => {
         </p>
         <div className={styles.ticketContainer}>
           <img src={ticket} alt="Ticket" className={styles.ticket} />
-          <img src={poster || Poster} alt="Poster" className={styles.poster} />
+          <img
+            src={moviePoster || Poster} // Use the fallback Poster image if moviePoster is null
+            alt="Movie Poster"
+            className={styles.poster}
+          />
           <div className={styles.detailsContainer}>
             <div>
               <p className={styles.movieName}>{movieName}</p>
