@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Table,
-  Button,
-  Modal,
-  message,
-  Select,
-  Card,
-  Form,
-  Input,
-} from "antd";
+import { Table, Button, Modal, message, Select, Card, Form, Input } from "antd";
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import {
@@ -43,9 +34,9 @@ function Member() {
     undefined
   ); // สำหรับการเลือกอีเมล
   const [emailOptions, setEmailOptions] = useState<string[]>([]); // สำหรับเก็บรายการอีเมล
-  const [selectedUsername, setSelectedUsername] = useState<
-    string | undefined
-  >(undefined); // สำหรับการเลือก username
+  const [selectedUsername, setSelectedUsername] = useState<string | undefined>(
+    undefined
+  ); // สำหรับการเลือก username
   const [usernameOptions, setUsernameOptions] = useState<string[]>([]); // สำหรับเก็บรายการ username
 
   // เพิ่มคอลัมน์ Username
@@ -91,7 +82,6 @@ function Member() {
       key: "manage",
       render: (text, record) => (
         <>
-          
           <Button
             onClick={() => showModal(record)}
             className="delete-button"
@@ -112,7 +102,9 @@ function Member() {
       if (res) {
         setMembers(res);
         setEmailOptions(res.map((member: MembersInterface) => member.Email)); // เก็บอีเมลสำหรับการค้นหา
-        setUsernameOptions(res.map((member: MembersInterface) => member.UserName)); // เก็บ username สำหรับการค้นหา
+        setUsernameOptions(
+          res.map((member: MembersInterface) => member.UserName)
+        ); // เก็บ username สำหรับการค้นหา
       }
     } catch (error) {
       messageApi.open({
@@ -126,7 +118,9 @@ function Member() {
   const showModal = (val: MembersInterface) => {
     setDeleteId(val.ID);
     setDeleteRole(val.Role); // เก็บ role ของคนที่จะลบ
-    setModalText(`Are you sure you want to delete user "${val.FirstName} ${val.LastName}"?`);
+    setModalText(
+      `Are you sure you want to delete user "${val.FirstName} ${val.LastName}"?`
+    );
     if (val.Role === "admin") {
       // ถ้าเป็น admin แสดง modal ใส่รหัสผ่าน
       setAdminPasswordModalOpen(true);
@@ -181,9 +175,9 @@ function Member() {
           type: "success",
           content: "Member added successfully",
         });
-        setIsAddModalOpen(false);  // ปิด Modal
-        getMembers();  // ดึงข้อมูลใหม่
-        addForm.resetFields();  // ล้างฟอร์ม
+        setIsAddModalOpen(false); // ปิด Modal
+        getMembers(); // ดึงข้อมูลใหม่
+        addForm.resetFields(); // ล้างฟอร์ม
       } else {
         messageApi.open({
           type: "error",
@@ -216,9 +210,16 @@ function Member() {
         return;
       }
 
-      const adminCheckRes = await CheckAdminPassword(adminToCheck.ID, adminPassword);
+      const adminCheckRes = await CheckAdminPassword(
+        adminToCheck.ID,
+        adminPassword
+      );
       if (adminCheckRes.status) {
-        let res = await DeleteMemberByID(deleteId, adminToCheck.ID, adminPassword); // ส่งรหัสผ่านและ ID ไปลบ admin
+        let res = await DeleteMemberByID(
+          deleteId,
+          adminToCheck.ID,
+          adminPassword
+        ); // ส่งรหัสผ่านและ ID ไปลบ admin
         if (res) {
           messageApi.open({
             type: "success",
@@ -267,166 +268,165 @@ function Member() {
   return (
     <div className="showtime">
       <div className="app">
-      <Card style={{ margin: "20px" }}>
-        {contextHolder}
+        <Card style={{ margin: "20px" }}>
+          {contextHolder}
 
-        {/* Header Section */}
-        <div className="header">
-          {/* Search Username */}
-          <div className="header-item search-username-container">
-            <label>Username</label>
-            <Select
-              value={selectedUsername}
-              showSearch
-              className="username-select"
-              allowClear
-              placeholder="Select a Username"
-              style={{ width: 200 }}
-              optionFilterProp="children"
-              onChange={(value) => setSelectedUsername(value as string)}
-              filterOption={(input, option) =>
-                option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-              }
-            >
-              {usernameOptions.map((username) => (
-                <Option key={username} value={username}>
-                  {username}
-                </Option>
-              ))}
-            </Select>
+          {/* Header Section */}
+          <div className="header">
+            {/* Search Username */}
+            <div className="header-item search-username-container">
+              <label>Username</label>
+              <Select
+                value={selectedUsername}
+                showSearch
+                className="username-select"
+                allowClear
+                placeholder="Select a Username"
+                style={{ width: 200 }}
+                optionFilterProp="children"
+                onChange={(value) => setSelectedUsername(value as string)}
+                filterOption={(input, option) =>
+                  option?.children.toLowerCase().indexOf(input.toLowerCase()) >=
+                  0
+                }
+              >
+                {usernameOptions.map((username) => (
+                  <Option key={username} value={username}>
+                    {username}
+                  </Option>
+                ))}
+              </Select>
+            </div>
+
+            {/* Search Email */}
+            <div className="header-item search-email-container">
+              <label>Email</label>
+              <Select
+                value={selectedEmail}
+                showSearch
+                className="email-select"
+                allowClear
+                placeholder="Select an Email"
+                style={{ width: 200 }}
+                optionFilterProp="children"
+                onChange={(value) => setSelectedEmail(value as string)}
+                filterOption={(input, option) =>
+                  option?.children.toLowerCase().indexOf(input.toLowerCase()) >=
+                  0
+                }
+              >
+                {emailOptions.map((email) => (
+                  <Option key={email} value={email}>
+                    {email}
+                  </Option>
+                ))}
+              </Select>
+            </div>
+
+            {/* Add Member Button */}
+            <Button type="primary" onClick={handleAdd} icon={<PlusOutlined />}>
+              Add Member
+            </Button>
           </div>
 
-          {/* Search Email */}
-          <div className="header-item search-email-container">
-            <label>Email</label>
-            <Select
-              value={selectedEmail}
-              showSearch
-              className="email-select"
-              allowClear
-              placeholder="Select an Email"
-              style={{ width: 200 }}
-              optionFilterProp="children"
-              onChange={(value) => setSelectedEmail(value as string)}
-              filterOption={(input, option) =>
-                option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-              }
-            >
-              {emailOptions.map((email) => (
-                <Option key={email} value={email}>
-                  {email}
-                </Option>
-              ))}
-            </Select>
+          {/* Table Section */}
+          <div className="member-table-container">
+            <Table
+              rowKey="ID"
+              columns={columns}
+              dataSource={filteredMembers}
+              loading={loading}
+            />
           </div>
 
-          {/* Add Member Button */}
-          <Button type="primary" onClick={handleAdd} icon={<PlusOutlined />}>
-            Add Member
-          </Button>
-        </div>
+          {/* Modal Section for Delete */}
+          <Modal
+            title="Delete Member?"
+            open={open}
+            onOk={handleOk}
+            confirmLoading={confirmLoading}
+            onCancel={handleCancel}
+          >
+            <p>{modalText}</p>
+          </Modal>
 
-        {/* Table Section */}
-        <div className="member-table-container">
-          <Table rowKey="ID" columns={columns} dataSource={filteredMembers} loading={loading} />
-        </div>
+          {/* Modal Section for Add */}
+          <Modal
+            title="Add Member"
+            open={isAddModalOpen}
+            onOk={handleAddOk}
+            onCancel={handleAddCancel}
+            okText="Submit"
+            cancelText="Cancel"
+          >
+            <Form form={addForm} layout="vertical">
+              <Form.Item
+                label="Username"
+                name="UserName"
+                rules={[{ required: true, message: "Please enter username!" }]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label="First Name"
+                name="FirstName"
+                rules={[
+                  { required: true, message: "Please enter first name!" },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label="Last Name"
+                name="LastName"
+                rules={[{ required: true, message: "Please enter last name!" }]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label="Email"
+                name="Email"
+                rules={[{ required: true, message: "Please enter email!" }]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label="Password"
+                name="Password"
+                rules={[{ required: true, message: "Please enter password!" }]}
+              >
+                <Input.Password />
+              </Form.Item>
+              <Form.Item
+                label="Role"
+                name="Role"
+                rules={[{ required: true, message: "Please select role!" }]}
+              >
+                <Select>
+                  <Option value="user">User</Option>
+                  <Option value="admin">Admin</Option>
+                </Select>
+              </Form.Item>
+            </Form>
+          </Modal>
 
-        {/* Modal Section for Delete */}
-        <Modal
-          title="Delete Member?"
-          open={open}
-          onOk={handleOk}
-          confirmLoading={confirmLoading}
-          onCancel={handleCancel}
-        >
-          <p>{modalText}</p>
-        </Modal>
-
-        {/* Modal Section for Add */}
-        <Modal
-          title="Add Member"
-          open={isAddModalOpen}
-          onOk={handleAddOk}
-          onCancel={handleAddCancel}
-          okText="Submit"
-          cancelText="Cancel"
-        >
-          <Form form={addForm} layout="vertical">
-            <Form.Item
-              label="Username"
-              name="UserName"
-              rules={[{ required: true, message: "Please enter username!" }]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              label="First Name"
-              name="FirstName"
-              rules={[{ required: true, message: "Please enter first name!" }]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              label="Last Name"
-              name="LastName"
-              rules={[{ required: true, message: "Please enter last name!" }]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              label="Email"
-              name="Email"
-              rules={[{ required: true, message: "Please enter email!" }]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              label="Password"
-              name="Password"
-              rules={[{ required: true, message: "Please enter password!" }]}
-            >
-              <Input.Password />
-            </Form.Item>
-            <Form.Item
-              label="Role"
-              name="Role"
-              rules={[{ required: true, message: "Please select role!" }]}
-            >
-              <Select>
-                <Option value="user">User</Option>
-                <Option value="admin">Admin</Option>
-              </Select>
-            </Form.Item>
-            <Form.Item
-              label="Gender"
-              name="GenderID"
-              rules={[{ required: true, message: "Please select gender!" }]}
-            >
-              <Select>
-                <Option value={1}>Male</Option>
-                <Option value={2}>Female</Option>
-              </Select>
-            </Form.Item>
-          </Form>
-        </Modal>
-
-        {/* Modal for Admin Password */}
-        <Modal
-          title="Enter Admin Password"
-          open={adminPasswordModalOpen}
-          onOk={handleAdminPasswordOk}
-          onCancel={handleAdminPasswordCancel}
-          okText="Submit"
-          cancelText="Cancel"
-        >
-          <Input.Password
-            value={adminPassword}
-            onChange={(e) => setAdminPassword(e.target.value)}
-            placeholder="Admin Password"
-          />
-        </Modal>
-      </Card>
-    </div>
+          {/* Modal for Admin Password */}
+          <Modal
+            title="Enter Admin Password"
+            open={adminPasswordModalOpen}
+            onOk={handleAdminPasswordOk}
+            onCancel={handleAdminPasswordCancel}
+            okText="Submit"
+            cancelText="Cancel"
+          >
+            <Input.Password
+              value={adminPassword}
+              onChange={(e) => setAdminPassword(e.target.value)}
+              placeholder="Admin Password"
+            />
+          </Modal>
+        </Card>
+      </div>
     </div>
   );
 }

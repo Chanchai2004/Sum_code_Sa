@@ -6,7 +6,7 @@ export interface MembersInterface {
   Email?: string;
   Phone?: string;
   Age?: number;
-  GenderID?: number;
   Password?: string;
   TotalPoint: number;
+  Role?: string;
 }

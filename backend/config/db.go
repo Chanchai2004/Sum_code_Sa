@@ -28,7 +28,6 @@ func SetupDatabase() {
 
 	// AutoMigrate สำหรับทุก entity
 	err := db.AutoMigrate(
-		&entity.Gender{},
 		&entity.Member{},
 		&entity.Movie{},
 		&entity.Theater{},
@@ -48,13 +47,6 @@ func SetupDatabase() {
 		fmt.Println("AutoMigrate completed successfully.")
 	}
 
-	// สร้างข้อมูลเพศ
-	GenderMale := entity.Gender{Name: "Male"}
-	GenderFemale := entity.Gender{Name: "Female"}
-
-	db.FirstOrCreate(&GenderMale, &entity.Gender{Name: "Male"})
-	db.FirstOrCreate(&GenderFemale, &entity.Gender{Name: "Female"})
-
 
 	// สร้างข้อมูลสตาฟ 
 	hashedPasswordStaff, _ := HashPassword("123456")
@@ -64,7 +56,6 @@ func SetupDatabase() {
 		LastName:   "Analysisstaff",
 		Email:      "sastaff@gmail.com",
 		Password:   hashedPasswordStaff,
-		GenderID:   GenderMale.ID,
 		TotalPoint: 10,
 		Role:       "staff",
 	}
@@ -80,7 +71,6 @@ func SetupDatabase() {
 		LastName:   "Analysis1",
 		Email:      "saadmin@gmail.com",
 		Password:   hashedPassword,
-		GenderID:   GenderMale.ID,
 		TotalPoint: 10000,
 		Role:       "admin",
 	}
@@ -96,7 +86,6 @@ func SetupDatabase() {
 		LastName:   "Analysis2",
 		Email:      "sa2@gmail.com",
 		Password:   hashedPassword2,
-		GenderID:   GenderMale.ID,
 		TotalPoint: 1000,
 		Role:       "user",
 	}
@@ -111,7 +100,6 @@ func SetupDatabase() {
 		LastName:   "Analysis3",
 		Email:      "sa3@gmail.com",
 		Password:   hashedPassword3, // บันทึกรหัสผ่านที่แฮชแล้ว
-		GenderID:   GenderMale.ID,
 		TotalPoint: 8,
 		Role:       "user",
 	}

@@ -1,7 +1,6 @@
 import { MembersInterface } from "../../interfaces/IMember";
 import { MoviesInterface } from "../../interfaces/IMovie";
 import { ShowTimesInterface } from "../../interfaces/IShowtime";
-import { TicketInterface } from "../../interfaces/ITicket";
 import { BookingResponse } from "../../interfaces/IBooking"; // Import Interface ของ Tickets
 import { RewardInterface } from "../../interfaces/IReward";
 
@@ -17,26 +16,6 @@ async function GetMembers() {
   };
 
   let res = await fetch(`${apiUrl}/members`, requestOptions).then((res) => {
-    if (res.status === 200) {
-      return res.json();
-    } else {
-      return false;
-    }
-  });
-
-  return res;
-}
-
-// ฟังก์ชันเพื่อดึงข้อมูลเพศทั้งหมด
-async function GetGenders() {
-  const requestOptions = {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-
-  let res = await fetch(`${apiUrl}/genders`, requestOptions).then((res) => {
     if (res.status === 200) {
       return res.json();
     } else {
@@ -958,7 +937,6 @@ export {
   GetTicketById,
   GetMembers,
   CreateMember,
-  GetGenders,
   DeleteMemberByID,
   GetMemberById,
   UpdateMember,

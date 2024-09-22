@@ -2,6 +2,7 @@
 .reward{
     background-color:#000;
     
+    
 }
 
 
@@ -452,6 +453,7 @@
 
 .popcorn-box:hover {
     transform: translateX(-50%) scale(1.1); /* ขยายขนาดเมื่อ hover */
+    z-index: 2; /* ทำให้ภาพอยู่ด้านหน้าเมื่อ hover */
 }
 
 .popcorn-box-1 {
@@ -544,8 +546,8 @@
 
 .popcorn-box-18 {
     top: 5700px;
-    left: 53%;
-    width: 150px; /* ปรับขนาดตามที่ต้องการ */
+    left: 51%;
+    width: 200px; /* ปรับขนาดตามที่ต้องการ */
 }
 
 
@@ -816,13 +818,3 @@
   .reward .popup-content-coin button:hover {
     background-color: #0056b3;
   }
-  
-
-
-  
-
-
-
-
-
-

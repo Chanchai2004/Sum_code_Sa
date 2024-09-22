@@ -16,10 +16,6 @@ type Member struct {
 	TotalPoint int
 	Role       string
 
-	// GenderID ทำหน้าที่เป็น FK
-	GenderID uint
-	Gender   Gender `gorm:"foreignKey:GenderID"`
-
 	// ความสัมพันธ์กับ Ticket
 	Tickets []Ticket `gorm:"foreignKey:MemberID"`
 	// One-to-Many Relationship

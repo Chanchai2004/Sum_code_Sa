@@ -112,14 +112,10 @@ const handleImageClick = (reward: RewardInterface) => {
 };
 
 const getRewardImage = (reward: RewardInterface) => {
-  const expiredImageUrl = "discountnew.png";
+  
   console.log("Reward Name:", reward.RewardName);
   console.log("Reward Expiration Date:", reward.ExpirationDate);
   console.log("Is Reward Expired?", isRewardExpired(reward));
-
-  if (isRewardExpired(reward)) {
-    return expiredImageUrl; // ถ้ารางวัลหมดอายุ
-  }
   return reward.imageUrl; // ถ้ารางวัลยังไม่หมดอายุ
 };
 
@@ -230,9 +226,9 @@ const getRewardImage = (reward: RewardInterface) => {
       Discount: 0,
       Rewardcode: "-" ,
       Reward_time: new Date() ,
-      Describtion:"น่ากินที่สุด",
+      Describtion:"1 BOX POPCORN M ชุดนี้ประกอบด้วยป๊อปคอร์นขนาดกลาง 1 กล่อง และเครื่องดื่มเย็นชื่นใจ 1 แก้ว ที่จะทำให้การชมภาพยนตร์ของคุณเต็มไปด้วยความอร่อยและความสุข",
       Type:"reward",
-      ExpirationDate:new Date('2024-09-09'),
+      ExpirationDate:new Date('2024-10-09'),
       
       
     },
@@ -260,7 +256,7 @@ const getRewardImage = (reward: RewardInterface) => {
       Discount: 0,
       Rewardcode: "-" ,
       Reward_time:new Date() ,
-      Describtion:"น่ากินสุดๆ",
+      Describtion:"1 COMBO SET L  ที่ประกอบด้วยป๊อปคอร์นขนาดใหญ่ 1 กล่อง และเครื่องดื่มเย็นชื่นใจ 1 แก้ว เหมาะสำหรับแบ่งปันความอร่อยกับเพื่อนหรือครอบครัวของคุณ",
       Type:"reward",
       ExpirationDate:new Date('2024-10-17'),
       
@@ -268,7 +264,7 @@ const getRewardImage = (reward: RewardInterface) => {
     {
       ID: 4,
       imageUrl: "discountnew.png",
-      RewardName: "DUSCOUNT 100 BATH",
+      RewardName: "DISCOUNT 100 BATH",
       Points: 9,
       Status: false,
       Discount: 100,
@@ -281,13 +277,13 @@ const getRewardImage = (reward: RewardInterface) => {
     {
       ID: 5,
       imageUrl: "supersizesetA.PNG",
-      RewardName: "SUPERSIZE SET A",
+      RewardName: "1 SUPERSIZE SET A",
       Points: 12,
       Status: false, 
       Discount: 0,
       Rewardcode: "-" ,
       Reward_time:new Date() ,
-      Describtion:"น่ากินสุดๆๆเลย",
+      Describtion:"1 SUPERSIZE SET A ที่ประกอบไปด้วยป๊อปคอร์นขนาดซูเปอร์ไซส์ 1 กล่องใหญ่ และเครื่องดื่มเย็นชื่นใจ 1 แก้ว เซ็ตนี้เหมาะสำหรับผู้ที่ต้องการประสบการณ์การชมภาพยนตร์ที่พิเศษสุด ทั้งอร่อยและจุใจ",
       Type:"reward",
       ExpirationDate:new Date('2024-10-29'),
       
@@ -298,10 +294,10 @@ const getRewardImage = (reward: RewardInterface) => {
       RewardName: "TICKETZILLA",
       Points: 15,
       Status: false,
-      Discount: 50,
+      Discount: 100,
       Rewardcode: "-" ,
       Reward_time:new Date(), 
-      Describtion:"บัตรฟรี",
+      Describtion:"บัตรชมภาพยนตร์ฟรี 1 ใบ ระดับที่นั่ง normal seat",
       Type:"discount",
       ExpirationDate:new Date('2024-10-25'),
       
@@ -309,13 +305,13 @@ const getRewardImage = (reward: RewardInterface) => {
     {
       ID: 7,
       imageUrl: "supersizesetc.png",
-      RewardName: "SUPERSIZE SET C",
+      RewardName: "1 SUPERSIZE SET C",
       Points: 18,
       Status: false, 
       Discount: 0,
       Rewardcode: "-" ,
       Reward_time:new Date() ,
-      Describtion:"น่ากินสุดๆ",
+      Describtion:"1 SUPERSIZE SET C ประกอบด้วยป๊อปคอร์นขนาดใหญ่ 2 กล่อง และเครื่องดื่ม 3 แก้ว ให้คุณและเพื่อนได้อิ่มอร่อยเต็มที่ระหว่างการชมภาพยนตร์ ด้วยปริมาณที่จุใจ",
       Type:"reward",
       ExpirationDate:new Date('2024-10-08'),
     },
@@ -326,7 +322,7 @@ const getRewardImage = (reward: RewardInterface) => {
       Points: 21,
       Status: false,
       Discount: 0,
-      Rewardcode: "GIFT" ,
+      Rewardcode: "SPECIAL GIFT" ,
       Reward_time:new Date(), 
       Describtion:"ของขวัญสุดพิเศษ",
       Type:"reward",
@@ -340,9 +336,9 @@ const getRewardImage = (reward: RewardInterface) => {
       Points: 26,
       Status: false,
       Discount: 200,
-      Rewardcode: "2 NORMAL SEATS" ,
+      Rewardcode: "-" ,
       Reward_time:new Date() , 
-      Describtion:"",
+      Describtion:"ตั๋วที่นั่ง 2 ที่นั่งในโรงภาพยนตร์ ให้คุณได้เพลิดเพลินกับการชมภาพยนตร์กับเพื่อนหรือคนพิเศษในที่นั่งสบาย มาพร้อมกับมุมมองที่ชัดเจนและบรรยากาศการรับชมที่ยอดเยี่ยม",
       Type:"discount",
       ExpirationDate:new Date('2024-10-09'),
     },
@@ -355,7 +351,7 @@ const getRewardImage = (reward: RewardInterface) => {
       Discount: 0,
       Rewardcode: "-" ,
       Reward_time:new Date() , 
-      Describtion:"น่ากินสุดๆ",
+      Describtion:"SUPERSIZE SET A  2 SET ที่ประกอบไปด้วยป๊อปคอร์นขนาดซูเปอร์ไซส์ 2 กล่องใหญ่ และเครื่องดื่มเย็นชื่นใจ 2 แก้ว เซ็ตนี้เหมาะสำหรับผู้ที่ต้องการประสบการณ์การชมภาพยนตร์ที่พิเศษสุด ทั้งอร่อยและจุใจ",
       Type:"reward",
       ExpirationDate:new Date('2024-11-02'),
     },
@@ -365,36 +361,36 @@ const getRewardImage = (reward: RewardInterface) => {
       RewardName: "2 PERMUIM SEATS ",
       Points: 38,
       Status: false,
-      Discount: 400,
+      Discount: 300,
       Rewardcode: "-" ,
       Reward_time:new Date() , 
-      Describtion:"",
+      Describtion:"ตั๋วที่นั่งพรีเมียม 2 ที่นั่งในโรงภาพยนตร์ ที่นั่งสุดหรูหราและสะดวกสบาย มอบประสบการณ์การชมภาพยนตร์ที่เหนือระดับ ",
       Type:"discount",
       ExpirationDate:new Date('2024-11-01'),
     },
     {
       ID: 12,
       imageUrl: "supersizesetbbb.png",
-      RewardName: "SUPERSIZE SET B",
+      RewardName: "2 SUPERSIZE SET B",
       Points: 45,
       Status: false,
       Discount: 0,
       Rewardcode: "-" ,
       Reward_time:new Date() , 
-      Describtion:"น่ากินสุดๆ",
+      Describtion:"2 SUPERSIZE SET B ชุดซูเปอร์ไซส์ที่ประกอบไปด้วยป๊อปคอร์นขนาดใหญ่ 2 กล่อง และเครื่องดื่มเย็นสดชื่น 2 แก้ว เต็มอิ่มกับความอร่อยในปริมาณที่มากขึ้น ",
       Type:"reward",
       ExpirationDate:new Date('2024-11-22'),
     },
     {
       ID: 13,
       imageUrl: "gift.PNG",
-      RewardName: "GIFT",
+      RewardName: "SPECIAL GIFT",
       Points: 50,
       Status: false, 
       Discount: 0,
       Rewardcode: "-" ,
       Reward_time:new Date() ,
-      Describtion:"",
+      Describtion:"ของขวัญสุดพิเศษ",
       Type:"reward",
       ExpirationDate:new Date('2024-15-20'),
     },
@@ -404,13 +400,11 @@ const getRewardImage = (reward: RewardInterface) => {
       RewardName: "3 PREMUIM SEATS  ",
       Points: 60,
       Status: false, 
-      Discount: 600,
+      Discount: 450,
       Rewardcode: "-" ,
       Reward_time:new Date(),
-      Describtion:"ที่นั่งสุดพิเศษ",
+      Describtion:"ตั๋วที่นั่งพรีเมียม 3 ที่นั่งในโรงภาพยนตร์ ที่นั่งสุดหรูหราและสะดวกสบาย มอบประสบการณ์การชมภาพยนตร์ที่เหนือระดับ ",
       Type:"discount",
-      
-     
       ExpirationDate:new Date('2024-11-20'),
     },
     {
@@ -422,7 +416,7 @@ const getRewardImage = (reward: RewardInterface) => {
       Discount: 900,
       Rewardcode: "-" ,
       Reward_time:new Date() , 
-      Describtion:"แพ็คเกจหนังสุดพิเศษ",
+      Describtion:"1 DIRECTOR PACKAGE แพ็คเกจสุดพิเศษที่ให้คุณได้รับประสบการณ์การชมภาพยนตร์ในแบบ Director Class ด้วยที่นั่งที่สะดวกสบายและหรูหรา",
       Type:"discount",
       ExpirationDate:new Date('2024-11-09'),
     },
@@ -432,36 +426,36 @@ const getRewardImage = (reward: RewardInterface) => {
       RewardName: " 4 PREMUIM SEATS",
       Points: 80,
       Status: false,
-      Discount: 800,
+      Discount: 600,
       Rewardcode: "-" ,
       Reward_time:new Date() , 
-      Describtion:"ที่นั่งสุดพิเศษ",
+      Describtion:"ตั๋วที่นั่งพรีเมียม 4 ที่นั่งในโรงภาพยนตร์ ที่นั่งสุดหรูหราและสะดวกสบาย มอบประสบการณ์การชมภาพยนตร์ที่เหนือระดับ",
       Type:"discount",
       ExpirationDate:new Date('2024-12-03'),
     },
     {
       ID: 17,
       imageUrl: "4supersizesetc.png",
-      RewardName: "4 SUPERSIZE SET c",
+      RewardName: "4 SUPERSIZE SET C",
       Points: 90,
       Status: false,
       Discount: 0,
       Rewardcode: "-" ,
       Reward_time:new Date(),
-      Describtion:"น่ากินสุดๆ", 
+      Describtion:"4 SUPERSIZE SET C ประกอบด้วยป๊อปคอร์นขนาดใหญ่ 8 กล่อง และเครื่องดื่ม 12 แก้ว ให้คุณและเพื่อนได้อิ่มอร่อยเต็มที่ระหว่างการชมภาพยนตร์ ด้วยปริมาณที่จุใจ", 
       Type:"reward",
       ExpirationDate:new Date('2024-12-05'),
     },
     {
       ID: 18,
-      imageUrl: "10seat.png",
-      RewardName: "10 NORMAL SEATS ",
+      imageUrl: "5premuimseat.png",
+      RewardName: "5 NORMAL SEATS ",
       Points: 100,
       Status: false, 
-      Discount: 1000,
+      Discount: 750,
       Rewardcode: "-" ,
       Reward_time:new Date(),
-      Describtion:"",
+      Describtion:"ตั๋วที่นั่งพรีเมียม 5 ที่นั่งในโรงภาพยนตร์ ที่นั่งสุดหรูหราและสะดวกสบาย มอบประสบการณ์การชมภาพยนตร์ที่เหนือระดับ",
       Type:"discount",
       ExpirationDate:new Date('2024-12-12'),
     },
@@ -609,7 +603,7 @@ const getRewardImage = (reward: RewardInterface) => {
                 onClick={() => !isRewardExpired(reward) && handleImageClick(reward)}
                 style={{
                   cursor: isRewardExpired(reward) ? "not-allowed" : "pointer",
-                  opacity: isRewardExpired(reward) ? 0.5 : 1,
+                  opacity: isRewardExpired(reward) ? 1 : 1,
                 }}
               />
               <div className={`popcorn-label popcorn-label-${index + 1}`}>

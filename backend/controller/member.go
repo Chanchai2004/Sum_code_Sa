@@ -32,19 +32,16 @@ func Signin(c *gin.Context) {
 	db := config.DB()
 	var member entity.Member
 
-	// ตรวจสอบว่ามีสมาชิกที่มีอีเมลนี้หรือไม่
 	if err := db.Where("email = ?", loginData.Email).First(&member).Error; err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Incorrect email or password"})
 		return
 	}
 
-	// ตรวจสอบว่ารหัสผ่านตรงกันหรือไม่
 	if !config.CheckPasswordHash([]byte(loginData.Password), []byte(member.Password)) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Incorrect email or password"})
 		return
 	}
 
-	// สร้าง JWT token
 	expirationTime := time.Now().Add(24 * time.Hour)
 	claims := &Claims{
 		Email: loginData.Email,
@@ -59,12 +56,11 @@ func Signin(c *gin.Context) {
 		return
 	}
 
-	// ส่ง response กลับไปพร้อมกับ token
 	c.JSON(http.StatusOK, gin.H{
 		"id":    member.ID,
 		"email": member.Email,
-		"role":  member.Role,   // assuming you have a role field in your Member struct
-		"token": tokenString,   // ส่ง token กลับไปด้วย
+		"role":  member.Role,
+		"token": tokenString,
 	})
 }
 
@@ -73,7 +69,6 @@ func Signin(c *gin.Context) {
 func CreateMember(c *gin.Context) {
 	var member entity.Member
 
-	// bind เข้าตัวแปร member
 	if err := c.ShouldBindJSON(&member); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -81,31 +76,18 @@ func CreateMember(c *gin.Context) {
 
 	db := config.DB()
 
-	// ค้นหา gender ด้วย id
-	// var gender entity.Gender
-	// db.First(&gender, member.GenderID)
-	// if gender.ID == 0 {
-	// 	c.JSON(http.StatusNotFound, gin.H{"error": "gender not found"})
-	// 	return
-	// }
-
-	// เข้ารหัสลับรหัสผ่านที่ผู้ใช้กรอกก่อนบันทึกลงฐานข้อมูล
 	hashedPassword, _ := config.HashPassword(member.Password)
 
-	// สร้าง Member
 	u := entity.Member{
 		UserName: member.UserName,
 		FirstName:  member.FirstName,
 		LastName:   member.LastName,
 		Email:      member.Email,
 		Password:   hashedPassword,
-		// GenderID:   member.GenderID,
-		// Gender:     gender,
 		TotalPoint: member.TotalPoint,
 		Role:      "user",
 	}
 
-	// บันทึก
 	if err := db.Create(&u).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -120,7 +102,7 @@ func GetMember(c *gin.Context) {
 	var member entity.Member
 
 	db := config.DB()
-	results := db.Preload("Gender").First(&member, ID)
+	results := db.First(&member, ID)
 	if results.Error != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": results.Error.Error()})
 		return
@@ -137,7 +119,7 @@ func ListMembers(c *gin.Context) {
 	var members []entity.Member
 
 	db := config.DB()
-	results := db.Preload("Gender").Find(&members)
+	results := db.Find(&members)
 	if results.Error != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": results.Error.Error()})
 		return
@@ -187,10 +169,8 @@ func UpdateMember(c *gin.Context) {
 func UpdateMemberReward(c *gin.Context) {
     var member entity.Member
 
-    // ดึงค่า MemberID จาก URL parameter
     MemberID := c.Param("id")
 
-    // ตรวจสอบว่ามีสมาชิกที่มี ID นี้อยู่ในระบบหรือไม่
     db := config.DB()
     result := db.First(&member, MemberID)
     if result.Error != nil {
@@ -198,7 +178,6 @@ func UpdateMemberReward(c *gin.Context) {
         return
     }
 
-    // อ่านข้อมูลจาก JSON และอัปเดตเฉพาะฟิลด์ที่จำเป็น
     var input struct {
         TotalPoint int `json:"TotalPoint"`
     }
@@ -208,7 +187,6 @@ func UpdateMemberReward(c *gin.Context) {
         return
     }
 
-    // ใช้ db.Model() เพื่ออัปเดตเฉพาะฟิลด์ TotalPoint
     result = db.Model(&member).Updates(map[string]interface{}{
         "TotalPoint": input.TotalPoint,
     })
@@ -225,13 +203,11 @@ func UpdateMemberReward(c *gin.Context) {
 func GetRewardsByMemberID(c *gin.Context) {
     memberID := c.Param("member_id")
 
-    // Validate memberID
     if memberID == "" {
         c.JSON(http.StatusBadRequest, gin.H{"error": "Member ID is required"})
         return
     }
 
-    // Fetch rewards from the database พร้อมกับ Preload ข้อมูล Member
     var rewards []entity.Reward
     result := config.DB().Preload("Member").Where("member_id = ?", memberID).Find(&rewards)
     
@@ -240,15 +216,11 @@ func GetRewardsByMemberID(c *gin.Context) {
         return
     }
 
-    // Logging the fetched rewards for debugging
     fmt.Printf("Fetched Rewards: %+v\n", rewards)
 
-    // Logging member information
     for _, reward := range rewards {
         fmt.Printf("Member Information for Reward %d: %+v\n", reward.ID, reward.Member)
     }
 
     c.JSON(http.StatusOK, rewards)
 }
-
-

@@ -12,7 +12,7 @@
 }
 
 /* Left Side (Poster) */
-.poster-container {
+.poster-container { 
   flex: 1;
   max-width: 50%;
   display: flex;
@@ -22,11 +22,13 @@
 
 .poster-container img {
   width: 100%;
-  max-width: 100%;
   height: auto;
   object-fit: cover;
   aspect-ratio: 2 / 3;
+  display: block;
+  border: none;
 }
+
 
 /* Right Side (Information) */
 .movie-info {
@@ -122,7 +124,7 @@
 }
 
 .date-card:hover {
-  background-color: #1c2b59;
+  background-color: #FFD700;
   color: white;
 }
 
