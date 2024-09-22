@@ -22,6 +22,10 @@ import {
 } from "../../services/https/index"; // Adjust path as needed
 import styles from "./PaymentDetail.module.css"; // Import the CSS module
 
+// เพิ่มการนำเข้า react-toastify
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 interface SelectedCoupon {
   id: string;
   discount: string;
@@ -110,7 +114,7 @@ const PaymentDetail: React.FC = () => {
       console.log("Apply value:", selectedCoupon.discount);
 
       if (discount > totalPrice) {
-        alert("ไม่สามารถใช้คูปองนี้ได้ เนื่องจากส่วนลดเกินกว่าราคาสินค้า");
+        toast.error("ไม่สามารถใช้คูปองนี้ได้ เนื่องจากส่วนลดเกินกว่าราคาสินค้า");
         return;
       }
 
@@ -171,16 +175,19 @@ const PaymentDetail: React.FC = () => {
             console.error("Error updating status:", error);
           }
         }
+        toast.success("การชำระเงินสำเร็จ!");
         navigate("/ticket", { state: { ticketID } });
+      
       } else {
         // ถ้าราคาหลังส่วนลดมากกว่า 0 ให้ไปที่หน้า scanpayment
+        toast.success("ดำเนินการชำระเงิน");
         navigate("/scanpayment", {
           state: { ticketID, showtimeID, selectedSeats },
         });
       }
     } catch (error) {
       console.error("Error confirming payment:", error);
-      alert("มีข้อผิดพลาดในการประมวลผลการชำระเงินของคุณ โปรดลองอีกครั้ง");
+      toast.error("มีข้อผิดพลาดในการประมวลผลการชำระเงินของคุณ โปรดลองอีกครั้ง");
     }
   };
 
@@ -303,6 +310,8 @@ const PaymentDetail: React.FC = () => {
           </div>
         </div>
       </div>
+      {/* เพิ่ม ToastContainer เพื่อแสดง toast notifications */}
+      <ToastContainer />
     </>
   );
 };

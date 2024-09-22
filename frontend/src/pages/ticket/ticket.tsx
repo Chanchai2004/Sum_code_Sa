@@ -24,7 +24,7 @@ const Ticket: React.FC = () => {
   const [showTime, setShowTime] = useState<string>("Loading...");
   const [theaterID, setTheaterID] = useState<number | string>("Loading...");
   const [moviePoster, setMoviePoster] = useState<string | null>(null);
-  const [totalPrice, setTotalPrice] = useState<number | null>(null);
+  const [totalPrice, setTotalPrice] = useState<number | null>(0);
 
   useEffect(() => {
     if (ticketID) {
@@ -71,6 +71,7 @@ const Ticket: React.FC = () => {
         .then((payment) => {
           if (payment && payment.TotalPrice) {
             setTotalPrice(payment.TotalPrice);
+            console.log("ตังค์เข้ากี่บาทจ้ะ : ",payment.TotalPrice)
           }
         })
         .catch((error) => {
@@ -113,7 +114,7 @@ const Ticket: React.FC = () => {
               <p className={styles.date}>{showDate || "Loading..."}</p>
               <p className={styles.time}>{showTime || "Loading..."}</p>
               <p className={styles.price}>
-                {totalPrice !== 0 ? totalPrice : 0} THB
+                {totalPrice} THB
               </p>
             </div>
             <div className={styles.qrCodeContainer}>
