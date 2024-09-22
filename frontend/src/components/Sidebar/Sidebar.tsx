@@ -34,7 +34,7 @@ const Sidebar: React.FC = () => {
           </Link>
         </li>
         <li>
-          <Link to="/movies">
+          <Link to="/movie">
             <FontAwesomeIcon icon={faFilm} />
             <span>Movies</span>
           </Link>

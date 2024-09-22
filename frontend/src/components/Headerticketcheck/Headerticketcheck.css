@@ -10,6 +10,7 @@
     height: 60px;
     border-radius: 0; /* เอามุมมนออก */
     top: 0;
+    z-index: 101;
 }
 
 .headerder .icon {
