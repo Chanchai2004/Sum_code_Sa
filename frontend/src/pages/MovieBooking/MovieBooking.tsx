@@ -134,7 +134,7 @@ const MovieBooking: React.FC = () => {
         const showtimeID = showtime.ID;
         const TheaterID = showtime.TheaterID;
         console.log('Showtime ID:', showtimeID);
-        navigate('/seatbooking', { state: { showtimeID, TheaterID } });
+        navigate('/seatbooking', { state: {movieID, showtimeID, TheaterID } });
       } else {
         console.error('Showtime not found');
       }

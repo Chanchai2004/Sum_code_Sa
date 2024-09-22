@@ -51,7 +51,7 @@ func BookSeats(c *gin.Context) {
 	// สร้างรายการ ticket โดยใช้ข้อมูลจากผู้ใช้ เช่น จำนวนที่นั่ง
 	ticket := entity.Ticket{
 		MemberID: req.MemberID,
-		Point:    len(seats) * 5, // สามารถกำหนดสูตรการคำนวณเองตามที่ผู้ใช้ต้องการ
+		Point:    len(seats), // สามารถกำหนดสูตรการคำนวณเองตามที่ผู้ใช้ต้องการ
 		Status:   "on process",
 	}
 	if err := tx.Create(&ticket).Error; err != nil {

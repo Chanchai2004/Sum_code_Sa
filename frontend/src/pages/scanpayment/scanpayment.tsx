@@ -22,6 +22,10 @@ import {
 } from "../../services/https/index";
 import styles from "./ScanPayment.module.css";
 
+// นำเข้า react-toastify
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const ScanPayment: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -132,7 +136,8 @@ const ScanPayment: React.FC = () => {
       }
     } catch (error) {
       console.error("Error updating status:", error);
-      alert("เกิดข้อผิดพลาดในการอัปเดตสถานะ");
+      // แทนที่ alert ด้วย toast
+      toast.error("เกิดข้อผิดพลาดในการอัปเดตสถานะ");
     }
   };
 
@@ -153,30 +158,29 @@ const ScanPayment: React.FC = () => {
   };
 
   const handleSlipCheckResult = async (result: boolean) => {
-  if (result && files) {
-    try {
-      const saveResult = await saveSlipAndUpdateStatus(
-        ticketID,
-        files,
-        "Paid",   // Payment status
-        "Booked"  // Ticket status set to "Booked"
-      );
-      if (saveResult.status) {
+    if (result && files) {
+      try {
+        const saveResult = await saveSlipAndUpdateStatus(
+          ticketID,
+          files,
+          "Paid",   // Payment status
+          "Booked"  // Ticket status set to "Booked"
+        );
         setShowSuccessPopup(true);
-      } else {
-        alert("เกิดข้อผิดพลาดในการบันทึกการชำระเงิน");
+        // แสดง toast เมื่อสำเร็จ
+        toast.success("Payment Successful!");
+      } catch (error) {
+        console.error("Error during saving payment:", error);
+        // แทนที่ alert ด้วย toast
+        toast.error("เกิดข้อผิดพลาดในการบันทึกการชำระเงิน โปรดลองใหม่อีกครั้ง");
       }
-    } catch (error) {
-      console.error("Error during saving payment:", error);
-      alert("เกิดข้อผิดพลาดในการบันทึกการชำระเงิน โปรดลองใหม่อีกครั้ง");
+    } else {
+      // แทนที่ alert ด้วย toast
+      toast.error("Slip ไม่ถูกต้อง กรุณาอัพโหลดสลิปใหม่");
     }
-  } else {
-    alert("Slip ไม่ถูกต้อง กรุณาอัพโหลดสลิปใหม่");
-  }
 
-  setIsCheckingSlip(false);
-};
-
+    setIsCheckingSlip(false);
+  };
 
   const handleSubmit = async () => {
     if (!files || !ticketID) {
@@ -387,6 +391,8 @@ const ScanPayment: React.FC = () => {
           </div>
         )}
       </div>
+      {/* เพิ่ม ToastContainer เพื่อแสดง toast notifications */}
+      <ToastContainer />
     </>
   );
 };

@@ -41,7 +41,7 @@ const SeatMap: React.FC = () => {
 
   const navigate = useNavigate(); // ใช้ navigate เพื่อนำทางไปหน้าอื่น
   const location = useLocation(); // รับค่าจาก navigate
-  const { showtimeID, TheaterID } = location.state || {}; // ดึง showtimeID และ theaterID จาก location.state
+  const { movieID,showtimeID, TheaterID } = location.state || {}; // ดึง showtimeID และ theaterID จาก location.state
   
   // ดึงข้อมูลจาก localStorage
   useEffect(() => {
@@ -136,9 +136,14 @@ const SeatMap: React.FC = () => {
     }
   };
 
+  const handleBackTo = async () => {
+    navigate('/moviebooking', { state: { movieID} });
+  }
+
   useEffect(() => {
     fetchBookedSeats();
   }, [showtimeID, TheaterID]);
+  
   
   return (
     <div className='seat-container'>
@@ -178,7 +183,7 @@ const SeatMap: React.FC = () => {
               <h3 style={{ fontSize: '27px', color: '#FFD700' }}>: {selectedSeats.join(', ')}</h3>
             </div>
             <div style={{ flex: 2, textAlign: 'center' }}>
-              <Button type="default" style={{ marginRight: '20px', width: '180px', height: '40px' }}>BACK TO</Button>
+              <Button type="default" style={{ marginRight: '20px', width: '180px', height: '40px' }} onClick={handleBackTo}>BACK TO</Button>
               <Button type="primary" style={{ width: '180px', height: '40px', backgroundColor: '#FFD700', border: '2px solid #FFD700', color: 'black' }} onClick={handleConfirmBooking}>CONFIRM</Button>
             </div>
           </div>
