@@ -149,7 +149,7 @@ const MovieBooking: React.FC = () => {
         const showtimeID = showtime.ID;
         const TheaterID = showtime.TheaterID;
         console.log("Showtime ID:", showtimeID);
-        navigate("/seatbooking", { state: { movieID, showtimeID, TheaterID } });
+        navigate("/seatbooking", { state: { movieID,showtimeID, TheaterID } });
       } else {
         console.error("Showtime not found");
       }
@@ -230,15 +230,38 @@ const MovieBooking: React.FC = () => {
             <Card.Meta title="Round" />
             <div className="grid grid-cols-3 gap-2 mt-4">
               {filteredTimes.length > 0 ? (
-                filteredTimes.map((time) => (
-                  <Button
-                    key={time}
-                    type={time === selectedTime ? "primary" : "default"}
-                    onClick={() => setSelectedTime(time)}
-                  >
-                    {time}
-                  </Button>
-                ))
+                filteredTimes.map((time) => {
+                  const selectedMomentDate = moment()
+                    .add(selectedDate || 0, "days")
+                    .format("YYYY-MM-DD");
+                  const showtimeMoment = moment(
+                    `${selectedMomentDate} ${time}`,
+                    "YYYY-MM-DD HH:mm"
+                  );
+                  const isPastTime = showtimeMoment.isBefore(moment()); // ตรวจสอบว่ารอบนั้นเลยเวลาปัจจุบันไปแล้วหรือไม่
+
+                  return (
+                    <Button
+                      key={time}
+                      type={time === selectedTime ? "primary" : "default"}
+                      onClick={() => setSelectedTime(time)}
+                      disabled={isPastTime} // ปิดการใช้งานปุ่มถ้าเวลารอบนั้นผ่านไปแล้ว
+                      style={{
+                        marginLeft: "10px",
+                        backgroundColor: time === selectedTime ? "#FFD700" : "",
+                      }} // ระยะห่างทางซ้าย
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.backgroundColor = "#FFD700")
+                      } // เมื่อ hover เป็นสีเหลือง
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.backgroundColor =
+                          time === selectedTime ? "#FFD700" : "")
+                      } // คืนค่ากลับเมื่อ hover ออก
+                    >
+                      {time}
+                    </Button>
+                  );
+                })
               ) : (
                 <p>No showtimes available</p>
               )}

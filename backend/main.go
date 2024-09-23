@@ -30,6 +30,8 @@ func main() {
 		router.POST("/book-seats", controller.BookSeats) // เพิ่มเส้นทางสำหรับการจองที่นั่ง
 		router.PATCH("/release-seats", controller.ReleaseSeatsForUnfinishedTickets)
 		router.GET("/bookings/ticket/:ticketid", controller.GetBookingByTicketID)
+		router.GET("/theater/:id", controller.GetTheaterByID)
+		router.GET("/showtimes/:id/time", controller.GetTimeByShowtime)  // เพิ่มเส้นทางสำหรับดึงเวลา showtime
 
 		
 		// Member Routes

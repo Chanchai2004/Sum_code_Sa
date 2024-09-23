@@ -22,9 +22,8 @@ import {
 } from "../../services/https/index"; // Adjust path as needed
 import styles from "./PaymentDetail.module.css"; // Import the CSS module
 
-// เพิ่มการนำเข้า react-toastify
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+// เพิ่มการนำเข้า Alert จาก Ant Design
+import { Alert } from "antd";
 
 interface SelectedCoupon {
   id: string;
@@ -56,6 +55,12 @@ const PaymentDetail: React.FC = () => {
   );
   const [discountedTotalPrice, setDiscountedTotalPrice] =
     useState<number>(totalPrice); // New state to store the discounted total price
+
+  // State สำหรับควบคุมการแสดงผล Alert
+  const [alert, setAlert] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
 
   useEffect(() => {
     // Fetch showtime and movie details
@@ -114,7 +119,10 @@ const PaymentDetail: React.FC = () => {
       console.log("Apply value:", selectedCoupon.discount);
 
       if (discount > totalPrice) {
-        toast.error("ไม่สามารถใช้คูปองนี้ได้ เนื่องจากส่วนลดเกินกว่าราคาสินค้า");
+        setAlert({
+          type: "error",
+          message: "ไม่สามารถใช้คูปองนี้ได้ เนื่องจากส่วนลดเกินกว่าราคาสินค้า",
+        });
         return;
       }
 
@@ -175,25 +183,26 @@ const PaymentDetail: React.FC = () => {
             console.error("Error updating status:", error);
           }
         }
-        toast.success("การชำระเงินสำเร็จ!");
+        setAlert({ type: "success", message: "การชำระเงินสำเร็จ!" });
         navigate("/ticket", { state: { ticketID } });
-      
       } else {
         // ถ้าราคาหลังส่วนลดมากกว่า 0 ให้ไปที่หน้า scanpayment
-        toast.success("ดำเนินการชำระเงิน");
+        setAlert({ type: "success", message: "ดำเนินการชำระเงิน" });
         navigate("/scanpayment", {
           state: { ticketID, showtimeID, selectedSeats },
         });
       }
     } catch (error) {
       console.error("Error confirming payment:", error);
-      toast.error("มีข้อผิดพลาดในการประมวลผลการชำระเงินของคุณ โปรดลองอีกครั้ง");
+      setAlert({
+        type: "error",
+        message: "มีข้อผิดพลาดในการประมวลผลการชำระเงินของคุณ โปรดลองอีกครั้ง",
+      });
     }
   };
 
   return (
     <>
-      <Navbar />
       <div className={styles.container}>
         {/* Content ด้านบน */}
         <div className={styles.content}>
@@ -204,28 +213,27 @@ const PaymentDetail: React.FC = () => {
           />
           <div className={styles.details}>
             <h1 className={styles.title}>{movieName}</h1>
-            <div className={styles.info}>
-              <p>
-                <img src={IconDate} alt="date" className={styles.icon} />{" "}
-                {showDate}
-              </p>
-              <p>
-                <img src={Icontime} alt="time" className={styles.icon} />{" "}
-                {showTime}
-              </p>
-              <p>
-                <img src={Iconlo} alt="location" className={styles.icon} />{" "}
-                Merje Cineplex
-              </p>
+            <div className={`${styles.info} ${styles.dateInfo}`}>
+              <img src={IconDate} alt="date" className={styles.icon} />{" "}
+              {showDate}
+            </div>
+            <div className={`${styles.info} ${styles.timeInfo}`}>
+              <img src={Icontime} alt="time" className={styles.icon} />{" "}
+              {showTime}
+            </div>
+            <div className={`${styles.info} ${styles.locationInfo}`}>
+              <img src={Iconlo} alt="location" className={styles.icon} /> The
+              Mall Korat
+            </div>
+            <div className={`${styles.info} ${styles.theaterInfo}`}>
               <h2>Theater {theaterID}</h2>
-              <div className={styles.languages}>
-                <p>
-                  <img src={Iconsound} alt="sound" className={styles.icon} /> TH{" "}
-                </p>
-                <p>
-                  <img src={Iconsub} alt="subtitle" className={styles.icon} />{" "}
-                  ENG{" "}
-                </p>
+            </div>
+            <div className={styles.languagesInfo}>
+              <div className={styles.info}>
+                <img src={Iconsound} alt="sound" className={styles.icon} /> TH
+              </div>
+              <div className={styles.info}>
+                <img src={Iconsub} alt="subtitle" className={styles.icon} /> ENG
               </div>
             </div>
           </div>
@@ -309,9 +317,20 @@ const PaymentDetail: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* แสดง Alert ถ้ามี */}
+        {alert && (
+          <div className={styles.alertContainer}>
+            <Alert
+              message={alert.message}
+              type={alert.type}
+              showIcon
+              closable
+              afterClose={() => setAlert(null)}
+            />
+          </div>
+        )}
       </div>
-      {/* เพิ่ม ToastContainer เพื่อแสดง toast notifications */}
-      <ToastContainer />
     </>
   );
 };

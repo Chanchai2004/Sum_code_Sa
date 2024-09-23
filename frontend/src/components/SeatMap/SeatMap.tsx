@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'; 
 import { Button, Select, message } from 'antd';
-import { useNavigate, useLocation } from 'react-router-dom'; // นำเข้า useNavigate และ useLocation
+import { useNavigate, useLocation } from 'react-router-dom'; 
 import Seat from './Seat';
 import './SeatMap.css';
 import { bookSeats } from '../../services/https';
+import { GetTheaterById } from "../../services/https";
+import { GetTimeByShowtime } from '../../services/https';
 
 const { Option } = Select;
 
-// ฟังก์ชันสร้าง seatMap อัตโนมัติจากโครงสร้างที่นั่ง โดยคำนวณ seatIndex จาก theaterID
 const generateSeatMap = (seats: string[][], theaterID: number) => {
   const seatMap: { [key: number]: string } = {};
-  let seatIndex = (theaterID - 1) * 160 + 1; // คำนวณ seatID เริ่มต้นตามโรงหนัง (โรงที่ 1 เริ่มที่ 1, โรงที่ 2 เริ่มที่ 161, โรงที่ 3 เริ่มที่ 321)
+  let seatIndex = (theaterID - 1) * 160 + 1;
 
   seats.forEach(row => {
     row.forEach(seat => {
@@ -22,7 +23,6 @@ const generateSeatMap = (seats: string[][], theaterID: number) => {
   return seatMap;
 };
 
-// ข้อมูลที่นั่ง (เรียงลำดับที่ต้องการ)
 const seats = [
   ['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'A11', 'A12', 'A13', 'A14', 'A15', 'A16', 'A17', 'A18', 'A19', 'A20'],
   ['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'B10', 'B11', 'B12', 'B13', 'B14', 'B15', 'B16', 'B17', 'B18', 'B19', 'B20'],
@@ -38,41 +38,75 @@ const SeatMap: React.FC = () => {
   const [bookedSeats, setBookedSeats] = useState<string[]>([]);
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
   const [memberID, setMemberID] = useState<number | null>(null);
+  const [theaterName, setTheaterName] = useState<string>('');  
+  const [showtimeTime, setShowtimeTime] = useState<string>('');  // เพิ่ม state สำหรับเวลา showtime
 
-  const navigate = useNavigate(); // ใช้ navigate เพื่อนำทางไปหน้าอื่น
-  const location = useLocation(); // รับค่าจาก navigate
-  const { movieID,showtimeID, TheaterID } = location.state || {}; // ดึง showtimeID และ theaterID จาก location.state
-  
-  // ดึงข้อมูลจาก localStorage
+  const navigate = useNavigate(); 
+  const location = useLocation();
+  const { movieID, showtimeID, TheaterID } = location.state || {}; 
+
   useEffect(() => {
     const storedMemberID = localStorage.getItem('id');
     if (storedMemberID) setMemberID(Number(storedMemberID));
   }, []);
 
- 
-
-  // สร้าง seatMap โดยใช้ theaterID เพื่อกำหนด seatID ให้ถูกต้อง
   const seatMap = generateSeatMap(seats, TheaterID);
 
-  // ดึงข้อมูลที่นั่งที่ถูกจองจาก API
   const fetchBookedSeats = async () => {
     try {
       const response = await fetch(`http://localhost:8000/api/booked-seats/${showtimeID}`);
       const seatsData = await response.json();
-
       if (response.ok && seatsData.data) {
         const bookedSeatsArray = seatsData.data.map((seatID: number) => seatMap[seatID]);
-        setBookedSeats(bookedSeatsArray); // อัปเดตสถานะที่นั่งที่ถูกจอง
+        setBookedSeats(bookedSeatsArray);
       } else {
         console.log('No bookings found for this showtime.');
-        setBookedSeats([]); // ตั้งค่าเป็นที่นั่งว่าง
+        setBookedSeats([]);
       }
     } catch (error) {
       console.error('Error fetching booked seats:', error);
     }
   };
 
-  
+  // ฟังก์ชันดึงชื่อโรงหนังจาก TheaterID โดยใช้ GetTheaterById จาก service
+  const fetchTheaterName = async (TheaterID: number) => {
+    try {
+      const theaterData = await GetTheaterById(TheaterID);
+      if (theaterData) {
+        setTheaterName(theaterData.theater_name);
+      } else {
+        console.log('Theater not found');
+        setTheaterName('Unknown');
+      }
+    } catch (error) {
+      console.error('Error fetching theater name:', error);
+    }
+  };
+
+  // ฟังก์ชันดึงเวลาของ showtime โดยใช้ GetTimeByShowtime จาก service
+  const fetchShowtimeTime = async (showtimeID: number) => {
+    try {
+      const time = await GetTimeByShowtime(showtimeID);
+      if (time) {
+        setShowtimeTime(time);  // ตั้งค่า showtimeTime ตามข้อมูลที่ได้จาก service
+      } else {
+        console.log('Showtime time not found');
+        setShowtimeTime('Unknown');
+      }
+    } catch (error) {
+      console.error('Error fetching showtime time:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchBookedSeats();
+    if (TheaterID) {
+      fetchTheaterName(TheaterID); 
+    }
+    if (showtimeID) {
+      fetchShowtimeTime(showtimeID);  // เรียกฟังก์ชันเมื่อมี showtimeID
+    }
+  }, [showtimeID, TheaterID]);
 
   const onSelectSeat = (seat: string) => {
     if (selectedSeats.includes(seat)) {
@@ -88,11 +122,7 @@ const SeatMap: React.FC = () => {
 
   const totalPrice = selectedSeats.reduce((total, seat) => {
     const rowLetter = seat.charAt(0);
-    if (['G', 'H'].includes(rowLetter)) {
-      return total + 150;
-    } else {
-      return total + 100;
-    }
+    return total + (['G', 'H'].includes(rowLetter) ? 150 : 100);
   }, 0);
 
   const handleConfirmBooking = async () => {
@@ -100,69 +130,91 @@ const SeatMap: React.FC = () => {
       message.error('Please select the seat');
       return;
     }
-  
     if (selectedSeats.length > 5) {
       message.error('You can select up to 5 seats per booking');
       return;
     }
-  
     if (!memberID) {
-      message.error('Member ID not foundddd');
+      message.error('Member ID not found');
       return;
     }
-  
+
     const result = await bookSeats(showtimeID, TheaterID, memberID, selectedSeats);
-  
     if (result.success) {
       message.success(result.message);
       setSelectedSeats([]);
-  
-      // ดึง ticketID จาก result ที่ได้รับจาก backend
       const ticketID = result.ticketID;
-  
-      // ส่ง ticketID พร้อมกับข้อมูลอื่น ๆ ไปยังหน้า Payment
-      console.log("Navigating to Payment with data: ", {
-        showtimeID,
-        totalPrice,
-        selectedSeats,
-        ticketID,  // เพิ่ม ticketID ที่ได้รับจาก backend
-      });
-  
-      // นำทางไปยังหน้า Payment พร้อมส่งข้อมูลไปด้วย
-      navigate('/paymentdetail', { state: { totalPrice, selectedSeats, ticketID,showtimeID } });
-      console.log("นำทางแต่ไม่ไป");
+      navigate('/paymentdetail', { state: { totalPrice, selectedSeats, ticketID, showtimeID } });
     } else {
       message.error(result.message);
     }
   };
 
   const handleBackTo = async () => {
-    navigate('/moviebooking', { state: { movieID} });
+    navigate('/moviebooking', { state: { movieID } });
   }
 
-  useEffect(() => {
-    fetchBookedSeats();
-  }, [showtimeID, TheaterID]);
-  
-  
   return (
-    <div className='seat-container'>
+    <div className='seat'>
+    <div className="seat-container">
+      <div className="theater-time-container">
+        <div className="info-box">
+          <h3>{theaterName || 'Unknown'}</h3> {/* แสดงชื่อโรงหนัง */}
+        </div>
+        <div className="info-box">
+        <h3>{showtimeTime || 'Unknown'}</h3> {/* แสดงเวลา showtime */}
+        </div>
+      </div>
+
+      <div className="seat-legend">
+        <div className="legend-item">
+          <div className="legend-color booked"></div>
+          <span>booked</span>
+        </div>
+        <div className="legend-item">
+          <div className="legend-color available"></div>
+          <span>available</span>
+        </div>
+        <div className="legend-item">
+          <div className="legend-color selected"></div>
+          <span>select</span>
+        </div>
+      </div>
+
       <div className="SeatMapcontainer">
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <div>
-            {seats.map((row, rowIndex) => (
-              <div key={rowIndex} className={`seat-row ${rowIndex >= 6 ? 'yellow-border' : ''}`}>
-                {row.map(seat => (
-                  <Seat
-                    key={seat}
-                    seat={seat}
-                    isBooked={bookedSeats.includes(seat)}
-                    isSelected={selectedSeats.includes(seat)}
-                    onSelect={() => onSelectSeat(seat)}
-                  />
-                ))}
-              </div>
-            ))}
+            {seats.map((row, rowIndex) => {
+              const leftSeats = row.slice(0, 10);
+              const rightSeats = row.slice(10, 20);
+              return (
+                <div key={rowIndex} className={`seat-row ${rowIndex >= 6 ? 'yellow-border' : ''}`}>
+                  <div className="seat-row-left">
+                    {leftSeats.map((seat) => (
+                      <Seat
+                        key={seat}
+                        seat={seat}
+                        isBooked={bookedSeats.includes(seat)}
+                        isSelected={selectedSeats.includes(seat)}
+                        onSelect={() => onSelectSeat(seat)}
+                      />
+                    ))}
+                  </div>
+                  <div style={{ width: '50px' }} />
+                  <div className="seat-row-right">
+                    {rightSeats.map((seat) => (
+                      <Seat
+                        key={seat}
+                        seat={seat}
+                        isBooked={bookedSeats.includes(seat)}
+                        isSelected={selectedSeats.includes(seat)}
+                        onSelect={() => onSelectSeat(seat)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 
@@ -188,8 +240,8 @@ const SeatMap: React.FC = () => {
             </div>
           </div>
         </div>
-
       </div>
+    </div>
     </div>
   );
 };

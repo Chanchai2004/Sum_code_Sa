@@ -2,7 +2,7 @@ package controller
 
 import (
 	"net/http"
-
+	"time"
 	"github.com/gin-gonic/gin"
 	"github.com/tanapon395/sa-67-example/config"
 	"github.com/tanapon395/sa-67-example/entity"
@@ -173,4 +173,31 @@ func DeleteShowTimeByDetails(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "ShowTime deleted"})
+}
+
+func GetTimeByShowtime(c *gin.Context) { 
+	var showtime entity.ShowTimes
+	id := c.Param("id")
+
+	// Retrieve showtime by ID
+	if err := config.DB().Where("id = ?", id).First(&showtime).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Showtime not found"})
+		return
+	}
+
+	// Load the timezone location (e.g., "Asia/Bangkok")
+	location, err := time.LoadLocation("Asia/Bangkok")
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to load location"})
+		return
+	}
+
+	// Convert UTC time to the desired timezone (Asia/Bangkok)
+	showtimeLocal := showtime.Showdate.In(location)
+
+	// Format showdate to extract the time in hh:mm format
+	showtimeFormatted := showtimeLocal.Format("15:04")
+
+	// Return the formatted time
+	c.JSON(http.StatusOK, gin.H{"showtime": showtimeFormatted})
 }

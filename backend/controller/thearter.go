@@ -13,3 +13,19 @@ func ListTheaters(c *gin.Context) {
 	config.DB().Find(&theaters)
 	c.JSON(http.StatusOK, theaters)
 }
+
+func GetTheaterByID(c *gin.Context) {
+    var theater entity.Theater
+    theaterID := c.Param("id") // ดึงค่า TheaterID จาก URL param
+
+    // ค้นหาโรงหนังโดยใช้ TheaterID
+    if err := config.DB().Where("id = ?", theaterID).First(&theater).Error; err != nil {
+        c.JSON(http.StatusNotFound, gin.H{"error": "Theater not found"})
+        return
+    }
+
+    // ส่งชื่อโรงกลับไป
+    c.JSON(http.StatusOK, gin.H{
+        "theater_name": theater.TheaterName,
+    })
+}

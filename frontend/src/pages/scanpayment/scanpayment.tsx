@@ -22,9 +22,8 @@ import {
 } from "../../services/https/index";
 import styles from "./ScanPayment.module.css";
 
-// นำเข้า react-toastify
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+// นำเข้า Alert จาก Ant Design
+import { Alert } from 'antd';
 
 const ScanPayment: React.FC = () => {
   const navigate = useNavigate();
@@ -52,6 +51,9 @@ const ScanPayment: React.FC = () => {
   const [isCheckingSlip, setIsCheckingSlip] = useState<boolean>(false);
   const [checkResult, setCheckResult] = useState<boolean | null>(null);
   const [timeUpPopup, setTimeUpPopup] = useState(false);
+
+  // State สำหรับควบคุมการแสดงผล Alert
+  const [alert, setAlert] = useState<{ type: 'success' | 'error', message: string } | null>(null);
 
   useEffect(() => {
     if (showtimeID) {
@@ -136,8 +138,7 @@ const ScanPayment: React.FC = () => {
       }
     } catch (error) {
       console.error("Error updating status:", error);
-      // แทนที่ alert ด้วย toast
-      toast.error("เกิดข้อผิดพลาดในการอัปเดตสถานะ");
+      showAlert('error', "เกิดข้อผิดพลาดในการอัปเดตสถานะ");
     }
   };
 
@@ -167,16 +168,13 @@ const ScanPayment: React.FC = () => {
           "Booked"  // Ticket status set to "Booked"
         );
         setShowSuccessPopup(true);
-        // แสดง toast เมื่อสำเร็จ
-        toast.success("Payment Successful!");
+        showAlert('success', "Payment Successful!");
       } catch (error) {
         console.error("Error during saving payment:", error);
-        // แทนที่ alert ด้วย toast
-        toast.error("เกิดข้อผิดพลาดในการบันทึกการชำระเงิน โปรดลองใหม่อีกครั้ง");
+        showAlert('error', "เกิดข้อผิดพลาดในการบันทึกการชำระเงิน โปรดลองใหม่อีกครั้ง");
       }
     } else {
-      // แทนที่ alert ด้วย toast
-      toast.error("Slip ไม่ถูกต้อง กรุณาอัพโหลดสลิปใหม่");
+      showAlert('error', "Slip ไม่ถูกต้อง กรุณาอัพโหลดสลิปใหม่");
     }
 
     setIsCheckingSlip(false);
@@ -196,9 +194,12 @@ const ScanPayment: React.FC = () => {
     navigate("/ticket", { state: { ticketID, selectedSeats } });
   };
 
+  const showAlert = (type: 'success' | 'error', message: string) => {
+    setAlert({ type, message });
+  };
+
   return (
     <>
-      <Navbar />
       <div className={styles.container}>
         {/* Content ด้านบน */}
         <div className={styles.content}>
@@ -390,9 +391,20 @@ const ScanPayment: React.FC = () => {
             </div>
           </div>
         )}
+
+        {/* Alert for success or error messages */}
+        {alert && (
+          <div className={`${styles.alertWrapper} ${styles.alertPosition}`}>
+            <Alert
+              message={alert.message}
+              type={alert.type}
+              showIcon
+              closable
+              onClose={() => setAlert(null)}
+            />
+          </div>
+        )}
       </div>
-      {/* เพิ่ม ToastContainer เพื่อแสดง toast notifications */}
-      <ToastContainer />
     </>
   );
 };

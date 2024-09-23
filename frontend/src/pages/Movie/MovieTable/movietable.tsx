@@ -89,7 +89,7 @@ const MovieTable: React.FC = () => {
   return (
     <div className='movie'>
     <div className='app'>
-      <h1>เพิ่มข้อมูลหนัง</h1>
+    <h1 style={{ color: "#000" }}>เพิ่มข้อมูลหนัง</h1>
 
       {/* Create button navigates to the Create Movie page */}
       <Button type="primary" style={{ marginBottom: 16 }} onClick={handleCreateMovie}>

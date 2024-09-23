@@ -34,12 +34,12 @@ const Sidebar: React.FC = () => {
           </Link>
         </li>
         <li>
-          <Link to="/movie">
+          <Link to="/movies">
             <FontAwesomeIcon icon={faFilm} />
             <span>Movies</span>
           </Link>
         </li>
-        <li className="logout" onClick={handleLogout}> {/* เรียกใช้ handleLogout เมื่อคลิก */}
+        <li className="logout" onClick={handleLogout} > {/* เรียกใช้ handleLogout เมื่อคลิก */}
           <FontAwesomeIcon icon={faSignOutAlt} />
           <span>Log out</span>
         </li>

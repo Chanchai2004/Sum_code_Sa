@@ -1,40 +1,78 @@
-/*ใครหนอรักเราเท่าชีวี*/
-.ticket-container {
-  padding: 100px;
-  background-color: black;
-  display: flex;
-  flex-direction: column;
-  position: absolute; /* ขยาย container ให้เต็ม viewport */
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0
+.custom-ticket-title {
+  text-shadow: 
+    0 0 5px rgba(1, 1, 1, 0.8),
+    0 0 10px rgba(233, 201, 54, 0.6), 
+    0 0 20px rgba(255, 255, 255, 0.8), 
+    0 0 40px rgba(0, 0, 0, 0.7);
+  letter-spacing: 2px;
+  text-align: center;
+  font-weight: bold;
 }
 
+.ticket-table th, .ticket-table td {
+  text-align: center !important; /* บังคับให้ข้อความอยู่ตรงกลาง */
+  vertical-align: middle !important; /* จัดข้อความให้อยู่ตรงกลางแนวตั้ง */
+  word-wrap: break-word; /* ให้ข้อความยาวถูกตัดขึ้นบรรทัดใหม่ */
+  white-space: normal; /* ยอมให้ข้อความขึ้นบรรทัดใหม่ */
+}
+
+.ticket-container {
+  padding: 100px;
+  background: linear-gradient(to bottom, #000000, #11053e, rgb(22, 10, 10), #02073c); /* ไล่โทนสีจากดำไปเทา */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* ทำให้ container ยาวไปจนสุดจอ */
+  width: 100%; /* กำหนดความกว้างให้เต็มหน้าจอ */
+  position: relative;
+}
+
+
+.ticket-container h2 {
+  color: #ffcc00; /* เปลี่ยนเป็นสีทองเพื่อให้เข้ากับธีม */
+  font-size: 20px; /* เพิ่มขนาดตัวอักษร */
+  font-weight: bold;
+  margin-bottom: 20px; /* เพิ่มช่องว่างด้านล่าง */
+  margin-left: 125px; /* เพิ่มช่องว่างด้านล่าง */
+  text-align: center; /* จัดให้อยู่กลาง */
+  text-transform: uppercase; /* ทำให้เป็นตัวพิมพ์ใหญ่ทั้งหมด */
+  letter-spacing: 1.5px; /* เพิ่มระยะห่างระหว่างตัวอักษร */
+  background-color: #040607; /* เพิ่มพื้นหลังให้มีสีเดียวกับตาราง */
+  padding: 10px; /* เพิ่ม padding เพื่อให้มีพื้นที่ระหว่างข้อความกับขอบ */
+  border-radius: 10px; /* ทำให้ขอบมน */
+  display: inline-block; /* ทำให้วันที่อยู่ในบล็อกที่มีขนาดพอดี */
+}
+
+
 .ticket-title {
-  color: #ffcc00;
+  color: #faf9f5;
+  margin-top: 20px;
   margin-bottom: 20px;
-  font-size: 32px;
+  font-size: 31px;
   text-align: center;
 }
 
 .ticket-table {
   background-color: #001529;
   border-color: #ffcc00;
-  border-radius: 10px;
-  overflow: auto;
-  width: 100%; /* ให้ตารางแสดงเต็มความกว้าง */
+  border-radius: 10px 10px 10px 10px; /* เพิ่มขอบมนทั้งด้านบนและด้านล่าง */
+  width: 80%;
   max-width: 1300px;
-
   margin: 0 auto;
-  overflow-y: visible; /* แสดงตารางให้ครบ */
+  overflow: hidden; /* เพื่อไม่ให้มุมมนถูกรบกวน */
+}
 
+
+.ant-table-row:hover > td {
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  background-color: #dbe6eb !important;
+  color: rgb(5, 5, 93) !important;
+  transition: box-shadow 0.2s ease, background-color 0.2s ease;
+  font-weight: bold;
 }
 
 .ant-table-thead > tr > th {
   background-color: #001529 !important;
   color: white !important;
-  font-weight: bold;
   text-align: center;
 }
 
@@ -44,4 +82,23 @@
 
 .ant-table-row.row-dark {
   background-color: #e0e0e0;
+}
+
+.ant-btn-link {
+  color: #6651dd !important;
+  text-decoration: underline;
+}
+
+.ant-btn-link:hover {
+  color: rgb(241, 128, 128) !important;
+}
+
+.search-container {
+  display: flex;
+  justify-content: center; /* จัดให้อยู่ตรงกลาง */
+  margin-bottom: 20px;
+}
+
+.search-container input {
+  width: 300px; /* กำหนดความกว้างให้ใหญ่ขึ้น */
 }

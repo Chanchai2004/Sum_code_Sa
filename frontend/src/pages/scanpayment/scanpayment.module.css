@@ -1,316 +1,329 @@
 .container {
-    width: 1520px;
-    height: 100%; /* Full height of the screen */
-    background-color: #000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 80px; /* Adjust this based on your navbar height */
-    box-sizing: border-box;
-  }
-  
-  .content {
-    display: flex;
-    background-color: #ffc700;
-    padding: 20px;
-    border-radius: 20px;
-    width: 70%;
-    height: auto;
-    margin: 20px auto; /* เพิ่ม margin ให้ห่างจาก content อื่น */
-    box-sizing: border-box;
-    justify-content: space-between; /* จัดวาง content ให้ห่างกันในแนวนอน */
-  }
-  
-  .selectSeatContent {
-    display: flex;
-    justify-content: space-between; /* จัดวาง content ให้อยู่ห่างกันในแนวนอน */
-    align-items: center;
-    background-color: #ffc700;
-    padding: 20px;
-    padding-left: 200px; /* เพิ่ม padding ด้านซ้าย */
-    padding-right: 200px; /* เพิ่ม padding ด้านขวา */
-    border-radius: 20px;
-    width: 70%;
-    height: auto;
-    margin: 20px auto; /* เพิ่ม margin เพื่อเว้นขอบด้านบนและล่าง */
-    box-sizing: border-box;
-  }
-  
-  .innerContent {
-    display: flex;
-    justify-content: flex-start; /* Align items to the start (left) */
-    align-items: center; /* Align items center vertically */
-    width: 100%;
-  }
-  
-  .poster {
-    width: 250px;
-    height: auto;
-    margin-right: 20px;
-    border-radius: 10px;
-    padding-left: 20%;
-  }
-  
-  .details {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    color: #000;
-    width: 100%;
-    padding-left: 20%;
-  }
-  
-  .title {
-    font-size: 30px;
-    font-weight: bold;
-    padding-top: 5%;
-  }
-  
-  .info {
-    font-size: 20px;
-    font-weight: bold;
-  }
-  
-  .languages {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .icon {
-    width: 25px; /* Adjust size as needed */
-    margin-right: 8px;
-    vertical-align: middle;
-  }
-  
-  .item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .label {
-    font-size: 20px;
-    color: #000;
-    margin-bottom: 10px;
-    text-align: center; /* จัดข้อความให้อยู่ตรงกลาง */
-  }
-  
-  .text {
-    font-size: 24px;
-    font-weight: bold;
-    color: #000;
-  }
-  
-  .paymentContent {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #ffc700;
-    padding: 30px;
-    border-radius: 20px;
-    width: 70%;
-    height: auto;
-    margin: 20px auto; /* เพิ่ม margin เพื่อเว้นขอบด้านบนและล่าง */
-    box-sizing: border-box;
-    position: relative;
-  }
-  
-  .paymentSection {
-    display: flex;
-    flex-direction: column; /* Stack elements vertically */
-    align-items: center;
-    width: 100%;
-    position: relative;
-  }
-  
-  .bgqrCode {
-    width: 350px;
-    height: auto;
-    border-radius: 10px;
-    margin-top: 70px; /* ลดระยะห่างด้านบน */
-    margin-bottom: -50px; /* ลดระยะห่างด้านล่าง */
-  }
-  
-  .timeLeft {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    padding: 5px 10px;
-    border-radius: 10px;
-    background-color: #ffc700;
-    border: 2px solid #000; /* Add border to the timer */
-    color: #000;
-    font-weight: bold;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .timer {
-    font-size: 30px;
-    font-weight: bold;
-    margin-top: -10px;
-  }
-  
-  .buttonGroup {
-    display: flex;
-    gap: 10px; /* ลดระยะห่างระหว่างปุ่ม */
-    margin-top: -20px; /* ลดระยะห่างจาก QR Code */
-  }
-  
-  .button {
-    background-color: #007bff;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-align: center;
-    display: inline-block;
-    margin-bottom: 10px;
-    min-width: 120px; /* กำหนดขนาดขั้นต่ำของปุ่ม */
-  }
-  
-  .cancelButton {
-    background-color: #fff;
-    color: #000;
-  }
-  
-  .fileInput {
-    display: none; /* ซ่อน input ไฟล์ */
-  }
-  
-  .screenshotContainer {
-    display: flex;
-    justify-content: center;
-    margin-top: 10px; /* เพิ่มระยะห่างจากปุ่ม Confirm */
-  }
-  
-  .screenshot {
-    width: 300px;
-    height: auto;
-    border-radius: 10px;
-  }
-  
-  .paymentButtonWrapper {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px; /* เพิ่มระยะห่างระหว่างสลิปและปุ่ม Confirm */
-  }
-  
-  .qrCodeContent {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #ffc700;
-    padding: 30px;
-    border-radius: 20px;
-    width: 70%;
-    height: auto;
-    margin: 20px auto;
-    box-sizing: border-box;
-    position: relative;
-  }
-  
-  .qrCodeOverlay {
-    position: absolute;
-    top: -180px; /* ปรับตามที่ต้องการ */
-    left: 50%; /* ปรับตามที่ต้องการ */
-    transform: translate(-50%, -50%); /* เพื่อให้ QR Code อยู่ตรงกลางภาพ */
-    width: 220px;
-    height: auto;
-  }
-  
-  .popupOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .popup {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-  }
-  
-  .popupMessage {
-    font-size: 20px;
-    margin-bottom: 20px;
-  }
-  
-  .popupButton {
-    background-color: #007bff;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .rewardPopupOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .rewardPopup {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-  }
-  
-  .rewardPopupMessage {
-    font-size: 20px;
-    margin-bottom: 20px;
-  }
-  
-  .rewardPopupButton {
-    background-color: #007bff;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
+  width: 1520px;
+  height: 100%; /* Full height of the screen */
+  background-color: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 80px; /* Adjust this based on your navbar height */
+  box-sizing: border-box;
+}
 
-  /* ScanPayment.module.css */
+.content {
+  display: flex;
+  background-color: #ffc700;
+  padding: 20px;
+  border-radius: 20px;
+  width: 70%;
+  height: auto;
+  margin: 20px auto; /* เพิ่ม margin ให้ห่างจาก content อื่น */
+  box-sizing: border-box;
+  justify-content: space-between; /* จัดวาง content ให้ห่างกันในแนวนอน */
+}
+
+.selectSeatContent {
+  display: flex;
+  justify-content: space-between; /* จัดวาง content ให้อยู่ห่างกันในแนวนอน */
+  align-items: center;
+  background-color: #ffc700;
+  padding: 20px;
+  padding-left: 200px; /* เพิ่ม padding ด้านซ้าย */
+  padding-right: 200px; /* เพิ่ม padding ด้านขวา */
+  border-radius: 20px;
+  width: 70%;
+  height: auto;
+  margin: 20px auto; /* เพิ่ม margin เพื่อเว้นขอบด้านบนและล่าง */
+  box-sizing: border-box;
+}
+
+.innerContent {
+  display: flex;
+  justify-content: flex-start; /* Align items to the start (left) */
+  align-items: center; /* Align items center vertically */
+  width: 100%;
+}
+
+.poster {
+  width: 250px;
+  height: auto;
+  margin-right: 20px;
+  border-radius: 10px;
+  padding-left: 20%;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #000;
+  width: 100%;
+  padding-left: 20%;
+}
+
+.title {
+  font-size: 30px;
+  font-weight: bold;
+  padding-top: 5%;
+}
+
+.info {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.languages {
+  display: flex;
+  gap: 10px;
+}
+
+.icon {
+  width: 25px; /* Adjust size as needed */
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.label {
+  font-size: 20px;
+  color: #000;
+  margin-bottom: 10px;
+  text-align: center; /* จัดข้อความให้อยู่ตรงกลาง */
+}
+
+.text {
+  font-size: 24px;
+  font-weight: bold;
+  color: #000;
+}
+
+.paymentContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ffc700;
+  padding: 30px;
+  border-radius: 20px;
+  width: 70%;
+  height: auto;
+  margin: 20px auto; /* เพิ่ม margin เพื่อเว้นขอบด้านบนและล่าง */
+  box-sizing: border-box;
+  position: relative;
+}
+
+.paymentSection {
+  display: flex;
+  flex-direction: column; /* Stack elements vertically */
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+
+.bgqrCode {
+  width: 350px;
+  height: auto;
+  border-radius: 10px;
+  margin-top: 70px; /* ลดระยะห่างด้านบน */
+  margin-bottom: -50px; /* ลดระยะห่างด้านล่าง */
+}
+
+.timeLeft {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  border-radius: 10px;
+  background-color: #ffc700;
+  border: 2px solid #000; /* Add border to the timer */
+  color: #000;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.timer {
+  font-size: 30px;
+  font-weight: bold;
+  margin-top: -10px;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 10px; /* ลดระยะห่างระหว่างปุ่ม */
+  margin-top: -20px; /* ลดระยะห่างจาก QR Code */
+}
+
+.button {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  display: inline-block;
+  margin-bottom: 10px;
+  min-width: 120px; /* กำหนดขนาดขั้นต่ำของปุ่ม */
+}
+
+.cancelButton {
+  background-color: #fff;
+  color: #000;
+}
+
+.fileInput {
+  display: none; /* ซ่อน input ไฟล์ */
+}
+
+.screenshotContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px; /* เพิ่มระยะห่างจากปุ่ม Confirm */
+}
+
+.screenshot {
+  width: 300px;
+  height: auto;
+  border-radius: 10px;
+}
+
+.paymentButtonWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px; /* เพิ่มระยะห่างระหว่างสลิปและปุ่ม Confirm */
+}
+
+.qrCodeContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ffc700;
+  padding: 30px;
+  border-radius: 20px;
+  width: 70%;
+  height: auto;
+  margin: 20px auto;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.qrCodeOverlay {
+  position: absolute;
+  top: -180px; /* ปรับตามที่ต้องการ */
+  left: 50%; /* ปรับตามที่ต้องการ */
+  transform: translate(-50%, -50%); /* เพื่อให้ QR Code อยู่ตรงกลางภาพ */
+  width: 220px;
+  height: auto;
+}
+
+.popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.popupMessage {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.popupButton {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.rewardPopupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rewardPopup {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.rewardPopupMessage {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.rewardPopupButton {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* ScanPayment.module.css */
 .confirmationOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  
-  .confirmationBox {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-  }
-  
-  .confirmationButtons {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 20px;
-  }
-  
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.confirmationBox {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.confirmationButtons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+/* CSS สำหรับการวางตำแหน่ง Alert */
+.alertWrapper {
+position: fixed;
+z-index: 1000;
+width: 100%;
+display: flex;
+justify-content: center;
+top: 20px; /* กำหนดตำแหน่งจากขอบบน */
+}
+
+.alertPosition {
+width: 50%; /* สามารถปรับขนาดความกว้างของ Alert */
+}

@@ -32,7 +32,6 @@ const SeatBooking: React.FC = () => {
 
   return (
     <div style={{ backgroundColor: 'black', padding: '0 20px' }}>
-      <Navbar />
       {/* ส่ง key ไปที่ SeatMap เพื่อบังคับให้ component ทำการรีเฟรชใหม่ */}
       <SeatMap key={refreshKey} />
     </div>

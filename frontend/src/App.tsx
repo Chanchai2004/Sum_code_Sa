@@ -20,6 +20,8 @@ import Table from './pages/ticketstatus/ticketstatus';
 import QrScanner from './pages/Qrscanner/QrScanner';
 import Signup from './pages/Signup/signup';
 import CheckCodeReward from './pages/Checkcodereward/checkcode';
+import MovieTable from './pages/Movie/MovieTable/movietable';
+import MovieEdit from './pages/Movie/MovieEdit/movieedit';
 
 
 const App: React.FC = () => {
@@ -65,7 +67,9 @@ const App: React.FC = () => {
                     <Route path="/login" element={<Login />} />
                     
                     {/* เส้นทางสำหรับผู้ใช้ Admin */}
-                    <Route path="/movie" element={isLoggedIn && isAdmin ? <Movie /> : <Navigate to="/login" />} />
+                    <Route path="/movie" element={isLoggedIn && isAdmin ? <MovieTable /> : <Navigate to="/login" />} />
+                    <Route path="/movies/edit" element={isLoggedIn && isAdmin ? <MovieEdit /> : <Navigate to="/login" />} />
+                    <Route path="/movies/create" element={isLoggedIn && isAdmin ? <Movie /> : <Navigate to="/login" />} />
                     <Route path="/showtimes" element={isLoggedIn && isAdmin ? <ShowtimeManagement /> : <Navigate to="/login" />} />
                     <Route path="/members" element={isLoggedIn && isAdmin ? <Members /> : <Navigate to="/login" />} />
                     <Route path="/analytics" element={isLoggedIn && isAdmin ? <Analytics /> : <Navigate to="/login" />} />

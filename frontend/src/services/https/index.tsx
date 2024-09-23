@@ -190,22 +190,20 @@ async function CreateMovie(formData: FormData) {
 }
 
 // ฟังก์ชันเพื่ออัปเดตข้อมูลหนัง
-async function UpdateMovie(data: MoviesInterface) {
+async function UpdateMovie(movieId: number, formData: FormData) {
   const requestOptions = {
     method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+    body: formData,  // ส่ง formData โดยตรง ไม่ต้องใช้ JSON.stringify
   };
 
-  let res = await fetch(`${apiUrl}/movies/${data.ID}`, requestOptions).then(
-    (res) => {
+  let res = await fetch(`${apiUrl}/movies/${movieId}`, requestOptions)
+    .then((res) => {
       if (res.status === 200) {
         return res.json();
       } else {
-        return false;
+        throw new Error("Failed to update movie");
       }
-    }
-  );
+    });
 
   return res;
 }
@@ -932,10 +930,69 @@ export const saveSlipAndUpdateStatus = async (
   return result;
 };
 
+async function GetTheaterById(id: number | undefined) {
+  if (!id || isNaN(Number(id))) {
+    console.error("Invalid Theater ID");
+    return false;
+  }
+
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  try {
+    const res = await fetch(`${apiUrl}/theater/${id}`, requestOptions);
+
+    if (res.status === 200) {
+      return res.json();
+    } else if (res.status === 404) {
+      console.error("Theater not found");
+      return false;
+    } else {
+      console.error(`Failed to fetch theater, status code: ${res.status}`);
+      return false;
+    }
+  } catch (error) {
+    console.error("Error fetching theater by ID:", error);
+    return false;
+  }
+}
+
+async function GetTimeByShowtime(showtimeID: number): Promise<string | false> { 
+  try {
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    const response = await fetch(`${apiUrl}/showtimes/${showtimeID}/time`, requestOptions);
+
+    if (!response.ok) {
+      console.error(`Error: Received status code ${response.status}`);
+      return false;
+    }
+
+    const data = await response.json();
+
+    // แก้จาก data.time เป็น data.showtime
+    return data.showtime;  // คืนค่าเวลาในรูปแบบ "hh:mm"
+  } catch (error) {
+    console.error("Error fetching showtime time:", error);
+    return false;
+  }
+}
+
 
 export {
   GetTicketById,
   GetMembers,
+  GetTheaterById,
+  GetTimeByShowtime,
   CreateMember,
   DeleteMemberByID,
   GetMemberById,

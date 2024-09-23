@@ -42,4 +42,13 @@
   overflow-y: hidden;
 }
 
-
+.ticketstatus h3 {
+  font-size: 1.5rem; /* ขนาดตัวอักษร */
+  font-weight: bold; /* น้ำหนักตัวอักษร */
+  color: #333; /* สีตัวอักษร */
+  margin: 20px 0; /* ระยะห่างบนและล่าง */
+  text-align: left; /* จัดแนวซ้าย */
+  border-bottom: 2px solid #e0e0e0; /* เส้นขอบใต้ */
+  padding-bottom: 10px; /* ระยะห่างด้านล่าง */
+  background-color: #f9f9f9; /* พื้นหลัง */
+}
