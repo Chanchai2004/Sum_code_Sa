@@ -405,6 +405,7 @@ function Member() {
                 <Select>
                   <Option value="user">User</Option>
                   <Option value="admin">Admin</Option>
+                  <Option value="staff">Staff</Option>
                 </Select>
               </Form.Item>
             </Form>

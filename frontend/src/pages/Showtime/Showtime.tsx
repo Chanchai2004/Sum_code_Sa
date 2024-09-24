@@ -604,7 +604,7 @@ const ShowtimeManagement: React.FC = () => {
     </Select>
   </div>
   <div className="header-item">
-    <label>Theater:</label>
+    <label style={{ color: 'black' }} >Theater:</label>
     <Select
       value={selectedTheaterID}
       showSearch
