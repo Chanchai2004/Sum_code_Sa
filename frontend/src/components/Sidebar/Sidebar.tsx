@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTachometerAlt, faTag, faUser, faClock, faFilm, faChartBar, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faClock, faFilm, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import './Sidebar.css';
 
 const Sidebar: React.FC = () => {

@@ -12,29 +12,6 @@ interface CardShowPosterProps {
   movieID: string;
 }
 
-const getButtonColor = (movieType: string): string => {
-  switch (movieType) {
-    case 'Action':
-      return 'danger';
-    case 'Drama':
-      return 'secondary';
-    case 'Comedy':
-      return 'success';
-    case 'Horror':
-      return 'dark';
-    case 'Sci-Fi':
-      return 'info';
-    case 'Romantic':
-      return 'pink';
-    case 'Thriller':
-      return 'warning';
-    case 'War':
-      return 'primary';
-    default:
-      return 'light';
-  }
-};
-
 const CardShowPoster: React.FC<CardShowPosterProps> = ({ movieID }) => {
   const navigate = useNavigate(); // move it inside the component
   const posterUrl = `http://localhost:8000/api/movie/${movieID}/poster`;
@@ -68,6 +45,7 @@ const CardShowPoster: React.FC<CardShowPosterProps> = ({ movieID }) => {
   return (
     <>
       {/* Card for displaying movie poster */}
+      
       <Card className="text-center card-custom" onClick={showModal} cover={
         <img
           src={posterUrl}
@@ -75,8 +53,11 @@ const CardShowPoster: React.FC<CardShowPosterProps> = ({ movieID }) => {
           className="poster-img"
         />
       }>
-        <Card.Meta title={movie?.MovieName || "Loading..."} />
+      
+      <Card.Meta title={<span style={{ color: 'white' }}>{movie?.MovieName || "Loading..."}</span>} />
+
       </Card>
+      
 
       {/* Modal for displaying movie details */}
       {movie && (
@@ -137,8 +118,9 @@ const CardShowPoster: React.FC<CardShowPosterProps> = ({ movieID }) => {
                       }}
                       block
                       size="large"
+                      style={{ backgroundColor: "#ffcc00", borderColor: "#ffcc00", color: "black" }}  // Change button color to yellow
                     >
-                      จองตั๋ว
+                      Booking
                     </Button>
                   </div>
                 </div>

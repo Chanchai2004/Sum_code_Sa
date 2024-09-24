@@ -18,10 +18,9 @@
 }
 /* สำหรับการ์ดแต่ละใบ */
  .movielist  .card-custom {
-  background-color: #ffffff; /* พื้นหลังการ์ดสีขาว */
-  border: 1px solid #cccccc; /* ขอบการ์ดสีเทาอ่อน */
-  border-radius: 10px; /* ขอบโค้งมน */
   
+  border: 0px solid #cccccc; /* ขอบการ์ดสีเทาอ่อน */
+  border-radius: 10px; /* ขอบโค้งมน */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* เงาอ่อน */
 }

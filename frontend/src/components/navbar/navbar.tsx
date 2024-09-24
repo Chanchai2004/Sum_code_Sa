@@ -43,7 +43,6 @@ const Navbar: React.FC = () => {
   <div className={styles.menu}>
     <span className={styles.link} onClick={() => navigate('/home')}>Home</span>
     <span className={styles.link} onClick={() => navigate('/myticket')}>MyTicket</span>
-    <span className={styles.link} onClick={() => navigate('/news')}>MERJE news</span>
     <span className={styles.link} onClick={() => navigate('/reward')}>Reward</span>
     <Button type="primary" className={styles.button} onClick={handleLoginClick}>
       {isLoggedIn ? 'Logout' : 'Login'}

@@ -15,11 +15,12 @@ import "./MovieBooking.css";
 import { GetShowtimes, GetMovieById } from "../../services/https/index"; // Import API calls
 import { MoviesInterface } from "../../interfaces/IMovie"; // Import movie interface
 import Navbar from "../../components/navbar/navbar";
+
 const PrevArrow = (props: any) => {
   const { onClick } = props;
   return (
-    <div className="slick-prev-arrow" onClick={onClick}>
-      {"<"}
+    <div className="slick-prev-arrow" onClick={onClick} style={{ color: 'white' }}>
+      {'<'}
     </div>
   );
 };
@@ -27,8 +28,8 @@ const PrevArrow = (props: any) => {
 const NextArrow = (props: any) => {
   const { onClick } = props;
   return (
-    <div className="slick-next-arrow" onClick={onClick}>
-      {">"}
+    <div className="slick-next-arrow" onClick={onClick} style={{ color: 'white' }}>
+      {'>'}
     </div>
   );
 };
@@ -248,14 +249,15 @@ const MovieBooking: React.FC = () => {
                       disabled={isPastTime} // ปิดการใช้งานปุ่มถ้าเวลารอบนั้นผ่านไปแล้ว
                       style={{
                         marginLeft: "10px",
-                        backgroundColor: time === selectedTime ? "#FFD700" : "",
+                        backgroundColor: time === selectedTime ? "#05234d" : "",
+                    
                       }} // ระยะห่างทางซ้าย
                       onMouseEnter={(e) =>
-                        (e.currentTarget.style.backgroundColor = "#FFD700")
+                        (e.currentTarget.style.backgroundColor = "#05234d")
                       } // เมื่อ hover เป็นสีเหลือง
                       onMouseLeave={(e) =>
                         (e.currentTarget.style.backgroundColor =
-                          time === selectedTime ? "#FFD700" : "")
+                          time === selectedTime ? "#05234d" : "")
                       } // คืนค่ากลับเมื่อ hover ออก
                     >
                       {time}

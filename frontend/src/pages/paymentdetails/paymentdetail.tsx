@@ -207,33 +207,36 @@ const PaymentDetail: React.FC = () => {
         {/* Content ด้านบน */}
         <div className={styles.content}>
           <img
-            src={moviePoster || Poster} // Use the fallback Poster image if moviePoster is null
+            src={moviePoster || Poster}
             alt="Movie Poster"
             className={styles.poster}
           />
           <div className={styles.details}>
             <h1 className={styles.title}>{movieName}</h1>
-            <div className={`${styles.info} ${styles.dateInfo}`}>
-              <img src={IconDate} alt="date" className={styles.icon} />{" "}
-              {showDate}
-            </div>
-            <div className={`${styles.info} ${styles.timeInfo}`}>
-              <img src={Icontime} alt="time" className={styles.icon} />{" "}
-              {showTime}
-            </div>
-            <div className={`${styles.info} ${styles.locationInfo}`}>
-              <img src={Iconlo} alt="location" className={styles.icon} /> The
-              Mall Korat
-            </div>
-            <div className={`${styles.info} ${styles.theaterInfo}`}>
-              <h2>Theater {theaterID}</h2>
-            </div>
-            <div className={styles.languagesInfo}>
-              <div className={styles.info}>
-                <img src={Iconsound} alt="sound" className={styles.icon} /> TH
+            <div className={styles.infoGroup}>
+              <div className={styles.infoItem}>
+                <img src={IconDate} alt="date" className={styles.icon} />{" "}
+                <span>{showDate}</span>
               </div>
-              <div className={styles.info}>
-                <img src={Iconsub} alt="subtitle" className={styles.icon} /> ENG
+              <div className={styles.infoItem}>
+                <img src={Icontime} alt="time" className={styles.icon} />{" "}
+                <span>{showTime}</span>
+              </div>
+              <div className={styles.infoItem}>
+                <img src={Iconlo} alt="location" className={styles.icon} />{" "}
+                <span>The Mall Korat</span>
+              </div>
+              <div className={styles.infoItem}>
+                <h2>Theater {theaterID}</h2>
+              </div>
+              <div className={styles.languagesInfo}>
+                <div className={styles.info}>
+                  <img src={Iconsound} alt="sound" className={styles.icon} /> TH
+                </div>
+                <div className={styles.info}>
+                  <img src={Iconsub} alt="subtitle" className={styles.icon} />{" "}
+                  ENG
+                </div>
               </div>
             </div>
           </div>

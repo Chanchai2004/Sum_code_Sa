@@ -18,7 +18,7 @@ body {
     width: 100%; /* ขยาย wrapper เต็มความกว้าง */
     box-sizing: border-box; /* รวม padding และ border ในขนาด */
     margin-top: 60px;
-    margin-left: -50px; /* เลื่อนไปทางซ้าย 50px */
+    margin-left: 0px; /* เลื่อนไปทางซ้าย 50px */
 }
 
 .wrapperopern .page-title {

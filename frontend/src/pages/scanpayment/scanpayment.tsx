@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import Navbar from "../../components/navbar/navbar.tsx";
 import Poster from "../../assets/poster.jpg";
 import IconDate from "../../assets/icondate.png";
 import Icontime from "../../assets/icontime.png";
@@ -12,6 +11,9 @@ import Iconchair from "../../assets/iconchair.png";
 import BGPromptPay from "../../assets/bg-qrcode.jpg";
 import PromptPayQRCode from "../../components/promptpayqrcode/promptpayqrcode.tsx";
 import CheckSlip from "../../components/checkslip/checkslip";
+import Success from "../../assets/success.png";
+import Unsuccess from "../../assets/unsuccess.png";
+
 import {
   GetShowtimeById,
   GetMovieById,
@@ -23,7 +25,7 @@ import {
 import styles from "./ScanPayment.module.css";
 
 // นำเข้า Alert จาก Ant Design
-import { Alert } from 'antd';
+import { Alert } from "antd";
 
 const ScanPayment: React.FC = () => {
   const navigate = useNavigate();
@@ -43,7 +45,7 @@ const ScanPayment: React.FC = () => {
   const [moviePoster, setMoviePoster] = useState<string | null>(null);
   const [totalPrice, setTotalPrice] = useState<number | null>(null);
 
-  const [timeLeft, setTimeLeft] = useState(600); // Time countdown in seconds
+  const [timeLeft, setTimeLeft] = useState(300); // Time countdown in seconds
   const [files, setFiles] = useState<File | null>(null);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [showButtons, setShowButtons] = useState(false);
@@ -53,7 +55,10 @@ const ScanPayment: React.FC = () => {
   const [timeUpPopup, setTimeUpPopup] = useState(false);
 
   // State สำหรับควบคุมการแสดงผล Alert
-  const [alert, setAlert] = useState<{ type: 'success' | 'error', message: string } | null>(null);
+  const [alert, setAlert] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
 
   useEffect(() => {
     if (showtimeID) {
@@ -138,7 +143,7 @@ const ScanPayment: React.FC = () => {
       }
     } catch (error) {
       console.error("Error updating status:", error);
-      showAlert('error', "เกิดข้อผิดพลาดในการอัปเดตสถานะ");
+      showAlert("error", "เกิดข้อผิดพลาดในการอัปเดตสถานะ");
     }
   };
 
@@ -164,17 +169,20 @@ const ScanPayment: React.FC = () => {
         const saveResult = await saveSlipAndUpdateStatus(
           ticketID,
           files,
-          "Paid",   // Payment status
-          "Booked"  // Ticket status set to "Booked"
+          "Paid", // Payment status
+          "Booked" // Ticket status set to "Booked"
         );
         setShowSuccessPopup(true);
-        showAlert('success', "Payment Successful!");
+        showAlert("success", "Payment Successful!");
       } catch (error) {
         console.error("Error during saving payment:", error);
-        showAlert('error', "เกิดข้อผิดพลาดในการบันทึกการชำระเงิน โปรดลองใหม่อีกครั้ง");
+        showAlert(
+          "error",
+          "เกิดข้อผิดพลาดในการบันทึกการชำระเงิน โปรดลองใหม่อีกครั้ง"
+        );
       }
     } else {
-      showAlert('error', "Slip ไม่ถูกต้อง กรุณาอัพโหลดสลิปใหม่");
+      showAlert("error", "Slip ไม่ถูกต้อง กรุณาอัพโหลดสลิปใหม่");
     }
 
     setIsCheckingSlip(false);
@@ -194,7 +202,7 @@ const ScanPayment: React.FC = () => {
     navigate("/ticket", { state: { ticketID, selectedSeats } });
   };
 
-  const showAlert = (type: 'success' | 'error', message: string) => {
+  const showAlert = (type: "success" | "error", message: string) => {
     setAlert({ type, message });
   };
 
@@ -203,35 +211,37 @@ const ScanPayment: React.FC = () => {
       <div className={styles.container}>
         {/* Content ด้านบน */}
         <div className={styles.content}>
-        <img
-            src={moviePoster || Poster} // Use the fallback Poster image if moviePoster is null
+          <img
+            src={moviePoster || Poster}
             alt="Movie Poster"
             className={styles.poster}
           />
           <div className={styles.details}>
             <h1 className={styles.title}>{movieName}</h1>
-            <div className={styles.info}>
-              <p>
+            <div className={styles.infoGroup}>
+              <div className={styles.infoItem}>
                 <img src={IconDate} alt="date" className={styles.icon} />{" "}
-                {showDate || "Loading..."}
-              </p>
-              <p>
+                <span>{showDate}</span>
+              </div>
+              <div className={styles.infoItem}>
                 <img src={Icontime} alt="time" className={styles.icon} />{" "}
-                {showTime || "Loading..."}
-              </p>
-              <p>
+                <span>{showTime}</span>
+              </div>
+              <div className={styles.infoItem}>
                 <img src={Iconlo} alt="location" className={styles.icon} />{" "}
-                Merje Cineplex
-              </p>
-              <h2>Theater {theaterID} </h2>
-              <div className={styles.languages}>
-                <p>
-                  <img src={Iconsound} alt="sound" className={styles.icon} /> TH{" "}
-                </p>
-                <p>
+                <span>The Mall Korat</span>
+              </div>
+              <div className={styles.infoItem}>
+                <h2>Theater {theaterID}</h2>
+              </div>
+              <div className={styles.languagesInfo}>
+                <div className={styles.info}>
+                  <img src={Iconsound} alt="sound" className={styles.icon} /> TH
+                </div>
+                <div className={styles.info}>
                   <img src={Iconsub} alt="subtitle" className={styles.icon} />{" "}
-                  ENG{" "}
-                </p>
+                  ENG
+                </div>
               </div>
             </div>
           </div>
@@ -286,6 +296,12 @@ const ScanPayment: React.FC = () => {
 
           {/* Content สำหรับการอัปโหลดสลิปและการยกเลิก */}
           <div className={styles.buttonGroup}>
+            <button
+              className={`${styles.button} ${styles.cancelButton}`}
+              onClick={handleCancelClick}
+            >
+              Cancel
+            </button>
             <label htmlFor="file-upload" className={styles.button}>
               Upload Slip
             </label>
@@ -296,12 +312,6 @@ const ScanPayment: React.FC = () => {
               onChange={handleFile}
               className={styles.fileInput}
             />
-            <button
-              className={`${styles.button} ${styles.cancelButton}`}
-              onClick={handleCancelClick}
-            >
-              Cancel
-            </button>
           </div>
 
           {/* การยืนยันการยกเลิก */}
@@ -317,7 +327,7 @@ const ScanPayment: React.FC = () => {
                     ใช่
                   </button>
                   <button
-                    className={styles.button}
+                    className={`${styles.button} ${styles.cancelButton}`}
                     onClick={handleCloseCancelConfirmation}
                   >
                     ยกเลิก
@@ -341,7 +351,7 @@ const ScanPayment: React.FC = () => {
           {/* Confirm and Reset Buttons */}
           {showButtons && (
             <div className={styles.paymentButtonWrapper}>
-              <button className={styles.button} onClick={handleReset}>
+              <button className={`${styles.button} ${styles.cancelButton}`} onClick={handleReset}>
                 Reset
               </button>
               <button className={styles.button} onClick={handleSubmit}>
@@ -364,6 +374,11 @@ const ScanPayment: React.FC = () => {
         {showSuccessPopup && (
           <div className={styles.rewardPopupOverlay}>
             <div className={styles.rewardPopup}>
+              <img
+                src={Success} // เปลี่ยน yourImagePath เป็น path ของรูปภาพที่ต้องการใช้
+                alt="Success"
+                className={styles.popupImage} // คุณสามารถกำหนดสไตล์ให้กับรูปภาพได้
+              />
               <p className={styles.rewardPopupMessage}>Payment Successful!</p>
               <button
                 className={styles.rewardPopupButton}
@@ -379,6 +394,11 @@ const ScanPayment: React.FC = () => {
         {timeUpPopup && (
           <div className={styles.rewardPopupOverlay}>
             <div className={styles.rewardPopup}>
+              <img
+                src={Unsuccess} // เปลี่ยน yourImagePath เป็น path ของรูปภาพที่ต้องการใช้
+                alt="Time Up"
+                className={styles.popupImage} // คุณสามารถกำหนดสไตล์ให้กับรูปภาพได้
+              />
               <p className={styles.rewardPopupMessage}>
                 หมดเวลาในการชำระเงิน กรุณาทำรายการจองใหม่อีกครั้ง
               </p>

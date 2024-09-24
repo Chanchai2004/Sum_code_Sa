@@ -72,7 +72,7 @@ const Movie: React.FC = () => {
         message.success("Movie added successfully!");
       } else {
         message.error("Failed to add movie!");
-        console.error("Error uploading movie:", response.message);
+        console.error("Failed to add movie!", response.message);
       }
     } catch (error) {
       console.error("Error uploading movie:", error);
