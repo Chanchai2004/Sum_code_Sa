@@ -563,7 +563,7 @@ const ShowtimeManagement: React.FC = () => {
   
 </Card>
   <div className="header-item">
-    <label>Date:</label>
+    <label style={{ color: 'black' }}>Date:</label>
     <DatePicker 
       value={selectedDate} 
       onChange={handleDateChange} 
@@ -571,7 +571,7 @@ const ShowtimeManagement: React.FC = () => {
     />
   </div>
   <div className="header-item">
-    <label>Time:</label>
+    <label style={{ color: 'black' }}>Time:</label>
     <TimePicker
       value={selectedTime}
       format="HH:mm"
@@ -582,7 +582,7 @@ const ShowtimeManagement: React.FC = () => {
     />
   </div>
   <div className="header-item">
-    <label>Movie:</label>
+    <label style={{ color: 'black' }}>Movie:</label>
     <Select
       value={selectedMovieID}
       showSearch

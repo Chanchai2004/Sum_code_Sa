@@ -78,7 +78,7 @@ const Login: React.FC = () => {
                     requiredMark={false}
                 >
                     <Form.Item
-                        label={<span className="login-label">Username</span>}
+                        label={<span className="login-label">Email</span>}
                         name="username"
                         rules={[{ required: true, message: 'Please enter your username' }]}
                     >

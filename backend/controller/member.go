@@ -3,7 +3,7 @@ package controller
 import (
 	"net/http"
 	"fmt"
-	// "strconv"
+	"strconv"
 	"time"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -64,11 +64,41 @@ func Signin(c *gin.Context) {
 	})
 }
 
+func CheckAdminPassword(c *gin.Context) {
+	var input struct {
+		AdminID  uint   `json:"id"`  // รับ adminID มาด้วย โดยใช้ json key "id"
+		Password string `json:"password"`
+	}
+
+	// ตรวจสอบว่า request body ถูกต้องหรือไม่
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		return
+	}
+
+	var admin entity.Member
+	db := config.DB()
+
+	// ค้นหา admin ในฐานข้อมูลตาม adminID ที่ส่งมา
+	if err := db.Where("id = ? AND role = ?", input.AdminID, "admin").First(&admin).Error; err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Admin not found"})
+		return
+	}
+
+	// ใช้ฟังก์ชันจาก config เพื่อตรวจสอบรหัสผ่าน
+	if config.CheckPasswordHash([]byte(input.Password), []byte(admin.Password)) {
+		c.JSON(http.StatusOK, gin.H{"success": true})
+	} else {
+		c.JSON(http.StatusUnauthorized, gin.H{"success": false, "error": "Invalid password"})
+	}
+}
+
 
 // POST /Member
 func CreateMember(c *gin.Context) {
 	var member entity.Member
 
+	// ตรวจสอบข้อมูลที่ส่งมาว่ามีรูปแบบถูกต้องหรือไม่
 	if err := c.ShouldBindJSON(&member); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -76,23 +106,42 @@ func CreateMember(c *gin.Context) {
 
 	db := config.DB()
 
-	hashedPassword, _ := config.HashPassword(member.Password)
-
-	u := entity.Member{
-		UserName: member.UserName,
-		FirstName:  member.FirstName,
-		LastName:   member.LastName,
-		Email:      member.Email,
-		Password:   hashedPassword,
-		TotalPoint: member.TotalPoint,
-		Role:      "user",
+	// ตรวจสอบว่ามี username นี้ในฐานข้อมูลแล้วหรือไม่
+	var existingMember entity.Member
+	if err := db.Where("user_name = ?", member.UserName).First(&existingMember).Error; err == nil {
+		// ถ้าเจอ username ซ้ำ
+		c.JSON(http.StatusConflict, gin.H{"error": "Username already exists"})
+		return
 	}
 
+	// ตรวจสอบว่ามี email นี้ในฐานข้อมูลแล้วหรือไม่
+	if err := db.Where("email = ?", member.Email).First(&existingMember).Error; err == nil {
+		// ถ้าเจอ email ซ้ำ
+		c.JSON(http.StatusConflict, gin.H{"error": "Email already exists"})
+		return
+	}
+
+	// เข้ารหัสรหัสผ่าน
+	hashedPassword, _ := config.HashPassword(member.Password)
+
+	// สร้างข้อมูลสมาชิกใหม่
+	u := entity.Member{
+		UserName:  member.UserName,
+		FirstName: member.FirstName,
+		LastName:  member.LastName,
+		Email:     member.Email,
+		Password:  hashedPassword,
+		TotalPoint: member.TotalPoint,
+		Role:      member.Role,
+	}
+
+	// บันทึกข้อมูลสมาชิกใหม่ลงในฐานข้อมูล
 	if err := db.Create(&u).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
+	// ส่งข้อมูลการสร้างสำเร็จกลับไปยัง client
 	c.JSON(http.StatusCreated, gin.H{"message": "Created success", "data": u})
 }
 
@@ -130,12 +179,62 @@ func ListMembers(c *gin.Context) {
 // DELETE /members/:id
 func DeleteMember(c *gin.Context) {
 	id := c.Param("id")
+	var member entity.Member
 	db := config.DB()
-	if tx := db.Exec("DELETE FROM members WHERE id = ?", id); tx.RowsAffected == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "id not found"})
+
+	// แปลง id จาก string เป็น uint
+	adminID, err := strconv.ParseUint(id, 10, 32)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "Deleted successful"})
+
+	// ดึงข้อมูลของ user ที่ต้องการลบ
+	if err := db.First(&member, adminID).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		return
+	}
+
+	// ตรวจสอบว่าเป็น admin หรือไม่
+	if member.Role == "admin" {
+		// นับจำนวน admin ที่เหลืออยู่ในระบบ
+		var adminCount int64
+		if err := db.Model(&entity.Member{}).Where("role = ?", "admin").Count(&adminCount).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Error checking admin count"})
+			return
+		}
+
+		// ถ้ามี admin เพียง 1 คน ห้ามลบ
+		if adminCount <= 1 {
+			c.JSON(http.StatusForbidden, gin.H{"error": "Cannot delete the last admin"})
+			return
+		}
+
+		// กรณี admin ต้องให้กรอกรหัสผ่าน
+		var input struct {
+			Password string `json:"password"`
+		}
+
+		// bind ข้อมูลที่กรอกมาจาก frontend
+		if err := c.ShouldBindJSON(&input); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+			return
+		}
+
+		// ตรวจสอบรหัสผ่าน admin
+		if !config.CheckPasswordHash([]byte(input.Password), []byte(member.Password)) {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid admin password"})
+			return
+		}
+	}
+
+	// ลบ user
+	if tx := db.Delete(&member).Error; tx != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error deleting user"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Deleted successfully"})
 }
 
 // PATCH /members/:id

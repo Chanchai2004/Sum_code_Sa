@@ -24,7 +24,7 @@ function Signup() {
       } else {
         messageApi.open({
           type: "error",
-          content: res.message?.error || 'An unexpected error occurred.',
+          content: res.message?.error || 'Email already exists',
         });
       }
     } catch (error: any) {
