@@ -28,6 +28,7 @@ import { Alert } from "antd";
 interface SelectedCoupon {
   id: string;
   discount: string;
+  name: string;
 }
 
 const PaymentDetail: React.FC = () => {
@@ -102,10 +103,10 @@ const PaymentDetail: React.FC = () => {
   }, [showtimeID]);
 
   const handleCouponChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const [id, discount] = e.target.value.split("|");
-    if (id && discount) {
-      setSelectedCoupon({ id, discount });
-      console.log("Coupon selected:", { id, discount });
+    const [id, discount, name] = e.target.value.split("|"); // เพิ่มการแยก name
+    if (id && discount && name) {
+      setSelectedCoupon({ id, discount, name }); // อัปเดตคูปองที่เลือก
+      console.log("Coupon selected:", { id, discount, name });
     } else {
       console.error("Failed to parse selected coupon");
     }
@@ -119,10 +120,12 @@ const PaymentDetail: React.FC = () => {
       console.log("Apply value:", selectedCoupon.discount);
 
       if (discount > totalPrice) {
+        setSelectedCoupon(null)
         setAlert({
           type: "error",
           message: "ไม่สามารถใช้คูปองนี้ได้ เนื่องจากส่วนลดเกินกว่าราคาสินค้า",
         });
+
         return;
       }
 
@@ -131,6 +134,13 @@ const PaymentDetail: React.FC = () => {
         "Discounted Total Price:",
         Math.max(0, totalPrice - discount)
       ); // แสดงค่าหลังใช้คูปอง
+
+      // อัปเดต select box ให้แสดงคูปองที่เลือก
+      setSelectedCoupon({
+        id: selectedCoupon.id,
+        discount: selectedCoupon.discount,
+        name: selectedCoupon.name,
+      });
     } else {
       console.warn("No valid coupon selected");
     }
@@ -178,7 +188,7 @@ const PaymentDetail: React.FC = () => {
         if (ticketID) {
           try {
             await updatePaymentStatus(ticketID, "Paid");
-            await updateTicketStatus(ticketID, "Booked");
+            await updateTicketStatus(ticketID, "Booked",0);
           } catch (error) {
             console.error("Error updating status:", error);
           }
@@ -275,7 +285,11 @@ const PaymentDetail: React.FC = () => {
               <img src={Iconcoupon} alt="coupon" className={styles.icon} />
               <select
                 className={styles.select}
-                value={selectedCoupon?.id || ""} // ใช้ selectedCoupon?.id หรือถ้าเป็น null ให้เป็น ""
+                value={
+                  selectedCoupon
+                    ? `${selectedCoupon.id}|${selectedCoupon.discount}|${selectedCoupon.name}`
+                    : ""
+                } // กำหนด value เป็น id, discount และ name ของคูปองที่ถูกเลือก
                 onChange={handleCouponChange}
               >
                 <option value="">Select Coupon</option>
@@ -283,7 +297,7 @@ const PaymentDetail: React.FC = () => {
                   coupons.map((coupon) => (
                     <option
                       key={coupon.rewardID}
-                      value={`${coupon.rewardID}|${coupon.discount}`}
+                      value={`${coupon.rewardID}|${coupon.discount}|${coupon.rewardName}`}
                     >
                       {coupon.rewardName}
                     </option>

@@ -75,7 +75,7 @@ func main() {
 		router.POST("/tickets", controller.CreateTicket)
 		router.PATCH("/ticket/:id", controller.UpdateTicket)
 		router.DELETE("/tickets/:id", controller.DeleteTicket)
-		router.PATCH("/tickets/status/:id", controller.UpdateTicketStatus)
+		router.PATCH("/tickets/status/:id", controller.UpdateTicketStatusAndPoints)
 
 		// Payment Routes
 		router.GET("/payments", controller.ListPayments)

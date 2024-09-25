@@ -18,7 +18,7 @@ body {
     width: 100%; /* ขยาย wrapper เต็มความกว้าง */
     box-sizing: border-box; /* รวม padding และ border ในขนาด */
     margin-top: 60px;
-    margin-left: 0px; /* เลื่อนไปทางซ้าย 50px */
+    
 }
 
 .wrapperopern .page-title {
@@ -134,7 +134,7 @@ body {
 
 
 .wrapperopern .ant-table-tbody > tr:nth-child(even) {
-    background-color: #eaf4e5 !important;
+    background-color: #eedfb7 !important;
 }
 
 .wrapperopern .ant-table-tbody > tr:nth-child(odd) {
@@ -157,11 +157,11 @@ body {
 }
 
 /* Title styling */
-.wrapperopern .ant-modal-title {
-    font-size: 24px;
+.ant-modal-title {
+    font-size: 24px !important;
     font-weight: bold;
-    color: #333;
-    text-align: center;
+    color: #4d94e4 !important;
+   
 }
 
 /* Close button styling */
@@ -179,34 +179,35 @@ body {
 
 
 /* Reward name */
-.wrapperopern .ant-modal-body h2 {
-    font-size: 22px;
+ .ant-modal-body h2 {
+    font-size: 16px;
     font-weight: bold;
-    color: #4a90e2;
+    color: #808183;
     margin-bottom: 10px;
 }
 
 /* Reward description */
-.wrapperopern .ant-modal-body p {
+ .ant-modal-body p {
     font-size: 16px;
     line-height: 1.5;
-    color: #666;
+    font-weight: bold;
+    color: #808183;
     margin-bottom: 15px;
 }
 
 /* Strong styling for reward code */
-.wrapperopern .ant-modal-body strong {
+ .ant-modal-body strong {
     font-weight: bold;
     color: #000;
 }
 
 /* Footer button styling */
-.wrapperopern .ant-modal-footer {
+ .ant-modal-footer {
     text-align: center;
     padding: 10px 0;
 }
 
-.wrapperopern .ant-modal-footer .ant-btn {
+ .ant-modal-footer .ant-btn {
     background-color: #4a90e2;
     color: white;
     border: none;

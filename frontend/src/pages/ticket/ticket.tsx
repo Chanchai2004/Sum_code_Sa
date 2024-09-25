@@ -104,7 +104,7 @@ const Ticket: React.FC = () => {
               <p className={styles.sub}>ENG</p>
             </div>
             <div>
-              <p className={styles.cinemaName}>Merje Cineplex</p>
+              <p className={styles.cinemaName}>The Mall Korat</p>
               <p className={styles.theater}>{theaterID}</p>
               <p className={styles.seatNumber}>
                 {Array.isArray(selectedSeats)

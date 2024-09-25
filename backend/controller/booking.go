@@ -67,7 +67,6 @@ func BookSeats(c *gin.Context) {
             SeatID:      seat.ID,
             TicketID:    ticket.ID, // เชื่อมโยงกับ ticket ที่เพิ่งสร้าง
             BookingTime: time.Now(),
-            Status:      "confirmed",
         }
 
         if err := tx.Create(&booking).Error; err != nil {

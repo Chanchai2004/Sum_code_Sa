@@ -126,31 +126,40 @@ func DeleteTicket(c *gin.Context) {
 }
 
 // UpdateTicketStatus อัปเดตสถานะของตั๋วตาม ticket ID
-func UpdateTicketStatus(c *gin.Context) {
-	ticketID := c.Param("id")
-	var ticket entity.Ticket
+func UpdateTicketStatusAndPoints(c *gin.Context) {
+    ticketID := c.Param("id")
+    var ticket entity.Ticket
 
-	// ค้นหาตั๋วตาม ticket ID
-	if err := config.DB().First(&ticket, ticketID).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Ticket not found"})
-		return
-	}
+    // ค้นหาตั๋วตาม ticket ID
+    if err := config.DB().First(&ticket, ticketID).Error; err != nil {
+        c.JSON(http.StatusNotFound, gin.H{"error": "Ticket not found"})
+        return
+    }
 
-	// Binding ข้อมูลจาก request body เพื่ออัปเดต status
-	var input struct {
-		Status string `json:"status"`
-	}
-	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
-		return
-	}
+    // Binding ข้อมูลจาก request body เพื่ออัปเดต status และ ticketpoint
+    var input struct {
+        Status     string `json:"status"`
+        TicketPoint *int   `json:"ticketpoint"` // ใช้ pointer เพื่อรองรับค่าที่เป็น nil
+    }
+    if err := c.ShouldBindJSON(&input); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
+        return
+    }
 
-	// อัปเดต status ของตั๋ว
-	ticket.Status = input.Status
-	if err := config.DB().Save(&ticket).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update ticket status"})
-		return
-	}
+    // อัปเดต status ของตั๋ว
+    ticket.Status = input.Status
 
-	c.JSON(http.StatusOK, gin.H{"message": "Ticket status updated", "data": ticket})
+    // อัปเดต ticketpoint ของตั๋วหากมีการส่งค่าเข้ามา
+    if input.TicketPoint != nil {
+        ticket.Point = *input.TicketPoint
+    }
+
+    // บันทึกการเปลี่ยนแปลงในฐานข้อมูล
+    if err := config.DB().Save(&ticket).Error; err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update ticket status and points"})
+        return
+    }
+
+    c.JSON(http.StatusOK, gin.H{"message": "Ticket status and points updated", "data": ticket})
 }
+

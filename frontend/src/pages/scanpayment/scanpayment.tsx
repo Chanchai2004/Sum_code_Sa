@@ -45,13 +45,14 @@ const ScanPayment: React.FC = () => {
   const [moviePoster, setMoviePoster] = useState<string | null>(null);
   const [totalPrice, setTotalPrice] = useState<number | null>(null);
 
-  const [timeLeft, setTimeLeft] = useState(300); // Time countdown in seconds
+  const [timeLeft, setTimeLeft] = useState(600); // Time countdown in seconds
   const [files, setFiles] = useState<File | null>(null);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [showButtons, setShowButtons] = useState(false);
   const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
   const [isCheckingSlip, setIsCheckingSlip] = useState<boolean>(false);
-  const [checkResult, setCheckResult] = useState<boolean | null>(null);
+  const [checkSlipUsed, setCheckSlipUsed] = useState<boolean>(true);
+  //const [checkResult, setCheckResult] = useState<boolean | null>(null);
   const [timeUpPopup, setTimeUpPopup] = useState(false);
 
   // State สำหรับควบคุมการแสดงผล Alert
@@ -139,6 +140,7 @@ const ScanPayment: React.FC = () => {
       if (ticketID) {
         await updatePaymentStatus(ticketID, "unfinish");
         await updateTicketStatus(ticketID, "unfinish");
+        showAlert("error", "ชำระเงินไม่สำเร็จ");
         navigate("/home");
       }
     } catch (error) {
@@ -174,6 +176,7 @@ const ScanPayment: React.FC = () => {
         );
         setShowSuccessPopup(true);
         showAlert("success", "Payment Successful!");
+        setCheckSlipUsed(false); // Stop using CheckSlip
       } catch (error) {
         console.error("Error during saving payment:", error);
         showAlert(
@@ -203,6 +206,10 @@ const ScanPayment: React.FC = () => {
   };
 
   const showAlert = (type: "success" | "error", message: string) => {
+    if (showSuccessPopup || timeUpPopup) {
+      // ถ้ามี popup ใดๆ กำลังแสดงอยู่ จะไม่แสดง alert
+      return;
+    }
     setAlert({ type, message });
   };
 
@@ -320,14 +327,13 @@ const ScanPayment: React.FC = () => {
               <div className={styles.confirmationBox}>
                 <p>คุณต้องการยกเลิกการชำระเงินและออกจากหน้านี้หรือไม่?</p>
                 <div className={styles.confirmationButtons}>
-                  <button
-                    className={styles.button}
+                  <button className={styles.button} style={{ backgroundColor: '#fff',color: '#000' }}
                     onClick={handleConfirmCancel}
                   >
                     ใช่
                   </button>
                   <button
-                    className={`${styles.button} ${styles.cancelButton}`}
+                    className={`${styles.button} ${styles.cancelButton}`} style={{ backgroundColor: '#077bce',color: '#fff' }}
                     onClick={handleCloseCancelConfirmation}
                   >
                     ยกเลิก
@@ -351,7 +357,10 @@ const ScanPayment: React.FC = () => {
           {/* Confirm and Reset Buttons */}
           {showButtons && (
             <div className={styles.paymentButtonWrapper}>
-              <button className={`${styles.button} ${styles.cancelButton}`} onClick={handleReset}>
+              <button
+                className={`${styles.button} ${styles.cancelButton}`}
+                onClick={handleReset}
+              >
                 Reset
               </button>
               <button className={styles.button} onClick={handleSubmit}>
@@ -362,7 +371,7 @@ const ScanPayment: React.FC = () => {
         </div>
 
         {/* Render CheckSlip component only if isCheckingSlip is true */}
-        {isCheckingSlip && (
+        {isCheckingSlip && checkSlipUsed && (
           <CheckSlip
             file={files}
             totalPrice={totalPrice}

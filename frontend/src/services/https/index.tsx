@@ -866,14 +866,22 @@ export async function updatePaymentStatus(ticketID: number, status: string) {
 }
 
 // อัปเดตสถานะของ ticket
-export async function updateTicketStatus(ticketID: number, status: string) {
+export async function updateTicketStatus(ticketID: number, status: string, ticketPoint?: number) {
   try {
+    // กำหนดชนิดของ body ให้ครอบคลุมทั้งสองค่า
+    const body: { status: string; ticketpoint?: number } = { status };
+    
+    // ถ้ามี ticketPoint ให้เพิ่มเข้าไปใน request body
+    if (ticketPoint !== undefined) {
+      body.ticketpoint = ticketPoint;
+    }
+
     const response = await fetch(`${apiUrl}/tickets/status/${ticketID}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ status }),
+      body: JSON.stringify(body),
     });
 
     if (!response.ok) {

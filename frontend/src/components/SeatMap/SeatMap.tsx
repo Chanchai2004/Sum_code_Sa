@@ -106,8 +106,8 @@ const SeatMap: React.FC = () => {
     if (selectedSeats.includes(seat)) {
       setSelectedSeats(prev => prev.filter(s => s !== seat));
     } else {
-      if (selectedSeats.length >= 5) {
-        message.error('You can select up to 5 seats per booking');
+      if (selectedSeats.length >= 4) {
+        message.error('You can select up to 4 seats per booking');
       } else {
         setSelectedSeats(prev => [...prev, seat]);
       }
@@ -124,8 +124,8 @@ const SeatMap: React.FC = () => {
       message.error('Please select the seat');
       return;
     }
-    if (selectedSeats.length > 5) {
-      message.error('You can select up to 5 seats per booking');
+    if (selectedSeats.length > 4) {
+      message.error('You can select up to 4 seats per booking');
       return;
     }
     if (!memberID) {
@@ -222,7 +222,7 @@ const SeatMap: React.FC = () => {
           <div className="summary-content" style={{ alignContent: 'center' }}>
             <div style={{ flex: 1 }}>
               <h3>Total</h3>
-              <h3 style={{ fontSize: '27px', color: '#FFD700' }}>Rp. {totalPrice.toLocaleString()}</h3>
+              <h3 style={{ fontSize: '27px', color: '#FFD700' }}>THB.  {totalPrice.toLocaleString()}</h3>
             </div>
             <div style={{ flex: 2 }}>
               <h3>Seat</h3>

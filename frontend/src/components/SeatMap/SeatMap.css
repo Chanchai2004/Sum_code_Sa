@@ -1,7 +1,7 @@
 .SeatMapcontainer {
   text-align: center;
   color: rgb(255, 255, 255);
-  padding: 220px;
+  padding: 130px;
   width: 100vw; /* ใช้ความกว้างของหน้าจอทั้งหมด */
   height: 100vh; /* ใช้ความสูงของหน้าจอทั้งหมด */
   background-color: #000000;
@@ -75,9 +75,9 @@ border-radius: 10px; /* ทำให้กล่องมีขอบมน */
 
 .seat {
   display: inline-block;
-  width: 50px;
+  width: 40px;
   height: 40px;
-  margin: 5px;
+  margin: 3px;
   line-height: 40px;
   text-align: center;
   border-radius: 8px;
@@ -152,14 +152,14 @@ button[type="primary"]:hover {
 /* Legend for seat status */
 .seat-legend {
   display: flex;
-  background-color: rgb(0, 0, 0);
+  background-color: black;
   justify-content: flex-end; /* จัดชิดขวา */
   gap: 15px;
-  padding: 0px;
+  padding: 10px;
 
   position: absolute;
-  top: 155px;
-  right: 340px;
+  top: 60px;
+  right: 250px;
 
 }
 
@@ -200,8 +200,8 @@ button[type="primary"]:hover {
   margin-bottom: 30px;
   margin-left: 220px;
   position: absolute;
-  top: 140px; /* ปรับความสูงให้อยู่ในแนวเดียวกับที่นั่ง */
-  left: 120px; /* ปรับให้อยู่ชิดกับที่นั่ง A1 */
+  top: 60px; /* ปรับความสูงให้อยู่ในแนวเดียวกับที่นั่ง */
+  left: 40px; /* ปรับให้อยู่ชิดกับที่นั่ง A1 */
 }
 
 .info-box {

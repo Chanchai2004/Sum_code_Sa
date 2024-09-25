@@ -58,6 +58,37 @@ const App: React.FC = () => {
         }
     }, [isLoggedIn, isAdmin, isStaff, navigate, location.pathname]);
     
+    useEffect(() => {
+        // ป้องกันการกดปุ่ม Back และ Forward
+        history.pushState(null, null, window.location.href);
+        window.onpopstate = function () {
+            history.go(1);
+        };
+
+        // ป้องกันการกด F5 หรือปุ่ม Refresh อื่น ๆ
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'F5' || (event.ctrlKey && event.key === 'r')) {
+                event.preventDefault();
+            }
+        };
+
+        // ป้องกันการ reload หรือปิดหน้า
+        const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+            const message = "Are you sure you want to leave this page? Changes you made may not be saved.";
+            event.returnValue = message;
+            return message;
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('beforeunload', handleBeforeUnload);
+
+        // Cleanup listeners on component unmount
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, []);
+
     return (
         <div className="app">
             {isLoggedIn && isAdmin && <Sidebar />}

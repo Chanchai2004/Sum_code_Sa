@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-// import axios from 'axios';
 import Navbar from '../../components/navbar/navbar';
 import './Reward.css';
 import RewardPopup from '../Popup/RewardPopup';
-import { CreateReward, GetMemberById,UpdateMember } from '../../services/https/index'; 
+import { CreateReward, GetMemberById, UpdateMember } from '../../services/https/index'; 
 import { RewardInterface } from "../../interfaces/IReward";
-// import { MembersInterface } from '../../interfaces/IMember';
 import { message } from "antd";
 
 
 const Reward: React.FC = () => {
-  // const apiUrl = "http://localhost:8000/api";
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedReward, setSelectedReward] = useState<RewardInterface | null>(null);
   const [userName, setUserName] = useState<string>('');
@@ -21,124 +18,70 @@ const Reward: React.FC = () => {
   const navigate = useNavigate();
 
   const getUserProfile = async () => {
-    const token = localStorage.getItem("token"); // ดึง token ที่เก็บไว้ใน localStorage
+    const token = localStorage.getItem("token");
 
     if (!token) {
-        messageApi.open({
-            type: "error",
-            content: "No token found.",
-        });
-        console.log("No token found.");
-        return;
+      messageApi.open({
+        type: "error",
+        content: "No token found.",
+      });
+      return;
     }
 
-    const memberID = localStorage.getItem('id'); // ดึง memberID ที่เก็บไว้ใน localStorage
-    console.log("memberID:", memberID);
-
+    const memberID = localStorage.getItem('id');
     if (!memberID) {
-        messageApi.open({
-            type: "error",
-            content: "No memberID found.",
-        });
-        console.log("No memberID found.");
-        return;
+      messageApi.open({
+        type: "error",
+        content: "No memberID found.",
+      });
+      return;
     }
-
-    console.log("Calling GetMemberById with ID:", memberID);
 
     try {
-        // เรียกใช้ฟังก์ชัน GetMemberById แทน fetch โดยตรง
-        const data = await GetMemberById(Number(memberID));
-
-        if (!data) {
-            messageApi.open({
-                type: "error",
-                content: "Failed to fetch member data",
-            });
-            return;
-        }
-
-        console.log("Response data:", data); // แสดงข้อมูลที่ได้รับจาก API
-
-        // ตรวจสอบว่า `data` มี `UserName` และ `TotalPoint` หรือไม่
-        const userName = data.UserName ? data.UserName : "Name data not available";
-        const points = Number(data.TotalPoint); // แปลง TotalPoint เป็นตัวเลข
-        const displayPoints = isNaN(points) ? 0 : points;
-
-        console.log("User Name:", userName); // แสดงค่า name
-        console.log("User Points:", displayPoints); // แสดงค่า points
-
-        // ตั้งค่าตัวแปรตามข้อมูลที่ได้รับ
-        setUserName(userName);
-        setUserPoints(displayPoints);
-
-    } catch (error) {
-        console.error("Error occurred:", error); // แสดงข้อผิดพลาดในคอนโซล
+      const data = await GetMemberById(Number(memberID));
+      if (!data) {
         messageApi.open({
-            type: "error",
-            content: error.message || 'An unknown error occurred',
+          type: "error",
+          content: "Failed to fetch member data",
         });
+        return;
+      }
+      const userName = data.UserName ? data.UserName : "Name data not available";
+      const points = Number(data.TotalPoint);
+      setUserName(userName);
+      setUserPoints(points || 0);
+    } catch (error) {
+      messageApi.open({
+        type: "error",
+        content: error.message || 'An unknown error occurred',
+      });
     }
-};
-useEffect(() => {
-    getUserProfile();
-}, []);
-
-
-  // ฟังก์ชันตรวจสอบวันหมดอายุ
-  const isRewardExpired = (reward: RewardInterface) => {
-    const currentDate = new Date(); // วันที่ปัจจุบัน
-    if (!reward.ExpirationDate) {
-      return false; // ถ้าไม่มีวันหมดอายุ ให้ถือว่าไม่หมดอายุ
-    }
-    // เปรียบเทียบวันที่หมดอายุกับวันที่ปัจจุบัน
-    return new Date(reward.ExpirationDate).getTime() < currentDate.getTime(); 
   };
-  
-  
-// ฟังก์ชันจัดการคลิกที่รูปภาพ
-const handleImageClick = (reward: RewardInterface) => {
-  // ตรวจสอบว่ารางวัลหมดอายุหรือไม่
-  if (isRewardExpired(reward)) {
-    messageApi.open({
-      type: "error",
-      content: "This reward has expired and cannot be redeemed.",
-    });
-    return; // ถ้ารางวัลหมดอายุ หยุดการทำงานของฟังก์ชัน
-  }
-  // ถ้ารางวัลไม่หมดอายุ ให้เปิด Popup
-  setSelectedReward(reward);
-  setIsPopupOpen(true);
-};
 
-const getRewardImage = (reward: RewardInterface) => {
-  
-  console.log("Reward Name:", reward.RewardName);
-  console.log("Reward Expiration Date:", reward.ExpirationDate);
-  console.log("Is Reward Expired?", isRewardExpired(reward));
-  return reward.imageUrl; // ถ้ารางวัลยังไม่หมดอายุ
-};
+  useEffect(() => {
+    getUserProfile();
+  }, []);
 
+  // ฟังก์ชันจัดการคลิกที่รูปภาพ
+  const handleImageClick = (reward: RewardInterface) => {
+    // เปิด Popup
+    setSelectedReward(reward);
+    setIsPopupOpen(true);
+  };
 
+  const getRewardImage = (reward: RewardInterface) => {
+    return reward.imageUrl;
+  };
 
-
+  // ปิด Popup
   const handleClosePopup = () => {
     setIsPopupOpen(false);
     setSelectedReward(null);
   };
 
+  // ยืนยันการแลกรางวัล
   const handleConfirmReward = async () => {
     if (selectedReward) {
-      // ตรวจสอบว่ารางวัลหมดอายุหรือไม่
-      const currentDate = new Date();
-      if (selectedReward.ExpirationDate && new Date(selectedReward.ExpirationDate) < currentDate) {
-        messageApi.open({
-          type: "error",
-          content: "This reward has expired and cannot be redeemed.",
-        });
-        return;
-      }
-  
       // ตรวจสอบว่าผู้ใช้มีคะแนนเพียงพอหรือไม่
       if (userPoints < selectedReward.Points!) {
         messageApi.open({
@@ -147,23 +90,17 @@ const getRewardImage = (reward: RewardInterface) => {
         });
         return;
       }
-  
-      // ลดคะแนนของผู้ใช้หลังจากแลกของรางวัล
+
       const updatedPoints = userPoints - selectedReward.Points!;
       setUserPoints(updatedPoints);
       setRewards(prevRewards =>
         prevRewards.map(reward =>
-          reward.RewardName === selectedReward.RewardName
-            ? { ...reward, Status: true }
-            : reward
+          reward.RewardName === selectedReward.RewardName ? { ...reward, Status: true } : reward
         )
       );
-  
+
       try {
-        // ดึง member_id จาก localStorage หรือแหล่งข้อมูลอื่น
         const memberID = localStorage.getItem("id");
-  
-        // ตรวจสอบว่า memberID มีค่าหรือไม่
         if (!memberID) {
           messageApi.open({
             type: "error",
@@ -171,36 +108,19 @@ const getRewardImage = (reward: RewardInterface) => {
           });
           return;
         }
-  
-        // เตรียมข้อมูลรางวัลพร้อมกับ member_id
-        const rewardData = {
-          ...selectedReward,
-          Status: true,
-          member_id: Number(memberID), // เพิ่ม member_id ที่ดึงมา
-        };
-  
-        // Print rewardData to the console
-        console.log("Data being sent to CreateReward:", rewardData);
-  
-        // เรียกใช้ฟังก์ชัน CreateReward และส่งข้อมูล rewardData ไปยัง backend
+
+        const rewardData = { ...selectedReward, Status: true, member_id: Number(memberID) };
         await CreateReward(rewardData);
-  
-        // เตรียมข้อมูลสำหรับอัปเดตคะแนน
-        const memberData = {
-          ID: Number(memberID),
-          TotalPoint: updatedPoints,
-        };
-  
-        // อัปเดตคะแนนสมาชิกในตาราง Member
+
+        const memberData = { ID: Number(memberID), TotalPoint: updatedPoints };
         await UpdateMember(memberData);
-  
+
         messageApi.open({
-          type: "success", // ประเภทของ popup เช่น "success", "error", "info", "warning"
-          content: 'Reward redeemed successfully and points updated!', // ข้อความที่ต้องการแสดง
-          duration: 5, // ระยะเวลาที่ popup จะแสดงผล (เป็นวินาที)
-          onClose: () => console.log('Popup closed!') // ฟังก์ชันที่จะทำงานเมื่อ popup ปิด
+          type: "success",
+          content: 'Reward redeemed successfully and points updated!',
+          duration: 5,
         });
-  
+
         setIsPopupOpen(false);
       } catch (error) {
         messageApi.open({
@@ -210,12 +130,11 @@ const getRewardImage = (reward: RewardInterface) => {
       }
     }
   };
-  
-  
+
   const goToHistory = () => {
     navigate('/history', { state: { userPoints, userName } });
   };
-  
+
   const [rewards, setRewards] = useState<RewardInterface[]>([
     {
       ID:1,
@@ -224,11 +143,9 @@ const getRewardImage = (reward: RewardInterface) => {
       Points: 2,
       Status: false, 
       Discount: 0,
-      Rewardcode: "-" ,
       Reward_time: new Date() ,
-      Describtion:"1 BOX POPCORN M ชุดนี้ประกอบด้วยป๊อปคอร์นขนาดกลาง 1 กล่อง และเครื่องดื่มเย็นชื่นใจ 1 แก้ว ที่จะทำให้การชมภาพยนตร์ของคุณเต็มไปด้วยความอร่อยและความสุข",
+      Describtion:"POPCORN M 1 BOX AND 1  DRINK (16 Oz)",
       Type:"reward",
-      ExpirationDate:new Date('2024-10-09'),
       
       
     },
@@ -239,11 +156,9 @@ const getRewardImage = (reward: RewardInterface) => {
       Points: 4,
       Status: false, 
       Discount: 50,
-      Rewardcode: "-" ,
       Reward_time: new Date()  ,
-      Describtion:"ส่วนลด 50 บาท",
+      Describtion:"DISCOUNT 50 BATH",
       Type:"discount",
-      ExpirationDate:new Date('2024-10-03'),
       
       
     },
@@ -254,11 +169,10 @@ const getRewardImage = (reward: RewardInterface) => {
       Points: 6,
       Status: false, 
       Discount: 0,
-      Rewardcode: "-" ,
       Reward_time:new Date() ,
-      Describtion:"1 COMBO SET L  ที่ประกอบด้วยป๊อปคอร์นขนาดใหญ่ 1 กล่อง และเครื่องดื่มเย็นชื่นใจ 1 แก้ว เหมาะสำหรับแบ่งปันความอร่อยกับเพื่อนหรือครอบครัวของคุณ",
+      Describtion:"COMBO SET L 1 BOX AND 1 DRINK (16 Oz)",
       Type:"reward",
-      ExpirationDate:new Date('2024-10-17'),
+      
       
     },
     {
@@ -268,11 +182,10 @@ const getRewardImage = (reward: RewardInterface) => {
       Points: 9,
       Status: false,
       Discount: 100,
-      Rewardcode: "-" ,
       Reward_time:new Date(), 
-      Describtion:"ส่วนลด 100 บาท",
+      Describtion:"DISCOUNT 100 BATH",
       Type:"discount",
-      ExpirationDate:new Date('2024-10-06'),
+      
     },
     {
       ID: 5,
@@ -281,11 +194,10 @@ const getRewardImage = (reward: RewardInterface) => {
       Points: 12,
       Status: false, 
       Discount: 0,
-      Rewardcode: "-" ,
       Reward_time:new Date() ,
-      Describtion:"1 SUPERSIZE SET A ที่ประกอบไปด้วยป๊อปคอร์นขนาดซูเปอร์ไซส์ 1 กล่องใหญ่ และเครื่องดื่มเย็นชื่นใจ 1 แก้ว เซ็ตนี้เหมาะสำหรับผู้ที่ต้องการประสบการณ์การชมภาพยนตร์ที่พิเศษสุด ทั้งอร่อยและจุใจ",
+      Describtion:"SUPERSIZE SET A 1 BOX SIZE XL AND 1 DRINK (16 Oz)",
       Type:"reward",
-      ExpirationDate:new Date('2024-10-29'),
+     
       
     },
     {
@@ -295,11 +207,10 @@ const getRewardImage = (reward: RewardInterface) => {
       Points: 15,
       Status: false,
       Discount: 100,
-      Rewardcode: "-" ,
       Reward_time:new Date(), 
-      Describtion:"บัตรชมภาพยนตร์ฟรี 1 ใบ ระดับที่นั่ง normal seat",
+      Describtion:"1 FREE MOVIE TICKET FOR A NORMAL SEAT",
       Type:"discount",
-      ExpirationDate:new Date('2024-10-25'),
+     
       
     },
     {
@@ -309,11 +220,10 @@ const getRewardImage = (reward: RewardInterface) => {
       Points: 18,
       Status: false, 
       Discount: 0,
-      Rewardcode: "-" ,
       Reward_time:new Date() ,
-      Describtion:"1 SUPERSIZE SET C ประกอบด้วยป๊อปคอร์นขนาดใหญ่ 2 กล่อง และเครื่องดื่ม 3 แก้ว ให้คุณและเพื่อนได้อิ่มอร่อยเต็มที่ระหว่างการชมภาพยนตร์ ด้วยปริมาณที่จุใจ",
+      Describtion:"SUPERSIZE SET C 2 BOX SIZE XL AND 3 DRINK (16 Oz)",
       Type:"reward",
-      ExpirationDate:new Date('2024-10-08'),
+      
     },
     {
       ID: 8,
@@ -322,11 +232,10 @@ const getRewardImage = (reward: RewardInterface) => {
       Points: 21,
       Status: false,
       Discount: 0,
-      Rewardcode: "SPECIAL GIFT" ,
       Reward_time:new Date(), 
-      Describtion:"ของขวัญสุดพิเศษ",
+      Describtion:"SPECIAL GIFT",
       Type:"reward",
-      ExpirationDate:new Date('2024-10-07'),
+     
       
     },
     {
@@ -338,9 +247,9 @@ const getRewardImage = (reward: RewardInterface) => {
       Discount: 200,
       Rewardcode: "-" ,
       Reward_time:new Date() , 
-      Describtion:"ตั๋วที่นั่ง 2 ที่นั่งในโรงภาพยนตร์ ให้คุณได้เพลิดเพลินกับการชมภาพยนตร์กับเพื่อนหรือคนพิเศษในที่นั่งสบาย มาพร้อมกับมุมมองที่ชัดเจนและบรรยากาศการรับชมที่ยอดเยี่ยม",
+      Describtion:"2 NORMAL SEATS",
       Type:"discount",
-      ExpirationDate:new Date('2024-10-09'),
+      
     },
     {
       ID: 10,
@@ -351,9 +260,9 @@ const getRewardImage = (reward: RewardInterface) => {
       Discount: 0,
       Rewardcode: "-" ,
       Reward_time:new Date() , 
-      Describtion:"SUPERSIZE SET A  2 SET ที่ประกอบไปด้วยป๊อปคอร์นขนาดซูเปอร์ไซส์ 2 กล่องใหญ่ และเครื่องดื่มเย็นชื่นใจ 2 แก้ว เซ็ตนี้เหมาะสำหรับผู้ที่ต้องการประสบการณ์การชมภาพยนตร์ที่พิเศษสุด ทั้งอร่อยและจุใจ",
+      Describtion:"SUPERSIZE SET A: 2 SETS. EACH SET INCLUDES 1 BOX SIZE XL OF POPCORN AND 1 DRINK (16 Oz).",
       Type:"reward",
-      ExpirationDate:new Date('2024-11-02'),
+      
     },
     {
       ID: 11,
@@ -364,9 +273,9 @@ const getRewardImage = (reward: RewardInterface) => {
       Discount: 300,
       Rewardcode: "-" ,
       Reward_time:new Date() , 
-      Describtion:"ตั๋วที่นั่งพรีเมียม 2 ที่นั่งในโรงภาพยนตร์ ที่นั่งสุดหรูหราและสะดวกสบาย มอบประสบการณ์การชมภาพยนตร์ที่เหนือระดับ ",
+      Describtion:"2 PERMUIM SEATS",
       Type:"discount",
-      ExpirationDate:new Date('2024-11-01'),
+      
     },
     {
       ID: 12,
@@ -377,9 +286,9 @@ const getRewardImage = (reward: RewardInterface) => {
       Discount: 0,
       Rewardcode: "-" ,
       Reward_time:new Date() , 
-      Describtion:"2 SUPERSIZE SET B ชุดซูเปอร์ไซส์ที่ประกอบไปด้วยป๊อปคอร์นขนาดใหญ่ 2 กล่อง และเครื่องดื่มเย็นสดชื่น 2 แก้ว เต็มอิ่มกับความอร่อยในปริมาณที่มากขึ้น ",
+      Describtion:"SUPERSIZE SET B 2 SETS. EACH SET INCLUDES 2 BOX SIZE XL+L OF POPCORN AND 2 DRINK (16 Oz).",
       Type:"reward",
-      ExpirationDate:new Date('2024-11-22'),
+      
     },
     {
       ID: 13,
@@ -390,35 +299,35 @@ const getRewardImage = (reward: RewardInterface) => {
       Discount: 0,
       Rewardcode: "-" ,
       Reward_time:new Date() ,
-      Describtion:"ของขวัญสุดพิเศษ",
+      Describtion:"SPECIAL GIFT",
       Type:"reward",
-      ExpirationDate:new Date('2024-15-20'),
+      
     },
     {
       ID: 14,
       imageUrl: "3 premuim seats.png",
-      RewardName: "3 PREMUIM SEATS  ",
+      RewardName: "3 PREMUIM SEATS ",
       Points: 60,
       Status: false, 
       Discount: 450,
       Rewardcode: "-" ,
       Reward_time:new Date(),
-      Describtion:"ตั๋วที่นั่งพรีเมียม 3 ที่นั่งในโรงภาพยนตร์ ที่นั่งสุดหรูหราและสะดวกสบาย มอบประสบการณ์การชมภาพยนตร์ที่เหนือระดับ ",
+      Describtion:"3 PREMUIM SEATS ",
       Type:"discount",
-      ExpirationDate:new Date('2024-11-20'),
+     
     },
     {
       ID: 15,
       imageUrl: "1 DIRECTOR PACKAGE .png",
-      RewardName: "1 DIRECTOR PACKAGE ",
+      RewardName: "1 PACKAGE OF 5 MOVIES",
       Points: 70,
       Status: false,
       Discount: 900,
       Rewardcode: "-" ,
       Reward_time:new Date() , 
-      Describtion:"1 DIRECTOR PACKAGE แพ็คเกจสุดพิเศษที่ให้คุณได้รับประสบการณ์การชมภาพยนตร์ในแบบ Director Class ด้วยที่นั่งที่สะดวกสบายและหรูหรา",
+      Describtion:"1 PACKAGE OF 5 MOVIES",
       Type:"discount",
-      ExpirationDate:new Date('2024-11-09'),
+      
     },
     {
       ID: 16,
@@ -429,9 +338,9 @@ const getRewardImage = (reward: RewardInterface) => {
       Discount: 600,
       Rewardcode: "-" ,
       Reward_time:new Date() , 
-      Describtion:"ตั๋วที่นั่งพรีเมียม 4 ที่นั่งในโรงภาพยนตร์ ที่นั่งสุดหรูหราและสะดวกสบาย มอบประสบการณ์การชมภาพยนตร์ที่เหนือระดับ",
+      Describtion:"4 PREMUIM SEATS",
       Type:"discount",
-      ExpirationDate:new Date('2024-12-03'),
+     
     },
     {
       ID: 17,
@@ -442,24 +351,23 @@ const getRewardImage = (reward: RewardInterface) => {
       Discount: 0,
       Rewardcode: "-" ,
       Reward_time:new Date(),
-      Describtion:"4 SUPERSIZE SET C ประกอบด้วยป๊อปคอร์นขนาดใหญ่ 8 กล่อง และเครื่องดื่ม 12 แก้ว ให้คุณและเพื่อนได้อิ่มอร่อยเต็มที่ระหว่างการชมภาพยนตร์ ด้วยปริมาณที่จุใจ", 
+      Describtion:"SUPERSIZE SET C 4 SETS. EACH SET INCLUDES 2 BOX SIZE XL OF POPCORN AND 3 DRINK (16 Oz).", 
       Type:"reward",
-      ExpirationDate:new Date('2024-12-05'),
+      
     },
     {
       ID: 18,
       imageUrl: "5premuimseat.png",
-      RewardName: "5 NORMAL SEATS ",
+      RewardName: "5 PREMUIM SEATS ",
       Points: 100,
       Status: false, 
       Discount: 750,
       Rewardcode: "-" ,
       Reward_time:new Date(),
-      Describtion:"ตั๋วที่นั่งพรีเมียม 5 ที่นั่งในโรงภาพยนตร์ ที่นั่งสุดหรูหราและสะดวกสบาย มอบประสบการณ์การชมภาพยนตร์ที่เหนือระดับ",
+      Describtion:"5 PREMUIM SEATS ",
       Type:"discount",
-      ExpirationDate:new Date('2024-12-12'),
+      
     },
-    // เพิ่มรายการรางวัลอื่นๆ ที่เหลือที่นี่
   ]);
 
 
@@ -595,16 +503,12 @@ const getRewardImage = (reward: RewardInterface) => {
   
         <div className="rewards-container">
           {rewards.map((reward, index) => (
-            <div key={index} >
+            <div key={index}>
               <img
                 src={getRewardImage(reward)}
                 alt={reward.RewardName}
                 className={`popcorn-box popcorn-box-${index + 1}`}
-                onClick={() => !isRewardExpired(reward) && handleImageClick(reward)}
-                style={{
-                  cursor: isRewardExpired(reward) ? "not-allowed" : "pointer",
-                  opacity: isRewardExpired(reward) ? 1 : 1,
-                }}
+                onClick={() => handleImageClick(reward)}
               />
               <div className={`popcorn-label popcorn-label-${index + 1}`}>
                 {reward.RewardName}
@@ -624,8 +528,5 @@ const getRewardImage = (reward: RewardInterface) => {
       </div>
     </div>
   );
-}  
-
-
-
+} 
 export default Reward;
