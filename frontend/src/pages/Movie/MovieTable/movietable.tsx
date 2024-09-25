@@ -55,18 +55,21 @@ const MovieTable: React.FC = () => {
 
   const columns = [
     {
+      align: 'center',
       title: 'ลำดับ',
       dataIndex: 'index',
       key: 'index',
       render: (text: string, record: MoviesInterface, index: number) => index + 1,
     },
     {
+      align: 'center',
       title: 'ชื่อ',
       dataIndex: 'MovieName',
       key: 'MovieName',
     },
     // Additional columns...
     {
+      align: 'center',
       title: 'จัดการข้อมูล',
       key: 'action',
       render: (text: string, record: MoviesInterface) => (
@@ -89,11 +92,11 @@ const MovieTable: React.FC = () => {
   return (
     <div className='movie'>
     <div className='app'>
-    <h1 style={{ color: "#000" }}>เพิ่มข้อมูลหนัง</h1>
+    <h1 style={{ color: "#000" }}>Movie List</h1>
 
       {/* Create button navigates to the Create Movie page */}
       <Button type="primary" style={{ marginBottom: 16 }} onClick={handleCreateMovie}>
-        + สร้างข้อมูล
+        สร้างข้อมูล
       </Button>
 
       <Table columns={columns} dataSource={movies} rowKey={(record) => record.ID} pagination={{ pageSize: 5 }} />

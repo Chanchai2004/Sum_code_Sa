@@ -987,6 +987,22 @@ async function GetTimeByShowtime(showtimeID: number): Promise<string | false> {
   }
 }
 
+const fetchBookedSeatsService = async (showtimeID: number, seatMap: any) => {
+  try {
+    const response = await fetch(`${apiUrl}/booked-seats/${showtimeID}`);
+    const seatsData = await response.json();
+    if (response.ok && seatsData.data) {
+      const bookedSeatsArray = seatsData.data.map((seatID: number) => seatMap[seatID]);
+      return bookedSeatsArray;
+    } else {
+      console.log('No bookings found for this showtime.');
+      return [];
+    }
+  } catch (error) {
+    console.error('Error fetching booked seats:', error);
+    throw error; // ส่งต่อ error กลับไปให้ handle ด้านนอก
+  }
+};
 
 export {
   GetTicketById,
@@ -1020,4 +1036,5 @@ export {
   Checkin,
   GetTicketcheck,
   ReleaseSeats,
+  fetchBookedSeatsService
 };

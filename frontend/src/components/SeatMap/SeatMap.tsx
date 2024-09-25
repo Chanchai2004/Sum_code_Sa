@@ -6,6 +6,7 @@ import './SeatMap.css';
 import { bookSeats } from '../../services/https';
 import { GetTheaterById } from "../../services/https";
 import { GetTimeByShowtime } from '../../services/https';
+import { fetchBookedSeatsService } from '../../services/https';
 
 const { Option } = Select;
 
@@ -54,15 +55,8 @@ const SeatMap: React.FC = () => {
 
   const fetchBookedSeats = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/api/booked-seats/${showtimeID}`);
-      const seatsData = await response.json();
-      if (response.ok && seatsData.data) {
-        const bookedSeatsArray = seatsData.data.map((seatID: number) => seatMap[seatID]);
-        setBookedSeats(bookedSeatsArray);
-      } else {
-        console.log('No bookings found for this showtime.');
-        setBookedSeats([]);
-      }
+      const bookedSeatsArray = await fetchBookedSeatsService(showtimeID, seatMap);
+      setBookedSeats(bookedSeatsArray);
     } catch (error) {
       console.error('Error fetching booked seats:', error);
     }

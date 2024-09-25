@@ -4,7 +4,6 @@ import "gorm.io/gorm"
 
 type Seat struct {
    gorm.Model
-   Status    string
    SeatNo    string
 
    //FK

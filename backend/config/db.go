@@ -189,7 +189,6 @@ The Battle of the Atlantic was one of the largest and longest naval battles of W
 		for _, seatNo := range seatNumbers {
 			seat := entity.Seat{
 				SeatNo:    seatNo,
-				Status:    "Available",
 				TheaterID: &theater.ID,
 			}
 			if err := db.FirstOrCreate(&seat, &entity.Seat{SeatNo: seatNo, TheaterID: &theater.ID}).Error; err != nil {

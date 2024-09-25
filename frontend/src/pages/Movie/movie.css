@@ -1,263 +1,262 @@
 .movie {
 
-    background-color: #f44336;
-  }
-  
-  .movie .app {
-    margin-left: 100px; /* เว้นระยะให้กับ sidebar */
-    padding: 20px; /* เพิ่ม padding ถ้าต้องการ */
-    height: 100vh;
-    width: calc(100% - 100px); /* กำหนดความกว้างของเนื้อหา ลดขนาดจาก sidebar */
-    background-color: white; /* เปลี่ยนพื้นหลังเป็นสีที่ต้องการ */
-    overflow: hidden;
-  }
-  
-  .movie .main-content {
-    margin-left: 100px; /* Updated to match the new sidebar width */
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto; /* Allow scrolling in the main content area */
-    height: 100vh; /* Full height for the main content */
-  }
-  
-  .movie .header {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
-    margin-top: 5px;
-    background-color: #f3f3f3;
-    position: sticky; /* Keep the header at the top when scrolling */
-    top: 0;
-    z-index: 1; /* Ensure it stays above other content */
-    width: 90%; /* Adjust to match the sidebar width */
-    box-sizing: border-box; /* Include padding in width calculation */
-  }
-  
-  .movie .calendar {
-    flex: 1;
-    padding: 20px;
-    background-color: white;
-    overflow-y: auto; /* Scroll if content overflows */
-    width: 100%; /* Ensure the calendar takes up the full width of the container */
-  }
-  
-  .movie .movie {
-    padding: 10px;
-    margin: 10px 0;
-    background-color: #ccc;
-    border-radius: 5px;
-  }
-  
-  .movie .movie-title {
-    font-weight: bold;
-  }
-  
-  .movie .movie-time {
-    font-size: 0.9em;
-  }
-  
-  .movie table {
-    width: 100%;
-    margin-left: 3px;
-    border-radius: 10px;
-    overflow: hidden;
-    border-collapse: collapse;
-    border-spacing: 0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* เงาเข้มขึ้น */
-  }
-  
-  .movie table tr:first-child td:first-child {
-    border-top-left-radius: 10px;
-  }
-  
-  .movie table tr:last-child td:first-child {
-    border-bottom-left-radius: 10px;
-  }
-  
-  .movie th, .movie td {
-    border: 1px solid #ccc;
-    padding: 8px;
-    text-align: center;
-  }
-  
-  .movie th {
-    background-color: #f4f4f4;
-  }
-  
-  .movie td {
-    min-width: 100px;
-    height: 50px;
-  }
-  
-  .movie .header {
-    margin-left: 3px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* Distributes space between child elements */
-    padding: 10px 20px;
-    background-color: #f9f9f9;
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 10px; /* Space below the header */
-    width: 100%; /* Adjusted width to 100% */
-    box-sizing: border-box; /* Include padding in width calculation */
-  }
-  
-  .movie .header-item {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* Space between label and input/button */
-  }
-  
-  .movie .header-item button {
-    margin-left: 5px; /* Space between buttons */
-  }
-  
-  .movie .header-item input[type="text"], 
-  .movie .header-item input[type="date"], 
-  .movie .header-item input[type="time"] {
-    padding: 10px;
-    border: 2px solid #ffc700;
-    border-radius: 15px;
-    outline: none;
-    font-size: 16px;
-    background-color: #fff;
-    color: #333;
-  }
-  
-  .movie .header-item select.movie-select {
-    padding: 10px;
-    border: 2px solid #ffc700;
-    border-radius: 15px;
-    outline: none;
-    font-size: 16px;
-    background-color: #fff;
-    color: #333;
-    width: 100%;
-    max-width: 200px; /* Adjust this based on your layout needs */
-  }
-  
-  .movie .add-btn, .movie .delete-btn, .movie .update-btn {
-    color: white;
-    border: none;
-    padding: 10px 20px; /* ขนาดปุ่มเดิม */
-    cursor: pointer;
-    border-radius: 8px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    position: relative; /* ทำให้ปุ่มอยู่ในตำแหน่งเดิม */
-    z-index: 2; /* ปุ่มจะอยู่เหนือเนื้อหาอื่นๆ */
-  }
-  
-  .movie .add-btn {
-    background-color: #4CAF50; /* สีเขียวสำหรับปุ่ม Add */
-  }
-  
-  .movie .delete-btn {
-    background-color: #f44336; /* สีแดงสำหรับปุ่ม Delete */
-  }
-  
-  .movie .update-btn {
-    background-color: #ffc700; /* สีเหลืองสำหรับปุ่ม Update */
-  }
-  
-  .movie .add-btn:hover, .movie .delete-btn:hover, .movie .update-btn:hover {
-    color: var(--bg-color); /* เปลี่ยนตัวอักษรเป็นสีพื้นหลังเดิม */
-    background-color: white; /* เปลี่ยนพื้นหลังเป็นสีขาว */
-    box-shadow: inset 0 0 0 2px var(--bg-color); /* เพิ่มขอบด้านในด้วยสีพื้นหลังเดิม */
-  }
-  
-  .movie .add-btn:hover {
-    --bg-color: #4CAF50; /* สีเขียวเดิมสำหรับปุ่ม Add */
-  }
-  
-  .movie .delete-btn:hover {
-    --bg-color: #f44336; /* สีแดงเดิมสำหรับปุ่ม Delete */
-  }
-  
-  .movie .update-btn:hover {
-    --bg-color: #ffc700; /* สีเหลืองเดิมสำหรับปุ่ม Update */
-  }
-  
-  .movie .add-btn:active, .movie .delete-btn:active, .movie .update-btn:active {
-    opacity: 0.9; /* ลดความโปร่งใสเมื่อคลิกเพื่อเพิ่มเอฟเฟกต์การกดปุ่ม */
-  }
-  
-  .movie .header-item button:hover {
-    opacity: 1; /* ทำให้ปุ่มไม่จางลงเมื่อ hover (ควบคุมโดย transform) */
-  }
-  
-  .movie .header-item button:focus {
-    outline: none; /* ลบเส้นขอบเมื่อปุ่มถูกโฟกัส */
-  }
-  
-  .movie .modal-content {
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 600px; /* ปรับขนาดความกว้างให้ครอบคลุมเนื้อหา */
-    width: 100%;
-    margin: 0 auto; /* จัด Modal ให้อยู่กึ่งกลาง */
-  }
-  
-  .movie .modal-content .header-item {
-    margin-bottom: 15px; /* เพิ่มระยะห่างระหว่างฟิลด์ */
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  
-  .movie .modal-content .header-item label {
-    display: inline-block;
-    width: 80px; /* ตั้งค่าความกว้างสำหรับ label เพื่อให้ text-align */
-    text-align: right;
-    margin-right: 10px; /* เพิ่มระยะห่างระหว่าง label กับ input */
-    font-weight: bold;
-  }
-  
-  .movie .modal-content .header-item .ant-picker,
-  .movie .modal-content .header-item .ant-select,
-  .movie .modal-content .header-item input {
-    width: 100%;
-    max-width: 300px; /* หรือค่าที่คุณต้องการให้เท่ากัน */
-    flex-grow: 1; /* ทำให้ขนาดของ input ใช้พื้นที่ทั้งหมดที่มีอยู่ */
-  }
-  
-  .movie .modal-content .header-item select {
-    width: 100%;
-    max-width: 300px; /* ทำให้ขนาดเท่ากัน */
-  }
-  
-  .movie .modal-content .header-item .update-btn, 
-  .movie .modal-content .header-item .delete-btn {
-    margin-top: 10px;
-    margin-right: 10px; /* ระยะห่างระหว่างปุ่ม Update กับ Delete */
-    width: 120px; /* ตั้งค่าความกว้างของปุ่มให้เท่ากัน */
-  }
-  
-  .movie .modal-content .header-item.button-group {
-    display: flex;
-    justify-content: flex-start; /* จัดปุ่มไปทางซ้าย */
-    gap: 10px; /* ระยะห่างระหว่างปุ่ม */
-  }
-  
-  .movie .modal-content .header-item button {
-    flex: 1; /* ทำให้ปุ่มมีขนาดเท่ากัน */
-  }
-  
-  .movie .movie-cell {
-    text-align: center;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
-    border-radius: 8px; /* Adjust this value to make the corners more or less rounded */
-  }
-  
-  .movie .movie-cell:hover {
-    transform: scale(0.97); /* Slightly increase the size */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Add shadow to create a lift effect */
-    z-index: 1; /* Make sure it appears on top of other elements */
-    border-radius: 8px; /* Ensure the border-radius is consistent on hover */
-    opacity: 0.7; /* Reduce opacity to make the color appear lighter */
-  }
-  
+  background-color: #f44336;
+}
+
+.movie .app {
+  margin-left: 100px; /* เว้นระยะให้กับ sidebar */
+  padding: 20px; /* เพิ่ม padding ถ้าต้องการ */
+  height: 100vh;
+  width: calc(100% - 100px); /* กำหนดความกว้างของเนื้อหา ลดขนาดจาก sidebar */
+  background-color: white; /* เปลี่ยนพื้นหลังเป็นสีที่ต้องการ */
+  overflow: hidden;
+}
+
+.movie .main-content {
+  margin-left: 100px; /* Updated to match the new sidebar width */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; /* Allow scrolling in the main content area */
+  height: 100vh; /* Full height for the main content */
+}
+
+.movie .header {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  margin-top: 5px;
+  background-color: #f3f3f3;
+  position: sticky; /* Keep the header at the top when scrolling */
+  top: 0;
+  z-index: 1; /* Ensure it stays above other content */
+  width: 90%; /* Adjust to match the sidebar width */
+  box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.movie .calendar {
+  flex: 1;
+  padding: 20px;
+  background-color: white;
+  overflow-y: auto; /* Scroll if content overflows */
+  width: 100%; /* Ensure the calendar takes up the full width of the container */
+}
+
+.movie .movie {
+  padding: 10px;
+  margin: 10px 0;
+  background-color: #ccc;
+  border-radius: 5px;
+}
+
+.movie .movie-title {
+  font-weight: bold;
+}
+
+.movie .movie-time {
+  font-size: 0.9em;
+}
+
+.movie table {
+  width: 100%;
+  margin-left: 3px;
+  border-radius: 10px;
+  overflow: hidden;
+  border-collapse: collapse;
+  border-spacing: 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* เงาเข้มขึ้น */
+}
+
+.movie table tr:first-child td:first-child {
+  border-top-left-radius: 10px;
+}
+
+.movie table tr:last-child td:first-child {
+  border-bottom-left-radius: 10px;
+}
+
+.movie th, .movie td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
+
+.movie th {
+  background-color: #f4f4f4;
+}
+
+.movie td {
+  min-width: 100px;
+  height: 50px;
+}
+
+.movie .header {
+  margin-left: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Distributes space between child elements */
+  padding: 10px 20px;
+  background-color: #f9f9f9;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px; /* Space below the header */
+  width: 100%; /* Adjusted width to 100% */
+  box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.movie .header-item {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between label and input/button */
+}
+
+.movie .header-item button {
+  margin-left: 5px; /* Space between buttons */
+}
+
+.movie .header-item input[type="text"], 
+.movie .header-item input[type="date"], 
+.movie .header-item input[type="time"] {
+  padding: 10px;
+  border: 2px solid #ffc700;
+  border-radius: 15px;
+  outline: none;
+  font-size: 16px;
+  background-color: #fff;
+  color: #333;
+}
+
+.movie .header-item select.movie-select {
+  padding: 10px;
+  border: 2px solid #ffc700;
+  border-radius: 15px;
+  outline: none;
+  font-size: 16px;
+  background-color: #fff;
+  color: #333;
+  width: 100%;
+  max-width: 200px; /* Adjust this based on your layout needs */
+}
+
+.movie .add-btn, .movie .delete-btn, .movie .update-btn {
+  color: white;
+  border: none;
+  padding: 10px 20px; /* ขนาดปุ่มเดิม */
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  position: relative; /* ทำให้ปุ่มอยู่ในตำแหน่งเดิม */
+  z-index: 2; /* ปุ่มจะอยู่เหนือเนื้อหาอื่นๆ */
+}
+
+.movie .add-btn {
+  background-color: #4CAF50; /* สีเขียวสำหรับปุ่ม Add */
+}
+
+.movie .delete-btn {
+  background-color: #f44336; /* สีแดงสำหรับปุ่ม Delete */
+}
+
+.movie .update-btn {
+  background-color: #ffc700; /* สีเหลืองสำหรับปุ่ม Update */
+}
+
+.movie .add-btn:hover, .movie .delete-btn:hover, .movie .update-btn:hover {
+  color: var(--bg-color); /* เปลี่ยนตัวอักษรเป็นสีพื้นหลังเดิม */
+  background-color: white; /* เปลี่ยนพื้นหลังเป็นสีขาว */
+  box-shadow: inset 0 0 0 2px var(--bg-color); /* เพิ่มขอบด้านในด้วยสีพื้นหลังเดิม */
+}
+
+.movie .add-btn:hover {
+  --bg-color: #4CAF50; /* สีเขียวเดิมสำหรับปุ่ม Add */
+}
+
+.movie .delete-btn:hover {
+  --bg-color: #f44336; /* สีแดงเดิมสำหรับปุ่ม Delete */
+}
+
+.movie .update-btn:hover {
+  --bg-color: #ffc700; /* สีเหลืองเดิมสำหรับปุ่ม Update */
+}
+
+.movie .add-btn:active, .movie .delete-btn:active, .movie .update-btn:active {
+  opacity: 0.9; /* ลดความโปร่งใสเมื่อคลิกเพื่อเพิ่มเอฟเฟกต์การกดปุ่ม */
+}
+
+.movie .header-item button:hover {
+  opacity: 1; /* ทำให้ปุ่มไม่จางลงเมื่อ hover (ควบคุมโดย transform) */
+}
+
+.movie .header-item button:focus {
+  outline: none; /* ลบเส้นขอบเมื่อปุ่มถูกโฟกัส */
+}
+
+.movie .modal-content {
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 600px; /* ปรับขนาดความกว้างให้ครอบคลุมเนื้อหา */
+  width: 100%;
+  margin: 0 auto; /* จัด Modal ให้อยู่กึ่งกลาง */
+}
+
+.movie .modal-content .header-item {
+  margin-bottom: 15px; /* เพิ่มระยะห่างระหว่างฟิลด์ */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.movie .modal-content .header-item label {
+  display: inline-block;
+  width: 80px; /* ตั้งค่าความกว้างสำหรับ label เพื่อให้ text-align */
+  text-align: right;
+  margin-right: 10px; /* เพิ่มระยะห่างระหว่าง label กับ input */
+  font-weight: bold;
+}
+
+.movie .modal-content .header-item .ant-picker,
+.movie .modal-content .header-item .ant-select,
+.movie .modal-content .header-item input {
+  width: 100%;
+  max-width: 300px; /* หรือค่าที่คุณต้องการให้เท่ากัน */
+  flex-grow: 1; /* ทำให้ขนาดของ input ใช้พื้นที่ทั้งหมดที่มีอยู่ */
+}
+
+.movie .modal-content .header-item select {
+  width: 100%;
+  max-width: 300px; /* ทำให้ขนาดเท่ากัน */
+}
+
+.movie .modal-content .header-item .update-btn, 
+.movie .modal-content .header-item .delete-btn {
+  margin-top: 10px;
+  margin-right: 10px; /* ระยะห่างระหว่างปุ่ม Update กับ Delete */
+  width: 120px; /* ตั้งค่าความกว้างของปุ่มให้เท่ากัน */
+}
+
+.movie .modal-content .header-item.button-group {
+  display: flex;
+  justify-content: flex-start; /* จัดปุ่มไปทางซ้าย */
+  gap: 10px; /* ระยะห่างระหว่างปุ่ม */
+}
+
+.movie .modal-content .header-item button {
+  flex: 1; /* ทำให้ปุ่มมีขนาดเท่ากัน */
+}
+
+.movie .movie-cell {
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+  border-radius: 8px; /* Adjust this value to make the corners more or less rounded */
+}
+
+.movie .movie-cell:hover {
+  transform: scale(0.97); /* Slightly increase the size */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Add shadow to create a lift effect */
+  z-index: 1; /* Make sure it appears on top of other elements */
+  border-radius: 8px; /* Ensure the border-radius is consistent on hover */
+  opacity: 0.7; /* Reduce opacity to make the color appear lighter */
+}
