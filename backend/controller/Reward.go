@@ -56,32 +56,6 @@ func GetReward(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": reward})
 }
 
-// GET /rewards รับข้อมูล Reward ทั้งหมด
-func ListRewards(c *gin.Context) {
-	var rewards []entity.Reward
-
-	db := config.DB()
-	if err := db.Find(&rewards).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch rewards"})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"data": rewards})
-}
-
-// DELETE /rewards/:id ลบ Reward ตาม ID
-func DeleteReward(c *gin.Context) {
-	id := c.Param("id")
-	db := config.DB()
-
-	if tx := db.Exec("DELETE FROM rewards WHERE id = ?", id); tx.RowsAffected == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Reward not found"})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"message": "Reward deleted successfully"})
-}
-
 // PATCH /rewards/:id อัปเดตข้อมูล Reward
 func UpdateReward(c *gin.Context) {
 	var reward entity.Reward

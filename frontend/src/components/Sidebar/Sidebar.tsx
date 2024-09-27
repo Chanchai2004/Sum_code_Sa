@@ -14,7 +14,6 @@ const Sidebar: React.FC = () => {
     localStorage.removeItem('isLogin');
     localStorage.removeItem('isAdmin');
     localStorage.removeItem('email'); // ลบข้อมูลอีเมลออกด้วย
-
     navigate('/login');
   };
 
@@ -34,7 +33,7 @@ const Sidebar: React.FC = () => {
           </Link>
         </li>
         <li>
-          <Link to="/movies">
+          <Link to="/movie">
             <FontAwesomeIcon icon={faFilm} />
             <span>Movies</span>
           </Link>

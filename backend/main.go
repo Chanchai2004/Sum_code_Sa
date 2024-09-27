@@ -88,11 +88,9 @@ func main() {
 	router.PATCH("/payments/upload-slip", controller.UpdatePaymentSlipByTicketID)
 
 		// Reward Routes
-        router.GET("/rewards", controller.ListRewards)          // เส้นทางสำหรับดึงข้อมูลรางวัลทั้งหมด
         router.GET("/rewards/:id", controller.GetReward)        // ดึงข้อมูลรางวัลตาม ID
         router.POST("/rewards", controller.CreateReward)        // สร้างรางวัล
         router.PATCH("/rewards/:id", controller.UpdateReward)   // อัปเดตรางวัล
-        router.DELETE("/rewards/:id", controller.DeleteReward)  // ลบรางวัล
 		router.GET("/rewards/member/:member_id/discount", controller.GetDiscountRewardsByMemberID)
 
 		// CodeReward Routes

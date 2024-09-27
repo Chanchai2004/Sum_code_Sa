@@ -132,7 +132,6 @@ func ReleaseSeatsForUnfinishedTickets(c *gin.Context) {
             return
         }
     }
-
     c.JSON(200, gin.H{"message": "Seats released for unfinished tickets"})
 }
 

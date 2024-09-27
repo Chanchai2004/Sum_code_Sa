@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Poster from "../../assets/poster.jpg";
 import IconDate from "../../assets/icondate.png";
@@ -52,7 +52,6 @@ const ScanPayment: React.FC = () => {
   const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
   const [isCheckingSlip, setIsCheckingSlip] = useState<boolean>(false);
   const [checkSlipUsed, setCheckSlipUsed] = useState<boolean>(true);
-  //const [checkResult, setCheckResult] = useState<boolean | null>(null);
   const [timeUpPopup, setTimeUpPopup] = useState(false);
 
   // State สำหรับควบคุมการแสดงผล Alert
@@ -60,6 +59,9 @@ const ScanPayment: React.FC = () => {
     type: "success" | "error";
     message: string;
   } | null>(null);
+
+  // ใช้ ref เพื่อจัดการการเรียกใช้ CheckSlip
+  const checkSlipRef = useRef<{ checkSlip: () => void }>(null);
 
   useEffect(() => {
     if (showtimeID) {
@@ -166,6 +168,7 @@ const ScanPayment: React.FC = () => {
   };
 
   const handleSlipCheckResult = async (result: boolean) => {
+    console.log("111");
     if (result && files) {
       try {
         const saveResult = await saveSlipAndUpdateStatus(
@@ -185,6 +188,7 @@ const ScanPayment: React.FC = () => {
         );
       }
     } else {
+      console.log("222");
       showAlert("error", "Slip ไม่ถูกต้อง กรุณาอัพโหลดสลิปใหม่");
     }
 
@@ -198,6 +202,11 @@ const ScanPayment: React.FC = () => {
     }
 
     setIsCheckingSlip(true);
+
+    if (checkSlipRef.current) {
+      // เรียกใช้การตรวจสอบสลิปจาก CheckSlip component
+      checkSlipRef.current.checkSlip();
+    }
   };
 
   const handleOkClick = () => {
@@ -327,13 +336,16 @@ const ScanPayment: React.FC = () => {
               <div className={styles.confirmationBox}>
                 <p>คุณต้องการยกเลิกการชำระเงินและออกจากหน้านี้หรือไม่?</p>
                 <div className={styles.confirmationButtons}>
-                  <button className={styles.button} style={{ backgroundColor: '#fff',color: '#000' }}
+                  <button
+                    className={styles.button}
+                    style={{ backgroundColor: "#fff", color: "#000" }}
                     onClick={handleConfirmCancel}
                   >
                     ใช่
                   </button>
                   <button
-                    className={`${styles.button} ${styles.cancelButton}`} style={{ backgroundColor: '#077bce',color: '#fff' }}
+                    className={`${styles.button} ${styles.cancelButton}`}
+                    style={{ backgroundColor: "#077bce", color: "#fff" }}
                     onClick={handleCloseCancelConfirmation}
                   >
                     ยกเลิก
@@ -373,6 +385,7 @@ const ScanPayment: React.FC = () => {
         {/* Render CheckSlip component only if isCheckingSlip is true */}
         {isCheckingSlip && checkSlipUsed && (
           <CheckSlip
+            ref={checkSlipRef} // ส่ง ref ให้กับ CheckSlip component
             file={files}
             totalPrice={totalPrice}
             onResult={handleSlipCheckResult}

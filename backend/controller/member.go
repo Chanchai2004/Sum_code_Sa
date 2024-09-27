@@ -1,10 +1,11 @@
 package controller
 
 import (
-	"net/http"
 	"fmt"
+	"net/http"
 	"strconv"
 	"time"
+
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/tanapon395/sa-67-example/config"
@@ -66,7 +67,7 @@ func Signin(c *gin.Context) {
 
 func CheckAdminPassword(c *gin.Context) {
 	var input struct {
-		AdminID  uint   `json:"id"`  // รับ adminID มาด้วย โดยใช้ json key "id"
+		AdminID  uint   `json:"id"` // รับ adminID มาด้วย โดยใช้ json key "id"
 		Password string `json:"password"`
 	}
 
@@ -92,7 +93,6 @@ func CheckAdminPassword(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"success": false, "error": "Invalid password"})
 	}
 }
-
 
 // POST /Member
 func CreateMember(c *gin.Context) {
@@ -124,15 +124,20 @@ func CreateMember(c *gin.Context) {
 	// เข้ารหัสรหัสผ่าน
 	hashedPassword, _ := config.HashPassword(member.Password)
 
+	// ตรวจสอบและกำหนดค่า Role
+	if member.Role == "" {
+		member.Role = "user" // ตั้งค่า Role เป็น "user" ถ้าไม่ถูกส่งมา
+	}
+
 	// สร้างข้อมูลสมาชิกใหม่
 	u := entity.Member{
-		UserName:  member.UserName,
-		FirstName: member.FirstName,
-		LastName:  member.LastName,
-		Email:     member.Email,
-		Password:  hashedPassword,
+		UserName:   member.UserName,
+		FirstName:  member.FirstName,
+		LastName:   member.LastName,
+		Email:      member.Email,
+		Password:   hashedPassword,
 		TotalPoint: member.TotalPoint,
-		Role:      member.Role,
+		Role:       member.Role,
 	}
 
 	// บันทึกข้อมูลสมาชิกใหม่ลงในฐานข้อมูล
@@ -266,60 +271,59 @@ func UpdateMember(c *gin.Context) {
 
 // PATCH /members/:id
 func UpdateMemberReward(c *gin.Context) {
-    var member entity.Member
+	var member entity.Member
 
-    MemberID := c.Param("id")
+	MemberID := c.Param("id")
 
-    db := config.DB()
-    result := db.First(&member, MemberID)
-    if result.Error != nil {
-        c.JSON(http.StatusNotFound, gin.H{"error": "Member ID not found"})
-        return
-    }
+	db := config.DB()
+	result := db.First(&member, MemberID)
+	if result.Error != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Member ID not found"})
+		return
+	}
 
-    var input struct {
-        TotalPoint int `json:"TotalPoint"`
-    }
+	var input struct {
+		TotalPoint int `json:"TotalPoint"`
+	}
 
-    if err := c.ShouldBindJSON(&input); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request, unable to map payload"})
-        return
-    }
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request, unable to map payload"})
+		return
+	}
 
-    result = db.Model(&member).Updates(map[string]interface{}{
-        "TotalPoint": input.TotalPoint,
-    })
-    
-    if result.Error != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to update member"})
-        return
-    }
+	result = db.Model(&member).Updates(map[string]interface{}{
+		"TotalPoint": input.TotalPoint,
+	})
 
-    c.JSON(http.StatusOK, gin.H{"message": "Update successful"})
+	if result.Error != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to update member"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Update successful"})
 }
 
-
 func GetRewardsByMemberID(c *gin.Context) {
-    memberID := c.Param("member_id")
+	memberID := c.Param("member_id")
 
-    if memberID == "" {
-        c.JSON(http.StatusBadRequest, gin.H{"error": "Member ID is required"})
-        return
-    }
+	if memberID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Member ID is required"})
+		return
+	}
 
-    var rewards []entity.Reward
-    result := config.DB().Preload("Member").Where("member_id = ?", memberID).Find(&rewards)
-    
-    if result.Error != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch rewards"})
-        return
-    }
+	var rewards []entity.Reward
+	result := config.DB().Preload("Member").Where("member_id = ?", memberID).Find(&rewards)
 
-    fmt.Printf("Fetched Rewards: %+v\n", rewards)
+	if result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch rewards"})
+		return
+	}
 
-    for _, reward := range rewards {
-        fmt.Printf("Member Information for Reward %d: %+v\n", reward.ID, reward.Member)
-    }
+	fmt.Printf("Fetched Rewards: %+v\n", rewards)
 
-    c.JSON(http.StatusOK, rewards)
+	for _, reward := range rewards {
+		fmt.Printf("Member Information for Reward %d: %+v\n", reward.ID, reward.Member)
+	}
+
+	c.JSON(http.StatusOK, rewards)
 }

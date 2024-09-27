@@ -38,11 +38,9 @@ func CheckRewardCode(c *gin.Context) {
     // ถ้าพบรหัสรางวัลและยังไม่ถูกใช้
     c.JSON(http.StatusOK, gin.H{
         "message": "รหัสรางวัลถูกต้อง",
-        "reward_code": codeReward.RewardCode,
         "reward_name": codeReward.Reward.RewardName,
         "discount": codeReward.Reward.Discount,
         "reward_points": codeReward.Reward.Points,
-        "expiration_date": codeReward.Reward.ExpirationDate,
         "description": codeReward.Reward.Describtion,
         "status": codeReward.Status,
     })

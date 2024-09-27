@@ -194,7 +194,7 @@ const PaymentDetail: React.FC = () => {
           }
         }
         setAlert({ type: "success", message: "การชำระเงินสำเร็จ!" });
-        navigate("/ticket", { state: { ticketID } });
+        navigate("/ticket", { state: { ticketID, showtimeID, selectedSeats} });
       } else {
         // ถ้าราคาหลังส่วนลดมากกว่า 0 ให้ไปที่หน้า scanpayment
         setAlert({ type: "success", message: "ดำเนินการชำระเงิน" });

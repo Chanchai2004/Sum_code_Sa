@@ -22,7 +22,7 @@ const showtimes = Array.from({ length: 14 }, (_, i) => 9 + i);
 
 const colors = [
   '#FFA500', '#FFD700', '#FFFF00', '#4CAF50',
-  '#ADFF2F', '#00FF00', '#20B2AA', '#0000FF', '#8A2BE2', 
+  '#ADFF2F', '#00FF00', '#20B2AA', '#ecb6ef', '#8A2BE2', 
   '#EE82EE', '#C71585'
 ];
 

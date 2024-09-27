@@ -24,13 +24,13 @@
     position: relative; /* ถ้าเป็น absolute หรือ fixed ให้ใช้ relative */
     top: 120px; /* เพิ่มระยะห่างจากด้านบน */
     text-align: left;
-    left: -50px; /* ขยับไปทางซ้าย 50px */
+    
 }
 
 .reward .my-points-container h2 {
     margin-left: auto; /* เลื่อนข้อความไปทางขวาสุด */
     margin-left: 20px; 
-    margin-left: 120px; /* ปรับระยะห่างจากขอบขวา */
+    margin-left: 140px; /* ปรับระยะห่างจากขอบขวา */
     display: inline-block; /* ทำให้ margin-left ทำงาน */
     color:#FFF
 }

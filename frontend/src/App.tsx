@@ -98,7 +98,7 @@ const App: React.FC = () => {
                     <Route path="/login" element={<Login />} />
                     
                     {/* เส้นทางสำหรับผู้ใช้ Admin */}
-                    <Route path="/movie" element={isLoggedIn && isAdmin ? <MovieTable /> : <Navigate to="/login" />} />
+                    <Route path="/movie" element={<MovieTable />} />
                     <Route path="/movies/edit" element={isLoggedIn && isAdmin ? <MovieEdit /> : <Navigate to="/login" />} />
                     <Route path="/movies/create" element={isLoggedIn && isAdmin ? <Movie /> : <Navigate to="/login" />} />
                     <Route path="/showtimes" element={isLoggedIn && isAdmin ? <ShowtimeManagement /> : <Navigate to="/login" />} />
