@@ -95,13 +95,13 @@ const MyTicket: React.FC = () => {
       title: 'Seats',
       dataIndex: 'seats',
       key: 'seats',
-      width: 150,
+      width: 190,
     },
     {
       title: 'Theater',
       dataIndex: 'theater',
       key: 'theater',
-      width: 150,
+      width: 140,
     },
     {
       title: 'Ticket',

@@ -168,7 +168,8 @@ const ScanPayment: React.FC = () => {
   };
 
   const handleSlipCheckResult = async (result: boolean) => {
-    console.log("111");
+    setIsCheckingSlip(false); // ปิดสถานะการตรวจสอบหลังการตรวจเสร็จสิ้น
+  
     if (result && files) {
       try {
         const saveResult = await saveSlipAndUpdateStatus(
@@ -188,26 +189,32 @@ const ScanPayment: React.FC = () => {
         );
       }
     } else {
-      console.log("222");
       showAlert("error", "Slip ไม่ถูกต้อง กรุณาอัพโหลดสลิปใหม่");
     }
-
-    setIsCheckingSlip(false);
   };
+  
 
   const handleSubmit = async () => {
     if (!files || !ticketID) {
       console.error("No file selected or ticket ID is missing");
       return;
     }
-
-    setIsCheckingSlip(true);
-
-    if (checkSlipRef.current) {
-      // เรียกใช้การตรวจสอบสลิปจาก CheckSlip component
-      checkSlipRef.current.checkSlip();
+  
+    // ป้องกันการกดปุ่มซ้ำหากการตรวจสอบกำลังทำงาน
+    if (isCheckingSlip) {
+      return;
     }
+  
+    setIsCheckingSlip(true);
+  
+    // ใช้ setTimeout เพื่อให้ React อัปเดตสถานะให้ครบก่อนเรียก checkSlipRef
+    setTimeout(() => {
+      if (checkSlipRef.current) {
+        checkSlipRef.current.checkSlip(); // เรียกการตรวจสอบสลิปใน CheckSlip component
+      }
+    }, 0);
   };
+  
 
   const handleOkClick = () => {
     setShowSuccessPopup(false);
