@@ -173,8 +173,12 @@
 .star {
     position: absolute;
     width: 100px; /* ขนาดของดาว */
+    transition: filter 0.3s ease; /* เพิ่มการเปลี่ยนแปลงที่ราบรื่น */
 }
-
+  
+.star:hover {
+    filter: brightness(0) saturate(100%) invert(92%) sepia(8%) saturate(1509%) hue-rotate(278deg) brightness(94%) contrast(85%);
+}
 /* กระจายดาวทั่วหน้าจอด้วยระยะห่างที่มากขึ้น */
 .star-1 {
     top: 500px;
@@ -545,9 +549,9 @@
 }
 
 .popcorn-box-18 {
-    top: 5700px;
+    top: 5650px;
     left: 51%;
-    width: 200px; /* ปรับขนาดตามที่ต้องการ */
+    width: 300px; /* ปรับขนาดตามที่ต้องการ */
 }
 
 

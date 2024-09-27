@@ -348,14 +348,14 @@ const Reward: React.FC = () => {
     },
     {
       ID: 18,
-      imageUrl: "5premuimseat.png",
-      RewardName: "5 PREMUIM SEATS ",
+      imageUrl: "กล่องของขวัญใหญ่.PNG",
+      RewardName: "BIG SPECIAL GIFT ",
       Points: 100,
       Status: false, 
-      Discount: 750,
+      Discount: 600,
       Reward_time:new Date(),
-      Describtion:"5 PREMUIM SEATS ",
-      Type:"discount",
+      Describtion:"BIG SPECIAL GIFT",
+      Type:"reward",
       
     },
   ]);
