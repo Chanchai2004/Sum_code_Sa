@@ -9,8 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// CreateCodeReward เป็นฟังก์ชันสำหรับบันทึกโค้ดแลกเปลี่ยน (CodeReward)
-// CreateCodeReward เป็นฟังก์ชันสำหรับบันทึกโค้ดแลกเปลี่ยน (CodeReward)
+
 func CreateCodeReward(c *gin.Context) {
 	db := config.DB()
 

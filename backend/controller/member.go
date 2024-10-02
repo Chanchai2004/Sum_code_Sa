@@ -106,30 +106,27 @@ func CreateMember(c *gin.Context) {
 
 	db := config.DB()
 
-	// ตรวจสอบว่ามี username นี้ในฐานข้อมูลแล้วหรือไม่
+
 	var existingMember entity.Member
 	if err := db.Where("user_name = ?", member.UserName).First(&existingMember).Error; err == nil {
-		// ถ้าเจอ username ซ้ำ
+
 		c.JSON(http.StatusConflict, gin.H{"error": "Username already exists"})
 		return
 	}
 
-	// ตรวจสอบว่ามี email นี้ในฐานข้อมูลแล้วหรือไม่
+	// ตรวจสอบว่ามี email 
 	if err := db.Where("email = ?", member.Email).First(&existingMember).Error; err == nil {
-		// ถ้าเจอ email ซ้ำ
+
 		c.JSON(http.StatusConflict, gin.H{"error": "Email already exists"})
 		return
 	}
 
-	// เข้ารหัสรหัสผ่าน
 	hashedPassword, _ := config.HashPassword(member.Password)
 
-	// ตรวจสอบและกำหนดค่า Role
 	if member.Role == "" {
 		member.Role = "user" // ตั้งค่า Role เป็น "user" ถ้าไม่ถูกส่งมา
 	}
 
-	// สร้างข้อมูลสมาชิกใหม่
 	u := entity.Member{
 		UserName:   member.UserName,
 		FirstName:  member.FirstName,
@@ -140,13 +137,11 @@ func CreateMember(c *gin.Context) {
 		Role:       member.Role,
 	}
 
-	// บันทึกข้อมูลสมาชิกใหม่ลงในฐานข้อมูล
 	if err := db.Create(&u).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	// ส่งข้อมูลการสร้างสำเร็จกลับไปยัง client
 	c.JSON(http.StatusCreated, gin.H{"message": "Created success", "data": u})
 }
 
@@ -194,15 +189,12 @@ func DeleteMember(c *gin.Context) {
 		return
 	}
 
-	// ดึงข้อมูลของ user ที่ต้องการลบ
 	if err := db.First(&member, adminID).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 		return
 	}
 
-	// ตรวจสอบว่าเป็น admin หรือไม่
 	if member.Role == "admin" {
-		// นับจำนวน admin ที่เหลืออยู่ในระบบ
 		var adminCount int64
 		if err := db.Model(&entity.Member{}).Where("role = ?", "admin").Count(&adminCount).Error; err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Error checking admin count"})
@@ -215,12 +207,10 @@ func DeleteMember(c *gin.Context) {
 			return
 		}
 
-		// กรณี admin ต้องให้กรอกรหัสผ่าน
 		var input struct {
 			Password string `json:"password"`
 		}
 
-		// bind ข้อมูลที่กรอกมาจาก frontend
 		if err := c.ShouldBindJSON(&input); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
 			return
@@ -233,7 +223,6 @@ func DeleteMember(c *gin.Context) {
 		}
 	}
 
-	// ลบ user
 	if tx := db.Delete(&member).Error; tx != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error deleting user"})
 		return

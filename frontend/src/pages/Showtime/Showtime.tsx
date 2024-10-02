@@ -6,7 +6,7 @@ import moment, { Moment } from 'moment';
 import { TheatersInterface } from '../../interfaces/ITheater';
 import { ShowTimesInterface } from '../../interfaces/IShowtime';
 import { MoviesInterface } from '../../interfaces/IMovie';
-import Table from 'react-bootstrap/Table';
+
 const { Option } = Select;
 import {Card} from "antd";
 
@@ -152,8 +152,10 @@ const ShowtimeManagement: React.FC = () => {
   };
 
   const handleDateChange = (date: Moment | null) => {
-    if (!isManualUpdate.current) {
-      setSelectedDate(date);
+    if (date) {
+      const selectedDateStr = date.format('YYYY-MM-DD');
+      console.log("Selected Date:", selectedDateStr);
+      setSelectedDate(date); // บันทึกค่า date ที่เลือกอย่างถูกต้อง
     }
   };
 
@@ -170,13 +172,14 @@ const ShowtimeManagement: React.FC = () => {
     }
 
     const combinedDateTime = moment(selectedDate)
-      .set({
-        date: selectedDate.date(),
-        hour: selectedTime?.hour() || 0,
-        minute: selectedTime?.minute() || 0,
-        second: 0,
-        millisecond: 0,
-      });
+  .set({
+    month: selectedDate.month(),
+    date: selectedDate.date(),
+    hour: selectedTime?.hour() || 0,
+    minute: selectedTime?.minute() || 0,
+    second: 0,
+    millisecond: 0,
+  });
 
     const newShowTimeStart = combinedDateTime.hours();
     const movieDuration = movies.find(movie => movie.ID === selectedMovieID)?.MovieDuration || 0;
@@ -203,10 +206,11 @@ const ShowtimeManagement: React.FC = () => {
     }
 
     const newShowTime = {
-      Showdate: combinedDateTime.toISOString(),
+      Showdate: combinedDateTime.format('YYYY-MM-DDTHH:mm:ssZ'), // ฟอร์แมต ISO สำหรับวันและเวลา
       MovieID: selectedMovieID,
       TheaterID: selectedTheaterID,
     };
+    
 
     fetch('http://localhost:8000/api/showtimes', {
       method: 'POST',
@@ -216,7 +220,9 @@ const ShowtimeManagement: React.FC = () => {
       body: JSON.stringify(newShowTime),
     })
       .then((response) => {
+        console.log("Response:", response);
         if (!response.ok) {
+          
           return response.json().then((error) => {
             throw new Error(error.error || 'Error creating showtime');
           });
@@ -242,6 +248,7 @@ const ShowtimeManagement: React.FC = () => {
     // คำนวณเวลารวมจากวันที่และเวลา
     const combinedDateTime = moment(selectedDate)
       .set({
+        month: selectedDate.month(),
         date: selectedDate.date(),
         hour: selectedTime?.hour() || 0,
         minute: selectedTime?.minute() || 0,
@@ -282,6 +289,7 @@ const ShowtimeManagement: React.FC = () => {
     const formattedDateTime = combinedDateTime.format('YYYY-MM-DDTHH:mm:ssZ');
   
     const updateShowTime = {
+      month: selectedDate.month(),
       Showdate: formattedDateTime,
       MovieID: selectedMovieID,
       TheaterID: selectedTheaterID,
@@ -334,7 +342,7 @@ const ShowtimeManagement: React.FC = () => {
     Modal.confirm({
       title: 'Are you sure you want to delete?',
       content: 'This information will be permanently deleted and cannot be recovered.',
-      centered: true, // ให้ Modal อยู่กึ่งกลาง
+      centered: true, 
       okText: 'confirm',
       cancelText: 'cancel',
       okButtonProps: { danger: true }, // ปรับสีปุ่มยืนยันให้เป็นปุ่มลบ

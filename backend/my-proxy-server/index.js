@@ -40,7 +40,7 @@ app.post('/proxy/slipok', upload.single('file'), async (req, res) => {
 
     const response = await axios.post('https://api.slipok.com/api/line/apikey/30672', formData, {
       headers: {
-        "x-authorization": "SLIPOK3V92PLW",
+        "x-authorization": "ABCDEFGHIJKL",
         ...formData.getHeaders(),
       },
     });

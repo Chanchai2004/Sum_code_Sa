@@ -32,7 +32,7 @@
 }
 
 .sidebar li.logout {
-  margin-top: 250px; /* Push the logout button to the bottom */
+  margin-top: 220px; /* Push the logout button to the bottom */
   margin-bottom: -100px; /* Adjust spacing as needed */
 }
 

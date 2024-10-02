@@ -311,7 +311,7 @@ const ScanPayment: React.FC = () => {
           <div className={styles.qrCodeContent}>
             <div className={styles.qrCodeOverlay}>
               <PromptPayQRCode
-                phoneNumber="0967360797"
+                phoneNumber="09300000456"
                 amount={totalPrice !== null ? totalPrice : undefined}
               />
             </div>

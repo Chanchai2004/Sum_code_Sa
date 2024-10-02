@@ -10,7 +10,7 @@ import MultiCarousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import CardShowPoster from './components/cardposter';
 import Footer from './components/footer';
-import { Select } from 'antd'; // Import Ant Design Select component
+import { Select } from 'antd'; 
 import video from '../../assets/Mufasa_ The Lion King  (1).mp4';
 import video2 from '../../assets/SaveTube.App-Captain America _Avengers Assemble_ Scene - Portal Scene - Avengers _ Endgame (2019) Scene (online-video-cutter.com).mp4';
 

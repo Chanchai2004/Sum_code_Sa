@@ -8,16 +8,6 @@ import (
 	"github.com/tanapon395/sa-67-example/entity"
 )
 
-// CreateShowTime godoc
-// @Summary Create ShowTime
-// @Description Create a new showtime
-// @Tags ShowTime
-// @Accept json
-// @Produce json
-// @Param showtime body entity.ShowTimes true "ShowTime"
-// @Success 200 {object} entity.ShowTimes
-// @Failure 400 {object} gin.H
-// @Router /showtimes [post]
 func CreateShowTime(c *gin.Context) {
 	var showtime entity.ShowTimes
 	if err := c.ShouldBindJSON(&showtime); err != nil {
@@ -35,20 +25,9 @@ func CreateShowTime(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, showtime)
+	c.JSON(http.StatusCreated, showtime)
 }
 
-// GetShowTime godoc
-// @Summary Get ShowTime by ID
-// @Description Get a showtime by ID
-// @Tags ShowTime
-// @Accept json
-// @Produce json
-// @Param id path uint true "ShowTime ID"
-// @Success 200 {object} entity.ShowTimes
-// @Failure 400 {object} gin.H
-// @Failure 404 {object} gin.H
-// @Router /showtimes/{id} [get]
 func GetShowTime(c *gin.Context) {
 	var showtime entity.ShowTimes
 	id := c.Param("id")
@@ -61,14 +40,7 @@ func GetShowTime(c *gin.Context) {
 	c.JSON(http.StatusOK, showtime)
 }
 
-// ListShowTimes godoc
-// @Summary List all ShowTimes
-// @Description Get all showtimes
-// @Tags ShowTime
-// @Accept json
-// @Produce json
-// @Success 200 {array} entity.ShowTimes
-// @Router /showtimes [get]
+
 func ListShowTimes(c *gin.Context) {
 	var showtimes []entity.ShowTimes
 
@@ -83,18 +55,6 @@ func ListShowTimes(c *gin.Context) {
 	c.JSON(http.StatusOK, showtimes)
 }
 
-// UpdateShowTime godoc
-// @Summary Update ShowTime
-// @Description Update a showtime by ID
-// @Tags ShowTime
-// @Accept json
-// @Produce json
-// @Param id path uint true "ShowTime ID"
-// @Param showtime body entity.ShowTimes true "ShowTime"
-// @Success 200 {object} entity.ShowTimes
-// @Failure 400 {object} gin.H
-// @Failure 404 {object} gin.H
-// @Router /showtimes/{id} [patch]
 func UpdateShowTime(c *gin.Context) {
 	var showtime entity.ShowTimes
 	id := c.Param("id")
@@ -105,13 +65,11 @@ func UpdateShowTime(c *gin.Context) {
 		return
 	}
 
-	// ตรวจสอบว่าข้อมูลที่ส่งมาถูกต้องหรือไม่
 	if err := c.ShouldBindJSON(&showtime); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	// ทำการอัปเดตรายการในฐานข้อมูล
 	if err := config.DB().Save(&showtime).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -127,17 +85,7 @@ func UpdateShowTime(c *gin.Context) {
 	c.JSON(http.StatusOK, showtime)
 }
 
-// DeleteShowTime godoc
-// @Summary Delete ShowTime
-// @Description Delete a showtime by ID
-// @Tags ShowTime
-// @Accept json
-// @Produce json
-// @Param id path uint true "ShowTime ID"
-// @Success 200 {object} gin.H
-// @Failure 400 {object} gin.H
-// @Failure 404 {object} gin.H
-// @Router /showtimes/{id} [delete]
+
 func DeleteShowTime(c *gin.Context) {
 	id := c.Param("id")
 
@@ -149,17 +97,7 @@ func DeleteShowTime(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "ShowTime deleted"})
 }
 
-// DeleteShowTimeByDetails godoc
-// @Summary Delete ShowTime by details
-// @Description Delete a showtime by MovieID, TheaterID, and Showdate
-// @Tags ShowTime
-// @Accept json
-// @Produce json
-// @Param showtime body entity.ShowTimes true "ShowTime"
-// @Success 200 {object} gin.H
-// @Failure 400 {object} gin.H
-// @Failure 404 {object} gin.H
-// @Router /showtimes [delete]
+
 func DeleteShowTimeByDetails(c *gin.Context) {
 	var showtime entity.ShowTimes
 	if err := c.ShouldBindJSON(&showtime); err != nil {
@@ -179,25 +117,20 @@ func GetTimeByShowtime(c *gin.Context) {
 	var showtime entity.ShowTimes
 	id := c.Param("id")
 
-	// Retrieve showtime by ID
 	if err := config.DB().Where("id = ?", id).First(&showtime).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Showtime not found"})
 		return
 	}
 
-	// Load the timezone location (e.g., "Asia/Bangkok")
 	location, err := time.LoadLocation("Asia/Bangkok")
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to load location"})
 		return
 	}
 
-	// Convert UTC time to the desired timezone (Asia/Bangkok)
 	showtimeLocal := showtime.Showdate.In(location)
 
-	// Format showdate to extract the time in hh:mm format
 	showtimeFormatted := showtimeLocal.Format("15:04")
 
-	// Return the formatted time
 	c.JSON(http.StatusOK, gin.H{"showtime": showtimeFormatted})
 }
